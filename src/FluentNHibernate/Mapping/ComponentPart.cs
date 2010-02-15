@@ -11,7 +11,7 @@ namespace FluentNHibernate.Mapping
     public class ComponentPart<T> : ComponentPartBase<T>, IComponentMappingProvider
     {
         private readonly Type entity;
-        private readonly AccessStrategyBuilder<ComponentPart<T>> access;
+        private readonly AccessStrategyBuilder access;
         private readonly AttributeStore<ComponentMapping> attributes;
 
         public ComponentPart(Type entity, Member property)
@@ -22,7 +22,7 @@ namespace FluentNHibernate.Mapping
             : base(underlyingStore, propertyName)
         {
             attributes = new AttributeStore<ComponentMapping>(underlyingStore);
-            access = new AccessStrategyBuilder<ComponentPart<T>>(this, value => attributes.Set(x => x.Access, value));
+            access = new AccessStrategyBuilder(value => attributes.Set(x => x.Access, value));
             this.entity = entity;
 
             Insert();
@@ -43,7 +43,7 @@ namespace FluentNHibernate.Mapping
         /// </summary>
         public new AccessStrategyBuilder<ComponentPart<T>> Access
         {
-            get { return access; }
+            get { return new AccessStrategyBuilder<ComponentPart<T>>(this, access); }
         }
 
         public new ComponentPart<T> ParentReference(Expression<Func<T, object>> exp)

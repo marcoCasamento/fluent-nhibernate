@@ -13,7 +13,7 @@ namespace FluentNHibernate.Mapping
 {
     public class CompositeIdentityPart<T> : ICompositeIdMappingProvider
 	{
-        private readonly AccessStrategyBuilder<CompositeIdentityPart<T>> access;
+        private readonly AccessStrategyBuilder access;
         private readonly AttributeStore<CompositeIdMapping> attributes = new AttributeStore<CompositeIdMapping>();
         private readonly IList<KeyPropertyMapping> keyProperties = new List<KeyPropertyMapping>();
         private readonly IList<KeyManyToOneMapping> keyManyToOnes = new List<KeyManyToOneMapping>();
@@ -21,7 +21,7 @@ namespace FluentNHibernate.Mapping
 
         public CompositeIdentityPart()
         {
-            access = new AccessStrategyBuilder<CompositeIdentityPart<T>>(this, value => attributes.Set(x => x.Access, value));
+            access = new AccessStrategyBuilder(value => attributes.Set(x => x.Access, value));
         }
 
         public CompositeIdentityPart(string name) : this()
@@ -154,7 +154,7 @@ namespace FluentNHibernate.Mapping
 		/// </summary>
 		public AccessStrategyBuilder<CompositeIdentityPart<T>> Access
 		{
-			get { return access; }
+			get { return new AccessStrategyBuilder<CompositeIdentityPart<T>>(this, access); }
 		}
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

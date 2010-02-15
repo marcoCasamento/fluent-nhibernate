@@ -29,23 +29,25 @@ namespace FluentNHibernate.Testing.DomainModel.Mapping
         [Test]
         public void Applying_a_filter_to_a_one_to_many()
         {
-            new MappingTester<OneToManyTarget>()
-                .ForMapping(m => m.HasMany(x => x.SetOfChildren)
-                    .ApplyFilter<TestFilter>("Name = :name"))
-                .Element("class/set/filter")
-                .HasAttribute("name", "test")
-                .HasAttribute("condition", "Name = :name");
+            //new MappingTester<OneToManyTarget>()
+            //    .ForMapping(m => m.HasMany(x => x.SetOfChildren)
+            //        .ApplyFilter<TestFilter>("Name = :name"))
+            //    .Element("class/set/filter")
+            //    .HasAttribute("name", "test")
+            //    .HasAttribute("condition", "Name = :name");
+            Assert.Fail();
         }
 
         [Test]
         public void Applying_a_filter_to_a_one_to_many_with_no_condition()
         {
-            new MappingTester<OneToManyTarget>()
-                .ForMapping(m => m.HasMany(x => x.SetOfChildren)
-                    .ApplyFilter<TestFilter>())
-                .Element("class/set/filter")
-                .HasAttribute("name", "test")
-                .DoesntHaveAttribute("condition");
+            //new MappingTester<OneToManyTarget>()
+            //    .ForMapping(m => m.HasMany(x => x.SetOfChildren)
+            //        .ApplyFilter<TestFilter>())
+            //    .Element("class/set/filter")
+            //    .HasAttribute("name", "test")
+            //    .DoesntHaveAttribute("condition");
+            Assert.Fail();
         }
 
         [Test]

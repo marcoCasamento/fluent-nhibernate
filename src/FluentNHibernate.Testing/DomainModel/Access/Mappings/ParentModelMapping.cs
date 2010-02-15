@@ -34,15 +34,15 @@ namespace FluentNHibernate.Testing.DomainModel.Access.Mappings
 
             DynamicComponent(x => x.Dynamic, x => { });
 
-            HasMany(x => x.MapOne).AsMap("type");
-            HasMany(x => x.SetOne).AsSet();
-            HasMany(x => x.ListOne).AsList();
-            HasMany(x => x.BagOne).AsBag();
+            //HasMany(x => x.MapOne).AsMap("type");
+            //HasMany(x => x.SetOne).AsSet();
+            //HasMany(x => x.ListOne).AsList();
+            //HasMany(x => x.BagOne);
 
-            HasManyToMany(x => x.MapMany).AsMap("type");
-            HasManyToMany(x => x.SetMany).AsSet();
-            HasManyToMany(x => x.ListMany).AsList();
-            HasManyToMany(x => x.BagMany).AsBag();
+            //HasManyToMany(x => x.MapMany).AsMap("type");
+            //HasManyToMany(x => x.SetMany).AsSet();
+            //HasManyToMany(x => x.ListMany).AsList();
+            //HasManyToMany(x => x.BagMany).AsBag();
         }
     }
 }

@@ -12,17 +12,17 @@ namespace FluentNHibernate.Mapping
     {
         private readonly Type entity;
         private readonly Member property;
-        private readonly AccessStrategyBuilder<OneToOnePart<TOther>> access;
-        private readonly FetchTypeExpression<OneToOnePart<TOther>> fetch;
-        private readonly CascadeExpression<OneToOnePart<TOther>> cascade;
+        private readonly AccessStrategyBuilder access;
+        private readonly FetchBuilder fetch;
+        private readonly CascadeBuilder cascade;
         private readonly AttributeStore<OneToOneMapping> attributes = new AttributeStore<OneToOneMapping>();
         private bool nextBool = true;
 
         public OneToOnePart(Type entity, Member property)
         {
-            access = new AccessStrategyBuilder<OneToOnePart<TOther>>(this, value => attributes.Set(x => x.Access, value));
-            fetch = new FetchTypeExpression<OneToOnePart<TOther>>(this, value => attributes.Set(x => x.Fetch, value));
-            cascade = new CascadeExpression<OneToOnePart<TOther>>(this, value => attributes.Set(x => x.Cascade, value));
+            access = new AccessStrategyBuilder(value => attributes.Set(x => x.Access, value));
+            fetch = new FetchBuilder(value => attributes.Set(x => x.Fetch, value));
+            cascade = new CascadeBuilder(value => attributes.Set(x => x.Cascade, value));
             this.entity = entity;
             this.property = property;
         }
@@ -53,9 +53,9 @@ namespace FluentNHibernate.Mapping
             return this;
         }
 
-        public FetchTypeExpression<OneToOnePart<TOther>> Fetch
+        public FetchBuilder<OneToOnePart<TOther>> Fetch
         {
-            get { return fetch; }
+            get { return new FetchBuilder<OneToOnePart<TOther>>(this, fetch); }
         }
 
         public OneToOnePart<TOther> ForeignKey()
@@ -91,14 +91,14 @@ namespace FluentNHibernate.Mapping
             return this;
         }
 
-        public CascadeExpression<OneToOnePart<TOther>> Cascade
+        public CascadeBuilder<OneToOnePart<TOther>> Cascade
         {
-            get { return cascade; }
+            get { return new CascadeBuilder<OneToOnePart<TOther>>(this, cascade); }
         }
 
         public AccessStrategyBuilder<OneToOnePart<TOther>> Access
         {
-            get { return access; }
+            get { return new AccessStrategyBuilder<OneToOnePart<TOther>>(this, access); }
         }
 
         public OneToOnePart<TOther> LazyLoad()

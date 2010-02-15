@@ -1,67 +1,337 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
+using System.Linq.Expressions;
 using FluentNHibernate.Mapping.Providers;
 using FluentNHibernate.MappingModel;
 using FluentNHibernate.MappingModel.Collections;
+using NHibernate.Persister.Entity;
 
 namespace FluentNHibernate.Mapping
 {
+    public interface HasManyArrayBuilder<TChild> : ICollectionMappingProvider
+    {
+        AccessStrategyBuilder<HasManyArrayBuilder<TChild>> Access { get; }
+    }
+
     public interface HasManyElementBagBuilder<TChild> : ICollectionMappingProvider
     {
         HasManyElementBagBuilder<TChild> ValueColumn(string valueColumn);
+        HasManyElementSetBuilder<TChild> AsSet();
+        HasManyElementListBuilder<TChild> AsList();
+        AccessStrategyBuilder<HasManyElementBagBuilder<TChild>> Access { get; }
+        CollectionCascadeBuilder<HasManyElementBagBuilder<TChild>> Cascade { get; }
+        FetchBuilder<HasManyElementBagBuilder<TChild>> Fetch { get; }
+        OptimisticLockBuilder<HasManyElementBagBuilder<TChild>> OptimisticLock { get; }
+        HasManyElementBagBuilder<TChild> BatchSize(int batchSize);
+        HasManyElementBagBuilder<TChild> Check(string constraint);
+        HasManyElementBagBuilder<TChild> CollectionType(string type);
+        HasManyElementBagBuilder<TChild> CollectionType(Type type);
+        HasManyElementBagBuilder<TChild> CollectionType<TCollection>();
+        HasManyElementBagBuilder<TChild> Inverse();
+        HasManyElementBagBuilder<TChild> LazyLoad();
+        HasManyElementBagBuilder<TChild> ReadOnly();
+        HasManyElementBagBuilder<TChild> OrderBy(string orderBy);
+        HasManyElementBagBuilder<TChild> Persister(string type);
+        HasManyElementBagBuilder<TChild> Persister(Type type);
+        HasManyElementBagBuilder<TChild> Persister<TPersister>() where TPersister : IEntityPersister;
+        HasManyElementBagBuilder<TChild> Schema(string schema);
+        HasManyElementBagBuilder<TChild> Not { get; }
+        HasManyElementBagBuilder<TChild> Subselect(string subselect);
+        HasManyElementBagBuilder<TChild> Table(string table);
+        HasManyElementBagBuilder<TChild> Where(string clause);
+        HasManyElementBagBuilder<TChild> Where(Expression<Predicate<TChild>> clause);
     }
 
-    public class HasManyElementBagBuilderImpl<TChild> : HasManyBagBuilder<TChild>,
-        HasManyElementBagBuilder<TChild>
+    public interface HasManyElementSetBuilder<TChild> : ICollectionMappingProvider
     {
-        public HasManyElementBagBuilderImpl(Type entity, Member property)
+        HasManyElementSetBuilder<TChild> ValueColumn(string valueColumn);
+        HasManyElementBagBuilder<TChild> AsBag();
+        HasManyElementListBuilder<TChild> AsList();
+    }
+
+    public interface HasManyElementListBuilder<TChild> : ICollectionMappingProvider
+    {
+        HasManyElementListBuilder<TChild> ValueColumn(string valueColumn);
+        HasManyElementBagBuilder<TChild> AsBag();
+        HasManyElementSetBuilder<TChild> AsSet();
+    }
+
+    public class HasManyElementBuilderImpl<TChild> : OneToManyPart<TChild>,
+        HasManyElementBagBuilder<TChild>,
+        HasManyElementListBuilder<TChild>,
+        HasManyElementSetBuilder<TChild>
+    {
+        public HasManyElementBuilderImpl(Type entity, Member property)
             : base(entity, property)
         {
             Element();
         }
 
-        public HasManyElementBagBuilder<TChild> ValueColumn(string valueColumn)
+        public void ValueColumn(string valueColumn)
         {
             Element(valueColumn);
+        }
+
+        #region set
+
+        HasManyElementBagBuilder<TChild> HasManyElementSetBuilder<TChild>.AsBag()
+        {
+            AsBag();
             return this;
+        }
+
+        HasManyElementListBuilder<TChild> HasManyElementSetBuilder<TChild>.AsList()
+        {
+            AsList();
+            return this;
+        }
+
+        HasManyElementSetBuilder<TChild> HasManyElementSetBuilder<TChild>.ValueColumn(string valueColumn)
+        {
+            ValueColumn(valueColumn);
+            return this;
+        }
+
+        #endregion
+
+        #region bag
+
+        HasManyElementBagBuilder<TChild> HasManyElementBagBuilder<TChild>.ValueColumn(string valueColumn)
+        {
+            ValueColumn(valueColumn);
+            return this;
+        }
+
+        AccessStrategyBuilder<HasManyElementBagBuilder<TChild>> HasManyElementBagBuilder<TChild>.Access
+        {
+            get { return new AccessStrategyBuilder<HasManyElementBagBuilder<TChild>>(this, access); }
+        }
+
+        CollectionCascadeBuilder<HasManyElementBagBuilder<TChild>> HasManyElementBagBuilder<TChild>.Cascade
+        {
+            get { return new CollectionCascadeBuilder<HasManyElementBagBuilder<TChild>>(this, cascade); }
+        }
+
+        FetchBuilder<HasManyElementBagBuilder<TChild>> HasManyElementBagBuilder<TChild>.Fetch
+        {
+            get { return new FetchBuilder<HasManyElementBagBuilder<TChild>>(this, fetch); }
+        }
+
+        OptimisticLockBuilder<HasManyElementBagBuilder<TChild>> HasManyElementBagBuilder<TChild>.OptimisticLock
+        {
+            get { return new OptimisticLockBuilder<HasManyElementBagBuilder<TChild>>(this, optimisticLock); }
+        }
+
+        HasManyElementBagBuilder<TChild> HasManyElementBagBuilder<TChild>.BatchSize(int batchSize)
+        {
+            BatchSize(batchSize);
+            return this;
+        }
+
+        HasManyElementBagBuilder<TChild> HasManyElementBagBuilder<TChild>.Check(string constraint)
+        {
+            Check(constraint);
+            return this;
+        }
+
+        HasManyElementBagBuilder<TChild> HasManyElementBagBuilder<TChild>.CollectionType(string type)
+        {
+            CollectionType(type);
+            return this;
+        }
+
+        HasManyElementBagBuilder<TChild> HasManyElementBagBuilder<TChild>.CollectionType(Type type)
+        {
+            CollectionType(type);
+            return this;
+        }
+
+        HasManyElementBagBuilder<TChild> HasManyElementBagBuilder<TChild>.CollectionType<TCollection>()
+        {
+            CollectionType<TCollection>();
+            return this;
+        }
+
+        HasManyElementBagBuilder<TChild> HasManyElementBagBuilder<TChild>.Inverse()
+        {
+            Inverse();
+            return this;
+        }
+
+        HasManyElementBagBuilder<TChild> HasManyElementBagBuilder<TChild>.LazyLoad()
+        {
+            LazyLoad();
+            return this;
+        }
+
+        HasManyElementBagBuilder<TChild> HasManyElementBagBuilder<TChild>.ReadOnly()
+        {
+            ReadOnly();
+            return this;
+        }
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        HasManyElementBagBuilder<TChild> HasManyElementBagBuilder<TChild>.Not
+        {
+            get
+            {
+                var tmp = Not;
+                return this;
+            }
+        }
+
+        HasManyElementBagBuilder<TChild> HasManyElementBagBuilder<TChild>.OrderBy(string orderBy)
+        {
+            OrderBy(orderBy);
+            return this;
+        }
+
+        HasManyElementBagBuilder<TChild> HasManyElementBagBuilder<TChild>.Persister(string type)
+        {
+            Persister(type);
+            return this;
+        }
+
+        HasManyElementBagBuilder<TChild> HasManyElementBagBuilder<TChild>.Persister(Type type)
+        {
+            Persister(type);
+            return this;
+        }
+
+        HasManyElementBagBuilder<TChild> HasManyElementBagBuilder<TChild>.Persister<TPersister>()
+        {
+            Persister<TPersister>();
+            return this;
+        }
+
+        HasManyElementBagBuilder<TChild> HasManyElementBagBuilder<TChild>.Schema(string schema)
+        {
+            Schema(schema);
+            return this;
+        }
+
+        HasManyElementBagBuilder<TChild> HasManyElementBagBuilder<TChild>.Subselect(string subselect)
+        {
+            Subselect(subselect);
+            return this;
+        }
+
+        HasManyElementBagBuilder<TChild> HasManyElementBagBuilder<TChild>.Table(string table)
+        {
+            Table(table);
+            return this;
+        }
+
+        HasManyElementBagBuilder<TChild> HasManyElementBagBuilder<TChild>.Where(string clause)
+        {
+            Where(clause);
+            return this;
+        }
+
+        HasManyElementBagBuilder<TChild> HasManyElementBagBuilder<TChild>.Where(Expression<Predicate<TChild>> clause)
+        {
+            Where(clause);
+            return this;
+        }
+
+        HasManyElementBagBuilder<TChild> HasManyElementListBuilder<TChild>.AsBag()
+        {
+            AsBag();
+            return this;
+        }
+
+        HasManyElementSetBuilder<TChild> HasManyElementListBuilder<TChild>.AsSet()
+        {
+            AsSet();
+            return this;
+        }
+
+        HasManyElementListBuilder<TChild> HasManyElementListBuilder<TChild>.ValueColumn(string valueColumn)
+        {
+            ValueColumn(valueColumn);
+            return this;
+        }
+
+        HasManyElementSetBuilder<TChild> HasManyElementBagBuilder<TChild>.AsSet()
+        {
+            AsSet();
+            return this;
+        }
+
+        HasManyElementListBuilder<TChild> HasManyElementBagBuilder<TChild>.AsList()
+        {
+            AsList();
+            return this;
+        }
+
+        #endregion
+    }
+
+    public abstract class HasManySetBuilderImpl<TChild> : OneToManyPart<TChild>
+    {
+        protected HasManySetBuilderImpl(Type entity, Member property)
+            : base(entity, property)
+        {
+            AsSet();
         }
     }
 
-    public abstract class HasManyBagBuilder<TChild> : OneToManyPart<TChild>
+    public abstract class HasManyListBuilderImpl<TChild> : OneToManyPart<TChild>
     {
-        protected HasManyBagBuilder(Type entity, Member property)
+        protected HasManyListBuilderImpl(Type entity, Member property)
             : base(entity, property)
         {
-            AsBag();
+            AsList();
         }
+    }
+
+    public interface HasManyBagBuilder<TChild>
+    {
+        HasManySetBuilder<TChild> AsSet();
+        HasManySetBuilder<TChild> AsSet<TComparer>() where TComparer : IComparer<TChild>;
+        HasManySetBuilder<TChild> AsSet(SortType natural);
+        HasManyListBuilder<TChild> AsList();
+        HasManyListBuilder<TChild> AsList(Action<IndexBuilder> index);
+    }
+
+    public interface HasManyListBuilder<TChild>
+    {}
+
+    public interface HasManySetBuilder<TChild>
+    { }
+
+    public interface IndexBuilder
+    {
+        void Column(string indexColumnName);
+        void Type<T>();
+        void Type(Type type);
     }
 
     public class OneToManyPart<TChild> : ToManyBase<OneToManyPart<TChild>, TChild, OneToManyMapping>
     {
         private readonly Type entity;
         private readonly ColumnMappingCollection<OneToManyPart<TChild>> keyColumns;
-        private readonly CollectionCascadeExpression<OneToManyPart<TChild>> cascade;
+        protected readonly CascadeBuilder cascade;
         private readonly NotFoundExpression<OneToManyPart<TChild>> notFound;
         private IndexManyToManyPart manyToManyIndex;
         private readonly Type childType;
         private Type valueType;
         private bool isTernary;
 
-        public OneToManyPart(Type entity, Member property)
-            : this(entity, property, property.PropertyType)
-        {
-        }
+        public OneToManyPart(Type entity, Member member)
+            : this(entity, member, member.PropertyType, new AttributeStore(), new AttributeStore())
+        {}
 
-        protected OneToManyPart(Type entity, Member member, Type collectionType)
+        protected OneToManyPart(Type entity, Member member, Type collectionType, AttributeStore underlyingCollectionAttributes, AttributeStore underlyingRelationshipAttributes)
             : base(entity, member, collectionType)
         {
             this.entity = entity;
             childType = collectionType;
 
             keyColumns = new ColumnMappingCollection<OneToManyPart<TChild>>(this);
-            cascade = new CollectionCascadeExpression<OneToManyPart<TChild>>(this, value => collectionAttributes.Set(x => x.Cascade, value));
+            cascade = new CascadeBuilder(value => collectionAttributes.Set(x => x.Cascade, value));
             notFound = new NotFoundExpression<OneToManyPart<TChild>>(this, value => relationshipAttributes.Set(x => x.NotFound, value));
 
             collectionAttributes.SetDefault(x => x.Name, member.Name);
@@ -72,9 +342,9 @@ namespace FluentNHibernate.Mapping
             get { return notFound; }
         }
 
-        public new CollectionCascadeExpression<OneToManyPart<TChild>> Cascade
+        public new CollectionCascadeBuilder<OneToManyPart<TChild>> Cascade
         {
-            get { return cascade; }
+            get { return new CollectionCascadeBuilder<OneToManyPart<TChild>>(this, cascade); }
         }
 
         public override ICollectionMapping GetCollectionMapping()
@@ -129,12 +399,14 @@ namespace FluentNHibernate.Mapping
         {
             // The argument to AsMap will be ignored as the ternary association will overwrite the index mapping for the map.
             // Therefore just pass null.
-            return AsMap(null).AsTernaryAssociation();
+            //return AsMap(null).AsTernaryAssociation();
+            throw new NotImplementedException();
         }
 
         public OneToManyPart<TChild> AsEntityMap(string indexColumnName)
         {
-            return AsMap(null).AsTernaryAssociation(indexColumnName);
+            throw new NotImplementedException();
+            //return AsMap(null).AsTernaryAssociation(indexColumnName);
         }
 
         protected override ICollectionRelationshipMapping GetRelationship()

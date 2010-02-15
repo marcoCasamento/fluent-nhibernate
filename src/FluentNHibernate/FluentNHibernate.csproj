@@ -630,11 +630,11 @@
     <Compile Include="Conventions\IPropertyConvention.cs" />
     <Compile Include="Conventions\IReferenceConvention.cs" />
     <Compile Include="Conventions\IVersionConvention.cs" />
-    <Compile Include="Mapping\CascadeExpression.cs" />
-    <Compile Include="Mapping\CollectionCascadeExpression.cs" />
+    <Compile Include="Mapping\CascadeBuilder.cs" />
+    <Compile Include="Mapping\CollectionCascadeBuilder.cs" />
     <Compile Include="Mapping\ColumnMappingCollection.cs" />
     <Compile Include="Mapping\DynamicComponentPart.cs" />
-    <Compile Include="Mapping\FetchTypeExpression.cs" />
+    <Compile Include="Mapping\FetchBuilder.cs" />
     <Compile Include="Mapping\GenericEnumMapper.cs" />
     <Compile Include="Mapping\Providers\ICollectionMappingProvider.cs" />
     <Compile Include="Mapping\Providers\ICompositeElementMappingProvider.cs" />

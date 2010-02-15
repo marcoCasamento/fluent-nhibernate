@@ -11,10 +11,10 @@ namespace FluentNHibernate.Mapping
 {
     public class ManyToOnePart<TOther> : IManyToOneMappingProvider
     {
-        private readonly AccessStrategyBuilder<ManyToOnePart<TOther>> access;
-        private readonly FetchTypeExpression<ManyToOnePart<TOther>> fetch;
+        private readonly AccessStrategyBuilder access;
+        private readonly FetchBuilder fetch;
         private readonly NotFoundExpression<ManyToOnePart<TOther>> notFound;
-        private readonly CascadeExpression<ManyToOnePart<TOther>> cascade;
+        private readonly CascadeBuilder cascade;
         private readonly IList<string> columns = new List<string>();
         private bool nextBool = true;
         private readonly AttributeStore<ManyToOneMapping> attributes = new AttributeStore<ManyToOneMapping>();
@@ -26,9 +26,9 @@ namespace FluentNHibernate.Mapping
         {
             this.entity = entity;
             this.property = property;
-            access = new AccessStrategyBuilder<ManyToOnePart<TOther>>(this, value => attributes.Set(x => x.Access, value));
-            fetch = new FetchTypeExpression<ManyToOnePart<TOther>>(this, value => attributes.Set(x => x.Fetch, value));
-            cascade = new CascadeExpression<ManyToOnePart<TOther>>(this, value => attributes.Set(x => x.Cascade, value));
+            access = new AccessStrategyBuilder(value => attributes.Set(x => x.Access, value));
+            fetch = new FetchBuilder(value => attributes.Set(x => x.Fetch, value));
+            cascade = new CascadeBuilder(value => attributes.Set(x => x.Cascade, value));
             notFound = new NotFoundExpression<ManyToOnePart<TOther>>(this, value => attributes.Set(x => x.NotFound, value));
         }
 
@@ -63,9 +63,9 @@ namespace FluentNHibernate.Mapping
             return new ColumnMapping(columnAttributes.CloneInner()) { Name = column };
         }
 
-        public FetchTypeExpression<ManyToOnePart<TOther>> Fetch
+        public FetchBuilder<ManyToOnePart<TOther>> Fetch
 		{
-			get { return fetch; }
+			get { return new FetchBuilder<ManyToOnePart<TOther>>(this, fetch); }
 		}
 
         public NotFoundExpression<ManyToOnePart<TOther>> NotFound
@@ -169,9 +169,9 @@ namespace FluentNHibernate.Mapping
             return this;
         }
 
-        public CascadeExpression<ManyToOnePart<TOther>> Cascade
+        public CascadeBuilder<ManyToOnePart<TOther>> Cascade
 		{
-			get { return cascade; }
+			get { return new CascadeBuilder<ManyToOnePart<TOther>>(this, cascade); }
 		}
 
         public ManyToOnePart<TOther> Column(string name)
@@ -204,7 +204,7 @@ namespace FluentNHibernate.Mapping
 
         public AccessStrategyBuilder<ManyToOnePart<TOther>> Access
         {
-            get { return access; }
+            get { return new AccessStrategyBuilder<ManyToOnePart<TOther>>(this, access); }
         }
 
         /// <summary>

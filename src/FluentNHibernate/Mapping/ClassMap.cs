@@ -15,7 +15,7 @@ namespace FluentNHibernate.Mapping
     {
         protected readonly AttributeStore<ClassMapping> attributes = new AttributeStore<ClassMapping>();
         private readonly IList<JoinMapping> joins = new List<JoinMapping>();
-        private readonly OptimisticLockBuilder<ClassMap<T>> optimisticLock;
+        private readonly OptimisticLockBuilder optimisticLock;
 
         /// <summary>
         /// Specify caching for this entity.
@@ -36,7 +36,7 @@ namespace FluentNHibernate.Mapping
 
         public ClassMap()
         {
-            optimisticLock = new OptimisticLockBuilder<ClassMap<T>>(this, value => attributes.Set(x => x.OptimisticLock, value));
+            optimisticLock = new OptimisticLockBuilder(value => attributes.Set(x => x.OptimisticLock, value));
             polymorphism = new PolymorphismBuilder<ClassMap<T>>(this, value => attributes.Set(x => x.Polymorphism, value));
             schemaAction = new SchemaActionBuilder<ClassMap<T>>(this, value => attributes.Set(x => x.SchemaAction, value));
             Cache = new CachePart(typeof(T));
@@ -343,7 +343,7 @@ namespace FluentNHibernate.Mapping
         /// </summary>
         public OptimisticLockBuilder<ClassMap<T>> OptimisticLock
         {
-            get { return optimisticLock; }
+            get { return new OptimisticLockBuilder<ClassMap<T>>(this, optimisticLock); }
         }
 
         public PolymorphismBuilder<ClassMap<T>> Polymorphism
@@ -354,12 +354,6 @@ namespace FluentNHibernate.Mapping
         public SchemaActionBuilder<ClassMap<T>> SchemaAction
         {
             get { return schemaAction; }
-        }
-
-        internal object Something
-        {
-            get { throw new NotImplementedException(); }
-            set { throw new NotImplementedException(); }
         }
 
         public void CheckConstraint(string constraint)

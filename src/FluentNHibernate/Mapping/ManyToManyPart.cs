@@ -1,20 +1,15 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Reflection;
-using System.Xml;
+using System.Threading;
 using FluentNHibernate.MappingModel;
 using FluentNHibernate.MappingModel.Collections;
-using FluentNHibernate.Utils;
-using NHibernate.Persister.Entity;
 
 namespace FluentNHibernate.Mapping
 {
     public class ManyToManyPart<TChild> : ToManyBase<ManyToManyPart<TChild>, TChild, ManyToManyMapping>
     {
         private readonly Type entity;
-        private readonly FetchTypeExpression<ManyToManyPart<TChild>> fetch;
         private readonly NotFoundExpression<ManyToManyPart<TChild>> notFound;
         private IndexManyToManyPart manyToManyIndex;
         private IndexPart index;
@@ -36,7 +31,6 @@ namespace FluentNHibernate.Mapping
             this.entity = entity;
             childType = collectionType;
 
-            fetch = new FetchTypeExpression<ManyToManyPart<TChild>>(this, value => collectionAttributes.Set(x => x.Fetch, value));
             notFound = new NotFoundExpression<ManyToManyPart<TChild>>(this, value => relationshipAttributes.Set(x => x.NotFound, value));
         }
 
@@ -88,11 +82,6 @@ namespace FluentNHibernate.Mapping
             keyMapping.ForeignKey = parentForeignKeyName;
             relationshipAttributes.Set(x => x.ForeignKey, childForeignKeyName);
             return this;
-        }
-
-        public FetchTypeExpression<ManyToManyPart<TChild>> FetchType
-        {
-            get { return fetch; }
         }
 
         private void EnsureDictionary()
@@ -190,12 +179,14 @@ namespace FluentNHibernate.Mapping
         {
             // The argument to AsMap will be ignored as the ternary association will overwrite the index mapping for the map.
             // Therefore just pass null.
-            return AsMap(null).AsTernaryAssociation();
+            //return AsMap(null).AsTernaryAssociation();
+            throw new AbandonedMutexException();
         }
 
         public ManyToManyPart<TChild> AsEntityMap(string indexColumn, string valueColumn)
         {
-            return AsMap(null).AsTernaryAssociation(indexColumn, valueColumn);
+            //return AsMap(null).AsTernaryAssociation(indexColumn, valueColumn);
+            throw new NotImplementedException();
         }
 
         public Type ChildType

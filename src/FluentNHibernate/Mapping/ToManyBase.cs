@@ -17,10 +17,10 @@ namespace FluentNHibernate.Mapping
         where T : ToManyBase<T, TChild, TRelationshipAttributes>, ICollectionMappingProvider
         where TRelationshipAttributes : ICollectionRelationshipMapping
     {
-        private readonly AccessStrategyBuilder<T> access;
-        private readonly FetchTypeExpression<T> fetch;
-        private readonly OptimisticLockBuilder<T> optimisticLock;
-        private readonly CollectionCascadeExpression<T> cascade;
+        protected readonly AccessStrategyBuilder access;
+        protected readonly FetchBuilder fetch;
+        protected readonly OptimisticLockBuilder optimisticLock;
+        private readonly CascadeBuilder cascade;
         protected ElementPart elementPart;
         protected ICompositeElementMappingProvider componentMapping;
         protected bool nextBool = true;
@@ -39,10 +39,10 @@ namespace FluentNHibernate.Mapping
             this.entity = entity;
             this.member = member;
             AsBag();
-            access = new AccessStrategyBuilder<T>((T)this, value => collectionAttributes.Set(x => x.Access, value));
-            fetch = new FetchTypeExpression<T>((T)this, value => collectionAttributes.Set(x => x.Fetch, value));
-            optimisticLock = new OptimisticLockBuilder<T>((T)this, value => collectionAttributes.Set(x => x.OptimisticLock, value));
-            cascade = new CollectionCascadeExpression<T>((T)this, value => collectionAttributes.Set(x => x.Cascade, value));
+            access = new AccessStrategyBuilder(value => collectionAttributes.Set(x => x.Access, value));
+            fetch = new FetchBuilder(value => collectionAttributes.Set(x => x.Fetch, value));
+            optimisticLock = new OptimisticLockBuilder(value => collectionAttributes.Set(x => x.OptimisticLock, value));
+            cascade = new CascadeBuilder(value => collectionAttributes.Set(x => x.Cascade, value));
 
             SetDefaultCollectionType(type);
             SetCustomCollectionType(type);
@@ -145,9 +145,9 @@ namespace FluentNHibernate.Mapping
             return (T)this;
         }
 
-        public CollectionCascadeExpression<T> Cascade
+        public CollectionCascadeBuilder<T> Cascade
         {
-            get { return cascade; }
+            get { return new CollectionCascadeBuilder<T>((T)this, cascade); }
         }
 
         public T AsSet()
@@ -357,9 +357,9 @@ namespace FluentNHibernate.Mapping
             return (T)this;
         }
 
-        public FetchTypeExpression<T> Fetch
+        public FetchBuilder<T> Fetch
         {
-            get { return fetch; }
+            get { return new FetchBuilder<T>((T)this, fetch); }
         }
 
         /// <summary>
@@ -367,17 +367,29 @@ namespace FluentNHibernate.Mapping
         /// </summary>
         public AccessStrategyBuilder<T> Access
         {
-            get { return access; }
+            get { return new AccessStrategyBuilder<T>((T)this, access); }
         }
 
         public OptimisticLockBuilder<T> OptimisticLock
         {
-            get { return optimisticLock; }
+            get { return new OptimisticLockBuilder<T>((T)this, optimisticLock); }
         }
 
         public T Persister<TPersister>() where TPersister : IEntityPersister
         {
-            collectionAttributes.Set(x => x.Persister, new TypeReference(typeof(TPersister)));
+            Persister(typeof(TPersister));
+            return (T)this;
+        }
+
+        public T Persister(Type type)
+        {
+            collectionAttributes.Set(x => x.Persister, new TypeReference(type));
+            return (T)this;
+        }
+
+        public T Persister(string type)
+        {
+            collectionAttributes.Set(x => x.Persister, new TypeReference(type));
             return (T)this;
         }
 
@@ -398,7 +410,7 @@ namespace FluentNHibernate.Mapping
         /// Sets the where clause for this one-to-many relationship.
         /// Note: This only supports simple cases, use the string overload for more complex clauses.
         /// </summary>
-        public T Where(Expression<Func<TChild, bool>> where)
+        public T Where(Expression<Predicate<TChild>> where)
         {
             var sql = ExpressionToSql.Convert(where);
 

@@ -6,11 +6,12 @@ namespace FluentNHibernate.Mapping
     public class KeyPropertyPart
     {
         private readonly KeyPropertyMapping mapping;
+        private readonly AccessStrategyBuilder access;
 
         public KeyPropertyPart(KeyPropertyMapping mapping)
         {
             this.mapping = mapping;
-            Access = new AccessStrategyBuilder<KeyPropertyPart>(this, value => mapping.Access = value);
+            access = new AccessStrategyBuilder(value => mapping.Access = value);
         }
 
         public KeyPropertyPart ColumnName(string columnName)
@@ -25,6 +26,9 @@ namespace FluentNHibernate.Mapping
             return this;
         }
 
-        public AccessStrategyBuilder<KeyPropertyPart> Access { get; private set; }
+        public AccessStrategyBuilder<KeyPropertyPart> Access
+        {
+            get { return new AccessStrategyBuilder<KeyPropertyPart>(this, access); }
+        }
     }
 }

@@ -5,16 +5,16 @@ using NUnit.Framework;
 namespace FluentNHibernate.Testing.DomainModel.Mapping
 {
 	[TestFixture]
-	public class CollectionCascadeExpressionTester : CascadeExpressionTester
+	public class CollectionCascadeBuilderTester : CascadeBuilderTester
 	{
-		private CollectionCascadeExpression<object> _collectionCascade;
+		private CollectionCascadeBuilder<object> _collectionCascade;
 
 		[SetUp]
 		public override void SetUp()
 		{
 			base.SetUp();
 
-			_cascade = _collectionCascade = new CollectionCascadeExpression<object>(null, value => cascadeValue = value);
+			_cascade = _collectionCascade = new CollectionCascadeBuilder<object>(null, new CascadeBuilder(value => cascadeValue = value));
 		}
 	
 		[Test]

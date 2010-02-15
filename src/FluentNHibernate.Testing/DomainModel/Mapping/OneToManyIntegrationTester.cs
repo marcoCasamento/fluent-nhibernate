@@ -31,10 +31,10 @@ namespace FluentNHibernate.Testing.DomainModel.Mapping
                 {
                     Id(x => x.Id);
                     HasMany(x => x.ListOfChildren).AsList();
-                    HasMany(x => x.BagOfChildren).AsBag();
-                    HasMany(x => x.SetOfChildren).AsSet();
-                    HasMany(x => x.MapOfChildren).AsMap( x => x.Name);
-                    HasMany(x => x.ArrayOfChildren).AsArray(x => x.Position);
+                    HasMany(x => x.BagOfChildren);
+                    HasMany(x => x.SetOfChildren);
+                    //HasMany(x => x.MapOfChildren).AsMap( x => x.Name);
+                    HasMany(x => x.ArrayOfChildren, "Position");
                 }
             }
         }

@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using FluentNHibernate.MappingModel;
 using FluentNHibernate.MappingModel.ClassBased;
@@ -191,8 +192,35 @@ namespace FluentNHibernate.Specs.FluentInterface
         It should_not_create_a_component = () =>
             collection.CompositeElement.ShouldBeNull();
 
-        It should_use_the_default_column_name_for_the_element = () =>
-            collection.Element.Columns.Single().Name.ShouldEqual("value");
+        It should_create_the_element_mapping_with_the_correct_type = () =>
+            collection.Element.Type.GetUnderlyingSystemType().ShouldEqual(collection.Member.PropertyType.GetGenericArguments()[0]);
+
+        protected static ICollectionMapping collection;
+    }
+
+    [Behaviors]
+    public class HasManyBagBehaviour
+    {
+        It should_create_the_collection_as_a_bag = () =>
+            collection.ShouldBeOfType<BagMapping>();
+
+        protected static ICollectionMapping collection;
+    }
+
+    [Behaviors]
+    public class HasManySetBehaviour
+    {
+        It should_create_the_collection_as_a_set = () =>
+            collection.ShouldBeOfType<SetMapping>();
+
+        protected static ICollectionMapping collection;
+    }
+
+    [Behaviors]
+    public class HasManyListBehaviour
+    {
+        It should_create_the_collection_as_a_list = () =>
+            collection.ShouldBeOfType<ListMapping>();
 
         protected static ICollectionMapping collection;
     }

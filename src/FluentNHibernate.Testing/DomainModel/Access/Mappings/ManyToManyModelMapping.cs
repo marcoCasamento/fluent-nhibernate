@@ -11,7 +11,7 @@ namespace FluentNHibernate.Testing.DomainModel.Access.Mappings
         public ManyToManyModelMapping()
         {
             Id(x => x.Id);
-            HasManyToMany(x => x.Bag).AsBag();
+            HasManyToMany(x => x.Bag);
         }
     }
 }

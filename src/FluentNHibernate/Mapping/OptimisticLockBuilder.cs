@@ -6,7 +6,7 @@ namespace FluentNHibernate.Mapping
     {
         private readonly Action<string> setter;
 
-        protected OptimisticLockBuilder(Action<string> setter)
+        public OptimisticLockBuilder(Action<string> setter)
         {
             this.setter = setter;
         }
@@ -32,49 +32,50 @@ namespace FluentNHibernate.Mapping
         }
     }
 
-    public class OptimisticLockBuilder<TParent> : OptimisticLockBuilder
+    public class OptimisticLockBuilder<TParent>
     {
         private readonly TParent parent;
+        readonly OptimisticLockBuilder innerBuilder;
 
-        public OptimisticLockBuilder(TParent parent, Action<string> setter)
-            : base(setter)
+        public OptimisticLockBuilder(TParent parent, OptimisticLockBuilder innerBuilder)
         {
             this.parent = parent;
+            this.innerBuilder = innerBuilder;
         }
 
         /// <summary>
         /// Use no locking strategy
         /// </summary>
-        public new TParent None()
+        public TParent None()
         {
-            base.None();
+            innerBuilder.None();
             return parent;
         }
 
         /// <summary>
         /// Use version locking
         /// </summary>
-        public new TParent Version()
+        public TParent Version()
         {
-            base.Version();
+            innerBuilder.Version();
             return parent;
         }
 
         /// <summary>
         /// Use dirty locking
         /// </summary>
-        public new TParent Dirty()
+        public TParent Dirty()
         {
-            base.Dirty();
+            innerBuilder.Dirty();
             return parent;
         }
 
         /// <summary>
         /// Use all locking
         /// </summary>
-        public new TParent All()
+        public TParent All()
         {
-            base.All();
+            innerBuilder.All();
             return parent;
         }
     }

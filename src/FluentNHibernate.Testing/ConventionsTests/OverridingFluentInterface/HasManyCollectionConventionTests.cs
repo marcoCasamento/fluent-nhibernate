@@ -29,171 +29,188 @@ namespace FluentNHibernate.Testing.ConventionsTests.OverridingFluentInterface
         [Test]
         public void AccessShouldntBeOverwritten()
         {
-            Mapping(x => x.Children, x => x.Access.Field());
+            //Mapping(x => x.Children, x => x.Access.Field());
 
-            Convention(x => x.Access.Property());
+            //Convention(x => x.Access.Property());
 
-            VerifyModel(x => x.Access.ShouldEqual("field"));
+            //VerifyModel(x => x.Access.ShouldEqual("field"));
+            Assert.Fail();
         }
 
         [Test]
         public void BatchSizeShouldntBeOverwritten()
         {
-            Mapping(x => x.Children, x => x.BatchSize(10));
+            //Mapping(x => x.Children, x => x.BatchSize(10));
 
-            Convention(x => x.BatchSize(100));
+            //Convention(x => x.BatchSize(100));
 
-            VerifyModel(x => x.BatchSize.ShouldEqual(10));
+            //VerifyModel(x => x.BatchSize.ShouldEqual(10));
+            Assert.Fail();
         }
 
         [Test]
         public void CacheShouldntBeOverwritten()
         {
-            Mapping(x => x.Children, x => x.Cache.ReadOnly());
+            //Mapping(x => x.Children, x => x.Cache.ReadOnly());
 
-            Convention(x => x.Cache.ReadWrite());
+            //Convention(x => x.Cache.ReadWrite());
 
-            VerifyModel(x => x.Cache.Usage.ShouldEqual("read-only"));
+            //VerifyModel(x => x.Cache.Usage.ShouldEqual("read-only"));
+            Assert.Fail();
         }
 
         [Test]
         public void CascadeShouldntBeOverwritten()
         {
-            Mapping(x => x.Children, x => x.Cascade.All());
+            //Mapping(x => x.Children, x => x.Cascade.All());
 
-            Convention(x => x.Cascade.None());
+            //Convention(x => x.Cascade.None());
 
-            VerifyModel(x => x.Cascade.ShouldEqual("all"));
+            //VerifyModel(x => x.Cascade.ShouldEqual("all"));
+            Assert.Fail();
         }
 
         [Test]
         public void CheckConstraintShouldntBeOverwritten()
         {
-            Mapping(x => x.Children, x => x.Check("constraint = 1"));
+            //Mapping(x => x.Children, x => x.Check("constraint = 1"));
 
-            Convention(x => x.Check("constraint = 0"));
+            //Convention(x => x.Check("constraint = 0"));
 
-            VerifyModel(x => x.Check.ShouldEqual("constraint = 1"));
+            //VerifyModel(x => x.Check.ShouldEqual("constraint = 1"));
+            Assert.Fail();
         }
 
         [Test]
         public void CollectionTypeShouldntBeOverwritten()
         {
-            Mapping(x => x.Children, x => x.CollectionType<int>());
+            //Mapping(x => x.Children, x => x.CollectionType<int>());
 
-            Convention(x => x.CollectionType<string>());
+            //Convention(x => x.CollectionType<string>());
 
-            VerifyModel(x => x.CollectionType.GetUnderlyingSystemType().ShouldEqual(typeof(int)));
+            //VerifyModel(x => x.CollectionType.GetUnderlyingSystemType().ShouldEqual(typeof(int)));
+            Assert.Fail();
         }
 
         [Test]
         public void FetchShouldntBeOverwritten()
         {
-            Mapping(x => x.Children, x => x.Fetch.Join());
+            //Mapping(x => x.Children, x => x.Fetch.Join());
 
-            Convention(x => x.Fetch.Select());
+            //Convention(x => x.Fetch.Select());
 
-            VerifyModel(x => x.Fetch.ShouldEqual("join"));
+            //VerifyModel(x => x.Fetch.ShouldEqual("join"));
+            Assert.Fail();
         }
 
         [Test]
         public void GenericShouldntBeOverwritten()
         {
-            Mapping(x => x.Children, x => x.Generic());
+            //Mapping(x => x.Children, x => x.Generic());
 
-            Convention(x => x.Not.Generic());
+            //Convention(x => x.Not.Generic());
 
-            VerifyModel(x => x.Generic.ShouldBeTrue());
+            //VerifyModel(x => x.Generic.ShouldBeTrue());
+            Assert.Fail();
         }
 
         [Test]
         public void InverseShouldntBeOverwritten()
         {
-            Mapping(x => x.Children, x => x.Inverse());
+            //Mapping(x => x.Children, x => x.Inverse());
 
-            Convention(x => x.Not.Inverse());
+            //Convention(x => x.Not.Inverse());
 
-            VerifyModel(x => x.Inverse.ShouldBeTrue());
+            //VerifyModel(x => x.Inverse.ShouldBeTrue());
+            Assert.Fail();
         }
 
         [Test]
         public void KeyColumnNameShouldntBeOverwritten()
         {
-            Mapping(x => x.Children, x => x.KeyColumn("name"));
+            //Mapping(x => x.Children, x => x.KeyColumn("name"));
 
-            Convention(x => x.Key.Column("xxx"));
+            //Convention(x => x.Key.Column("xxx"));
 
-            VerifyModel(x => x.Key.Columns.First().Name.ShouldEqual("name"));
+            //VerifyModel(x => x.Key.Columns.First().Name.ShouldEqual("name"));
+            Assert.Fail();
         }
 
         [Test]
         public void LazyShouldntBeOverwritten()
         {
-            Mapping(x => x.Children, x => x.LazyLoad());
+            //Mapping(x => x.Children, x => x.LazyLoad());
 
-            Convention(x => x.Not.LazyLoad());
+            //Convention(x => x.Not.LazyLoad());
 
-            VerifyModel(x => x.Lazy.ShouldEqual(true));
+            //VerifyModel(x => x.Lazy.ShouldEqual(true));
+            Assert.Fail();
         }
 
         [Test]
         public void OptimisticLockShouldntBeOverwritten()
         {
-            Mapping(x => x.Children, x => x.OptimisticLock.All());
+            //Mapping(x => x.Children, x => x.OptimisticLock.All());
 
-            Convention(x => x.OptimisticLock.Dirty());
+            //Convention(x => x.OptimisticLock.Dirty());
 
-            VerifyModel(x => x.OptimisticLock.ShouldEqual("all"));
+            //VerifyModel(x => x.OptimisticLock.ShouldEqual("all"));
+            Assert.Fail();
         }
 
         [Test]
         public void PersisterShouldntBeOverwritten()
         {
-            Mapping(x => x.Children, x => x.Persister<CustomPersister>());
+            //Mapping(x => x.Children, x => x.Persister<CustomPersister>());
 
-            Convention(x => x.Persister<SecondCustomPersister>());
+            //Convention(x => x.Persister<SecondCustomPersister>());
 
-            VerifyModel(x => x.Persister.GetUnderlyingSystemType().ShouldEqual(typeof(CustomPersister)));
+            //VerifyModel(x => x.Persister.GetUnderlyingSystemType().ShouldEqual(typeof(CustomPersister)));
+            Assert.Fail();
         }
 
         [Test]
         public void SchemaShouldntBeOverwritten()
         {
-            Mapping(x => x.Children, x => x.Schema("dbo"));
+            //Mapping(x => x.Children, x => x.Schema("dbo"));
 
-            Convention(x => x.Schema("test"));
+            //Convention(x => x.Schema("test"));
 
-            VerifyModel(x => x.Schema.ShouldEqual("dbo"));
+            //VerifyModel(x => x.Schema.ShouldEqual("dbo"));
+            Assert.Fail();
         }
 
         [Test]
         public void WhereShouldntBeOverwritten()
         {
-            Mapping(x => x.Children, x => x.Where("x = 1"));
+            //Mapping(x => x.Children, x => x.Where("x = 1"));
 
-            Convention(x => x.Where("y = 2"));
+            //Convention(x => x.Where("y = 2"));
 
-            VerifyModel(x => x.Where.ShouldEqual("x = 1"));
+            //VerifyModel(x => x.Where.ShouldEqual("x = 1"));
+            Assert.Fail();
         }
 
         [Test]
         public void ForeignKeyShouldntBeOverwritten()
         {
-            Mapping(x => x.Children, x => x.ForeignKeyConstraintName("key"));
+            //Mapping(x => x.Children, x => x.ForeignKeyConstraintName("key"));
 
-            Convention(x => x.Key.ForeignKey("xxx"));
+            //Convention(x => x.Key.ForeignKey("xxx"));
 
-            VerifyModel(x => x.Key.ForeignKey.ShouldEqual("key"));
+            //VerifyModel(x => x.Key.ForeignKey.ShouldEqual("key"));
+            Assert.Fail();
         }
 
         [Test]
         public void TableNameShouldntBeOverwritten()
         {
-            Mapping(x => x.Children, x => x.Table("table"));
+            //Mapping(x => x.Children, x => x.Table("table"));
 
-            Convention(x => x.Table("xxx"));
+            //Convention(x => x.Table("xxx"));
 
-            VerifyModel(x => x.TableName.ShouldEqual("table"));
+            //VerifyModel(x => x.TableName.ShouldEqual("table"));
+            Assert.Fail();
         }
 
         #region Helpers
@@ -203,7 +220,7 @@ namespace FluentNHibernate.Testing.ConventionsTests.OverridingFluentInterface
             model.Conventions.Add(new CollectionConventionBuilder().Always(convention));
         }
 
-        private void Mapping<TChild>(Expression<Func<ExampleInheritedClass, IEnumerable<TChild>>> property, Action<OneToManyPart<TChild>> mappingDefinition)
+        private void Mapping<TChild>(Expression<Func<ExampleInheritedClass, IEnumerable<TChild>>> property, Action<HasManyBagBuilder<TChild>> mappingDefinition)
         {
             var classMap = new ClassMap<ExampleInheritedClass>();
             classMap.Id(x => x.Id);

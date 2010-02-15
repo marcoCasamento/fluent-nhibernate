@@ -73,10 +73,10 @@ namespace FluentNHibernate.Testing.DomainModel
 
             Map(x => x.Name);
 
-            HasMany(g => g.Artists)
-                .KeyColumn("GenreID")
-                .Cascade.All()
-                .Inverse();
+            //HasMany(g => g.Artists)
+            //    .KeyColumn("GenreID")
+            //    .Cascade.All()
+            //    .Inverse();
         }
     }
 }

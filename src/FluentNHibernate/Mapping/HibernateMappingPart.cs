@@ -6,15 +6,15 @@ namespace FluentNHibernate.Mapping
 {
     public class HibernateMappingPart : IHibernateMappingProvider
     {
-        private readonly CascadeExpression<HibernateMappingPart> defaultCascade;
-        private readonly AccessStrategyBuilder<HibernateMappingPart> defaultAccess;
+        private readonly CascadeBuilder defaultCascade;
+        private readonly AccessStrategyBuilder defaultAccess;
         private readonly AttributeStore<HibernateMapping> attributes = new AttributeStore<HibernateMapping>();
         private bool nextBool = true;
 
         public HibernateMappingPart()
         {
-            defaultCascade = new CascadeExpression<HibernateMappingPart>(this, value => attributes.Set(x => x.DefaultCascade, value));
-            defaultAccess = new AccessStrategyBuilder<HibernateMappingPart>(this, value => attributes.Set(x => x.DefaultAccess, value));
+            defaultCascade = new CascadeBuilder(value => attributes.Set(x => x.DefaultCascade, value));
+            defaultAccess = new AccessStrategyBuilder(value => attributes.Set(x => x.DefaultAccess, value));
         }
 
         public HibernateMappingPart Schema(string schema)
@@ -23,14 +23,14 @@ namespace FluentNHibernate.Mapping
             return this;
         }
 
-        public CascadeExpression<HibernateMappingPart> DefaultCascade
+        public CascadeBuilder<HibernateMappingPart> DefaultCascade
         {
-            get { return defaultCascade; }
+            get { return new CascadeBuilder<HibernateMappingPart>(this, defaultCascade); }
         }
 
         public AccessStrategyBuilder<HibernateMappingPart> DefaultAccess
         {
-            get { return defaultAccess; }
+            get { return new AccessStrategyBuilder<HibernateMappingPart>(this, defaultAccess); }
         }
 
         public HibernateMappingPart AutoImport()

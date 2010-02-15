@@ -19,7 +19,7 @@ namespace FluentNHibernate.Mapping
         /// <summary>
         /// Access strategy mapping builder.
         /// </summary>
-        protected AccessStrategyBuilder(Action<string> setter)
+        public AccessStrategyBuilder(Action<string> setter)
         {
             this.setValue = setter;
         }

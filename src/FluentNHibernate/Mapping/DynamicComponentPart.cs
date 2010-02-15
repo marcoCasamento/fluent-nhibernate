@@ -11,7 +11,7 @@ namespace FluentNHibernate.Mapping
     public class DynamicComponentPart<T> : ComponentPartBase<T>, IComponentMappingProvider
     {
         private readonly Type entity;
-        private readonly AccessStrategyBuilder<DynamicComponentPart<T>> access;
+        private readonly AccessStrategyBuilder access;
         private readonly AttributeStore<DynamicComponentMapping> attributes;
 
         public DynamicComponentPart(Type entity, Member property)
@@ -23,7 +23,7 @@ namespace FluentNHibernate.Mapping
         {
             this.entity = entity;
             attributes = new AttributeStore<DynamicComponentMapping>(underlyingStore);
-            access = new AccessStrategyBuilder<DynamicComponentPart<T>>(this, value => attributes.Set(x => x.Access, value));
+            access = new AccessStrategyBuilder(value => attributes.Set(x => x.Access, value));
         }
 
         protected override IComponentMapping CreateComponentMappingRoot(AttributeStore store)
@@ -39,7 +39,7 @@ namespace FluentNHibernate.Mapping
         /// </summary>
         public new AccessStrategyBuilder<DynamicComponentPart<T>> Access
         {
-            get { return access; }
+            get { return new AccessStrategyBuilder<DynamicComponentPart<T>>(this, access); }
         }
 
         public new DynamicComponentPart<T> ParentReference(Expression<Func<T, object>> exp)

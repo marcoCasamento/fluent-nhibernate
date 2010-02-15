@@ -13,13 +13,13 @@ namespace FluentNHibernate.Mapping
     public class JoinPart<T> : ClasslikeMapBase<T>, IJoinMappingProvider
     {
         private readonly IList<string> columns = new List<string>();
-        private readonly FetchTypeExpression<JoinPart<T>> fetch;
+        private readonly FetchBuilder fetch;
         private readonly AttributeStore<JoinMapping> attributes = new AttributeStore<JoinMapping>();
         private bool nextBool = true;
 
         public JoinPart(string tableName)
         {
-            fetch = new FetchTypeExpression<JoinPart<T>>(this, value => attributes.Set(x => x.Fetch, value));
+            fetch = new FetchBuilder(value => attributes.Set(x => x.Fetch, value));
 
             attributes.SetDefault(x => x.TableName, tableName);
             attributes.Set(x => x.Key, new KeyMapping { ContainingEntityType = typeof(T) });
@@ -38,9 +38,9 @@ namespace FluentNHibernate.Mapping
             return this;
         }
 
-        public FetchTypeExpression<JoinPart<T>> Fetch
+        public FetchBuilder<JoinPart<T>> Fetch
         {
-            get { return fetch; }
+            get { return new FetchBuilder<JoinPart<T>>(this, fetch); }
         }
 
         public JoinPart<T> Inverse()

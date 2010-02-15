@@ -19,8 +19,8 @@ namespace FluentNHibernate.Mapping
         private readonly AttributeStore<AnyMapping> attributes = new AttributeStore<AnyMapping>();
         private readonly Type entity;
         private readonly Member property;
-        private readonly AccessStrategyBuilder<AnyPart<T>> access;
-        private readonly CascadeExpression<AnyPart<T>> cascade;
+        private readonly AccessStrategyBuilder access;
+        private readonly CascadeBuilder cascade;
         private readonly IList<string> typeColumns = new List<string>();
         private readonly IList<string> identifierColumns = new List<string>();
         private readonly IList<MetaValueMapping> metaValues = new List<MetaValueMapping>();
@@ -30,8 +30,8 @@ namespace FluentNHibernate.Mapping
         {
             this.entity = entity;
             this.property = property;
-            access = new AccessStrategyBuilder<AnyPart<T>>(this, value => attributes.Set(x => x.Access, value));
-            cascade = new CascadeExpression<AnyPart<T>>(this, value => attributes.Set(x => x.Cascade, value));
+            access = new AccessStrategyBuilder(value => attributes.Set(x => x.Access, value));
+            cascade = new CascadeBuilder(value => attributes.Set(x => x.Cascade, value));
         }
 
         /// <summary>
@@ -39,15 +39,15 @@ namespace FluentNHibernate.Mapping
         /// </summary>
         public AccessStrategyBuilder<AnyPart<T>> Access
         {
-            get { return access; }
+            get { return new AccessStrategyBuilder<AnyPart<T>>(this, access); }
         }
 
         /// <summary>
         /// Cascade style (Defaults to none)
         /// </summary>
-        public CascadeExpression<AnyPart<T>> Cascade
+        public CascadeBuilder<AnyPart<T>> Cascade
         {
-            get { return cascade; }
+            get { return new CascadeBuilder<AnyPart<T>>(this, cascade); }
         }
 
         public AnyPart<T> IdentityType(Expression<Func<T, object>> expression)

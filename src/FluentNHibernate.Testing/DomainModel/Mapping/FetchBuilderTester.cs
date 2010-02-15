@@ -6,20 +6,20 @@ using NUnit.Framework;
 namespace FluentNHibernate.Testing.DomainModel.Mapping
 {
 	[TestFixture]
-	public class FetchTypeExpressionTester
+	public class FetchBuilderTester
 	{
 		#region Test Setup
-		public FetchTypeExpression<object> _fetchType;
+		public FetchBuilder<object> _fetchType;
 	    private string fetchValue;
 		
 		[SetUp]
 		public virtual void SetUp()
 		{
 		    fetchValue = "";
-			_fetchType = new FetchTypeExpression<object>(null, value => fetchValue = value);
+			_fetchType = new FetchBuilder<object>(null, new FetchBuilder(value => fetchValue = value));
 		}
 
-		protected FetchTypeExpressionTester A_call_to(Func<object> fetchAction)
+		protected FetchBuilderTester A_call_to(Func<object> fetchAction)
 		{
 			fetchAction();
 			return this;

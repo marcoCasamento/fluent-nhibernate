@@ -12,7 +12,7 @@ namespace FluentNHibernate.Mapping
     {
         private readonly Member property;
         private readonly Type parentType;
-        private readonly AccessStrategyBuilder<PropertyPart> access;
+        private readonly AccessStrategyBuilder access;
         private readonly PropertyGeneratedBuilder generated;
         private readonly ColumnMappingCollection<PropertyPart> columns;
         private readonly AttributeStore<PropertyMapping> attributes = new AttributeStore<PropertyMapping>();
@@ -23,7 +23,7 @@ namespace FluentNHibernate.Mapping
         public PropertyPart(Member property, Type parentType)
         {
             columns = new ColumnMappingCollection<PropertyPart>(this);            
-            access = new AccessStrategyBuilder<PropertyPart>(this, value => attributes.Set(x => x.Access, value));
+            access = new AccessStrategyBuilder(value => attributes.Set(x => x.Access, value));
             generated = new PropertyGeneratedBuilder(this, value => attributes.Set(x => x.Generated, value));
 
             this.property = property;
@@ -96,7 +96,7 @@ namespace FluentNHibernate.Mapping
         /// </summary>
         public AccessStrategyBuilder<PropertyPart> Access
         {
-            get { return access; }
+            get { return new AccessStrategyBuilder<PropertyPart>(this, access); }
         }
 
         public PropertyPart Insert()

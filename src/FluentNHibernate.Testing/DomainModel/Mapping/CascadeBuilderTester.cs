@@ -7,11 +7,11 @@ using Rhino.Mocks;
 namespace FluentNHibernate.Testing.DomainModel.Mapping
 {
 	[TestFixture]
-	public class CascadeExpressionTester
+	public class CascadeBuilderTester
 	{
 		#region Test Setup
 
-	    protected CascadeExpression<object> _cascade;
+	    protected CascadeBuilder<object> _cascade;
 	    protected string cascadeValue;
 	    private Func<object> _currentCascadeAction;
 
@@ -19,10 +19,10 @@ namespace FluentNHibernate.Testing.DomainModel.Mapping
 		public virtual void SetUp()
 		{
 	        cascadeValue = "";
-			_cascade = new CascadeExpression<object>(null, value => cascadeValue = value);
+			_cascade = new CascadeBuilder<object>(null, new CascadeBuilder(value => cascadeValue = value));
 		}
 
-		protected CascadeExpressionTester A_call_to(Func<object> cascadeAction)
+		protected CascadeBuilderTester A_call_to(Func<object> cascadeAction)
 		{
 			_currentCascadeAction = cascadeAction;
 			return this;

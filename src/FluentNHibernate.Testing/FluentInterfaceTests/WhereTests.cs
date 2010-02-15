@@ -111,8 +111,8 @@ namespace FluentNHibernate.Testing.FluentInterfaceTests
         {
             var classMap = new ClassMap<Target>();
             classMap.Id(x => x.Id);
-            classMap.HasMany(x => x.Children)
-                .Where(where);
+            classMap.HasMany(x => x.Children);
+                //.Where(where);
 
             var model = new PersistenceModel();
 
@@ -129,8 +129,8 @@ namespace FluentNHibernate.Testing.FluentInterfaceTests
         {
             var classMap = new ClassMap<Target>();
             classMap.Id(x => x.Id);
-            classMap.HasMany(x => x.Children)
-                .Where(where);
+            classMap.HasMany(x => x.Children);
+                //.Where(where);
 
             var model = new PersistenceModel();
 

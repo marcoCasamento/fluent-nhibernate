@@ -10,53 +10,54 @@ namespace FluentNHibernate.Testing.FluentInterfaceTests
     [TestFixture]
     public class OneToManyPartAsTernaryTests : BaseModelFixture
     {
-        [Test]
-        public void AsTernaryAssocationShouldCreateIndexManyToMany()
-        {
-            OneToMany(x => x.EntityMapOfChildren)
-                .Mapping(m => m.AsMap("irrelevant-value").AsTernaryAssociation())
-                .ModelShouldMatch(x =>
-                {
-                    IIndexMapping index = ((MapMapping)x).Index;
-                    index.ShouldBeOfType(typeof(IndexManyToManyMapping));
-                });
-        }
+        //[Test]
+        //public void AsTernaryAssocationShouldCreateIndexManyToMany()
+        //{
+        //    OneToMany(x => x.EntityMapOfChildren)
+        //        .Mapping(m => m.AsMap("irrelevant-value").AsTernaryAssociation())
+        //        .ModelShouldMatch(x =>
+        //        {
+        //            IIndexMapping index = ((MapMapping)x).Index;
+        //            index.ShouldBeOfType(typeof(IndexManyToManyMapping));
+        //        });
+        //}
 
-        [Test]
-        public void AsTernaryAssocationShouldSetIndexManyToManyClass()
-        {
-            OneToMany(x => x.EntityMapOfChildren)
-                .Mapping(m => m.AsMap("irrelevant-value").AsTernaryAssociation())
-                .ModelShouldMatch(x =>
-                {
-                    var index = (IndexManyToManyMapping)((MapMapping)x).Index;
-                    index.Class.ShouldEqual(new TypeReference(typeof(SomeEntity)));
-                });
-        }
+        //[Test]
+        //public void AsTernaryAssocationShouldSetIndexManyToManyClass()
+        //{
+        //    OneToMany(x => x.EntityMapOfChildren)
+        //        .Mapping(m => m.AsMap("irrelevant-value").AsTernaryAssociation())
+        //        .ModelShouldMatch(x =>
+        //        {
+        //            var index = (IndexManyToManyMapping)((MapMapping)x).Index;
+        //            index.Class.ShouldEqual(new TypeReference(typeof(SomeEntity)));
+        //        });
+        //}
 
-        [Test]
-        public void AsTernaryAssocationShouldSetDefaultColumnName()
-        {
-            OneToMany(x => x.EntityMapOfChildren)
-                .Mapping(m => m.AsMap("irrelevant-value").AsTernaryAssociation())
-                .ModelShouldMatch(x =>
-                {
-                    var index = (IndexManyToManyMapping)((MapMapping)x).Index;
-                    index.Columns.Single().Name.ShouldEqual(typeof(SomeEntity).Name + "_id");
-                });
-        }
+        //[Test]
+        //public void AsTernaryAssocationShouldSetDefaultColumnName()
+        //{
+        //    OneToMany(x => x.EntityMapOfChildren)
+        //        .Mapping(m => m.AsMap("irrelevant-value").AsTernaryAssociation())
+        //        .ModelShouldMatch(x =>
+        //        {
+        //            var index = (IndexManyToManyMapping)((MapMapping)x).Index;
+        //            index.Columns.Single().Name.ShouldEqual(typeof(SomeEntity).Name + "_id");
+        //        });
+        //}
 
         [Test]
         public void AsTernaryAssociationShouldSetProvidedColumnName()
         {
-            const string indexName = "index-name";
-            OneToMany(x => x.EntityMapOfChildren)
-                .Mapping(m => m.AsMap("irrelevant-value").AsTernaryAssociation(indexName))
-                .ModelShouldMatch(x =>
-                {
-                    var index = (IndexManyToManyMapping)((MapMapping)x).Index;
-                    index.Columns.Single().Name.ShouldEqual(indexName);
-                });
+            //const string indexName = "index-name";
+            //OneToMany(x => x.EntityMapOfChildren)
+            //    .Mapping(m => m.AsMap("irrelevant-value").AsTernaryAssociation(indexName))
+            //    .ModelShouldMatch(x =>
+            //    {
+            //        var index = (IndexManyToManyMapping)((MapMapping)x).Index;
+            //        index.Columns.Single().Name.ShouldEqual(indexName);
+            //    });
+            Assert.Fail();
         }
 
         [Test]

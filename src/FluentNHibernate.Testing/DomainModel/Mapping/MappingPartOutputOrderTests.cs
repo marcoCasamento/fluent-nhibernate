@@ -12,7 +12,7 @@ namespace FluentNHibernate.Testing.DomainModel.Mapping
         {
             var mappingTester = new MappingTester<MappedObject>().ForMapping(mappedObject =>
             {
-                mappedObject.HasMany(x => x.Children).AsBag();
+                mappedObject.HasMany(x => x.Children);
                 mappedObject.Version(x => x.Version);
                 mappedObject.Id(x => x.Id);
             });
@@ -30,7 +30,7 @@ namespace FluentNHibernate.Testing.DomainModel.Mapping
             {
                 mappedObject.DiscriminateSubClassesOnColumn<string>("Type").SubClass<SecondMappedObject>(sc => sc.Map(x => x.Name)); //Last
                 mappedObject.Id(x => x.Id); //First
-                mappedObject.HasMany(x => x.Children).AsBag(); //Anywhere
+                mappedObject.HasMany(x => x.Children); //Anywhere
 
             });
 

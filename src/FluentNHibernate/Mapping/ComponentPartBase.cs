@@ -13,14 +13,14 @@ namespace FluentNHibernate.Mapping
     public abstract class ComponentPartBase<T> : ClasslikeMapBase<T>
     {
         private readonly string propertyName;
-        private readonly AccessStrategyBuilder<ComponentPartBase<T>> access;
+        private readonly AccessStrategyBuilder access;
         protected bool nextBool = true;
         private readonly AttributeStore<ComponentMappingBase> attributes;
 
         protected ComponentPartBase(AttributeStore underlyingStore, string propertyName)
         {
             attributes = new AttributeStore<ComponentMappingBase>(underlyingStore);
-            access = new AccessStrategyBuilder<ComponentPartBase<T>>(this, value => attributes.Set(x => x.Access, value));
+            access = new AccessStrategyBuilder(value => attributes.Set(x => x.Access, value));
             this.propertyName = propertyName;
         }
 
@@ -57,7 +57,7 @@ namespace FluentNHibernate.Mapping
         /// </summary>
         public AccessStrategyBuilder<ComponentPartBase<T>> Access
         {
-            get { return access; }
+            get { return new AccessStrategyBuilder<ComponentPartBase<T>>(this, access); }
         }
 
         public ComponentPartBase<T> ParentReference(Expression<Func<T, object>> expression)

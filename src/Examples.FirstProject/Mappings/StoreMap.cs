@@ -12,9 +12,9 @@ namespace Examples.FirstProject.Mappings
             HasManyToMany(x => x.Products)
                 .Cascade.All()
                 .Table("StoreProduct");
-            HasMany(x => x.Staff)
-                .Cascade.All()
-                .Inverse();
+            HasMany(x => x.Staff);
+                //.Cascade.All()
+                //.Inverse();
         }
     }
 }

@@ -51,7 +51,7 @@ namespace FluentNHibernate.Specs.FluentInterface.ClassMapSpecs
     public class when_class_map_is_told_to_map_a_has_many_array : ProviderSpec
     {
         Because of = () =>
-            mapping = map_as_class<EntityWithCollections>(m => m.HasMany(x => x.ArrayOfChildren).AsArray(x => x.Position));
+            mapping = map_as_class<EntityWithCollections>(m => m.HasMany(x => x.ArrayOfChildren, "Position"));
 
         Behaves_like<ClasslikeArrayBehaviour> an_array_in_a_classlike_mapping;
 

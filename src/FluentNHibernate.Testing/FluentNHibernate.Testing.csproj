@@ -289,10 +289,10 @@
     <Compile Include="DomainModel\ConnectedTester.cs" />
     <Compile Include="DomainModel\EntityEquality.cs" />
     <Compile Include="DomainModel\Mapping\AccessStrategyComponentPartTester.cs" />
-    <Compile Include="DomainModel\Mapping\CascadeExpressionTester.cs" />
+    <Compile Include="DomainModel\Mapping\CascadeBuilderTester.cs" />
     <Compile Include="DomainModel\Mapping\ClassCacheTests.cs" />
     <Compile Include="DomainModel\Mapping\ClassMapXmlCreationTester.cs" />
-    <Compile Include="DomainModel\Mapping\CollectionCascadeExpressionTester.cs" />
+    <Compile Include="DomainModel\Mapping\CollectionCascadeBuilderTester.cs" />
     <Compile Include="DomainModel\Mapping\ComponentPartTester.cs" />
     <Compile Include="DomainModel\Mapping\CompositeIdentityPartTester.cs" />
     <Compile Include="DomainModel\Mapping\ConventionsTester.cs" />
@@ -304,7 +304,7 @@
     <Compile Include="DomainModel\Mapping\ManyToManyIntegrationTester.cs" />
     <Compile Include="DomainModel\Mapping\ManyToManyTester.cs" />
     <Compile Include="DomainModel\Mapping\MappingPartOutputOrderTests.cs" />
-    <Compile Include="DomainModel\Mapping\FetchTypeExpressionTester.cs" />
+    <Compile Include="DomainModel\Mapping\FetchBuilderTester.cs" />
     <Compile Include="DomainModel\Mapping\DefaultAccessStrategyClassMapTester.cs" />
     <Compile Include="DomainModel\Mapping\IdentityPartTester.cs" />
     <Compile Include="DomainModel\Mapping\JoinedSubClassTester.cs" />

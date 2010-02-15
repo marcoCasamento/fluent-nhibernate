@@ -147,12 +147,13 @@ namespace FluentNHibernate.Testing.AutoMapping.Apm
         [Test]
         public void OverrideShouldOverrideExistingHasMany()
         {
-            var autoMapper = AutoMap.AssemblyOf<ExampleParentClass>()
-                .Where(t => t.Namespace == "FluentNHibernate.Automapping.TestFixtures")
-                .Override<ExampleParentClass>(m => m.HasMany(x => x.Examples).Inverse());
+            //var autoMapper = AutoMap.AssemblyOf<ExampleParentClass>()
+            //    .Where(t => t.Namespace == "FluentNHibernate.Automapping.TestFixtures")
+            //    .Override<ExampleParentClass>(m => m.HasMany(x => x.Examples).Inverse());
 
-            new AutoMappingTester<ExampleParentClass>(autoMapper)
-                .Element("//bag[@name='Examples']").HasAttribute("inverse", "true");
+            //new AutoMappingTester<ExampleParentClass>(autoMapper)
+            //    .Element("//bag[@name='Examples']").HasAttribute("inverse", "true");
+            Assert.Fail();
         }
 
         [Test]
@@ -640,21 +641,23 @@ namespace FluentNHibernate.Testing.AutoMapping.Apm
         [Test]
         public void OverriddenSubclassIsMerged()
         {
-            var autoMapper = AutoMap.AssemblyOf<ExampleInheritedClass>()
-                .Where(t => t.Namespace == "FluentNHibernate.Automapping.TestFixtures")
-                .Override<ExampleInheritedClass>(m => m.HasMany(x => x.Children).Inverse());
+            //var autoMapper = AutoMap.AssemblyOf<ExampleInheritedClass>()
+            //    .Where(t => t.Namespace == "FluentNHibernate.Automapping.TestFixtures")
+            //    .Override<ExampleInheritedClass>(m => m.HasMany(x => x.Children).Inverse());
 
-            autoMapper.BuildMappings();
-            var mappings = autoMapper.BuildMappings();
-            var classes = mappings.Select(x => x.Classes.First());
+            //autoMapper.BuildMappings();
+            //var mappings = autoMapper.BuildMappings();
+            //var classes = mappings.Select(x => x.Classes.First());
 
-            // no separate mapping for ExampleInheritedClass
-            classes.FirstOrDefault(c => c.Type == typeof(ExampleInheritedClass))
-                .ShouldBeNull();
+            //// no separate mapping for ExampleInheritedClass
+            //classes.FirstOrDefault(c => c.Type == typeof(ExampleInheritedClass))
+            //    .ShouldBeNull();
 
-            var example = classes.FirstOrDefault(c => c.Type == typeof(ExampleClass));
+            //var example = classes.FirstOrDefault(c => c.Type == typeof(ExampleClass));
 
-            example.ShouldNotBeNull();
+            //example.ShouldNotBeNull();
+
+            Assert.Fail();
         }
 
         [Test]
@@ -671,13 +674,14 @@ namespace FluentNHibernate.Testing.AutoMapping.Apm
         [Test]
         public void OverriddenSubclassIsAppliedToXml()
         {
-            var autoMapper = AutoMap.AssemblyOf<ExampleInheritedClass>()
-                .Where(t => t.Namespace == "FluentNHibernate.Automapping.TestFixtures")
-                .Override<ExampleInheritedClass>(m => m.HasMany(x => x.Children).Inverse());
+            //var autoMapper = AutoMap.AssemblyOf<ExampleInheritedClass>()
+            //    .Where(t => t.Namespace == "FluentNHibernate.Automapping.TestFixtures")
+            //    .Override<ExampleInheritedClass>(m => m.HasMany(x => x.Children).Inverse());
 
-            new AutoMappingTester<ExampleClass>(autoMapper)
-                .Element("class/joined-subclass/bag")
-                .HasAttribute("inverse", "true");
+            //new AutoMappingTester<ExampleClass>(autoMapper)
+            //    .Element("class/joined-subclass/bag")
+            //    .HasAttribute("inverse", "true");
+            Assert.Fail();
         }
 
         [Test]
@@ -709,12 +713,13 @@ namespace FluentNHibernate.Testing.AutoMapping.Apm
         [Test]
         public void JoinedSubclassOverrideShouldOverrideExistingHasMany()
         {
-            var autoMapper = AutoMap.AssemblyOf<ExampleClass>()
-                .Where(t => t.Namespace == "FluentNHibernate.Automapping.TestFixtures")
-                .Override<ExampleInheritedClass>(m => m.HasMany(x => x.Children).Inverse());
+            //var autoMapper = AutoMap.AssemblyOf<ExampleClass>()
+            //    .Where(t => t.Namespace == "FluentNHibernate.Automapping.TestFixtures")
+            //    .Override<ExampleInheritedClass>(m => m.HasMany(x => x.Children).Inverse());
 
-            new AutoMappingTester<ExampleClass>(autoMapper)
-                .Element("//joined-subclass/bag[@name='Children']").HasAttribute("inverse", "true");
+            //new AutoMappingTester<ExampleClass>(autoMapper)
+            //    .Element("//joined-subclass/bag[@name='Children']").HasAttribute("inverse", "true");
+            Assert.Fail();
         }
 
         [Test]
@@ -802,13 +807,14 @@ namespace FluentNHibernate.Testing.AutoMapping.Apm
         [Test]
         public void SubclassOverrideShouldOverrideExistingHasMany()
         {
-            var autoMapper = AutoMap.AssemblyOf<ExampleClass>()
-                .Where(t => t.Namespace == "FluentNHibernate.Automapping.TestFixtures")
-                .Setup(x => x.SubclassStrategy = type => SubclassStrategy.Subclass)
-                .Override<ExampleInheritedClass>(m => m.HasMany(x => x.Children).Inverse());
+            //var autoMapper = AutoMap.AssemblyOf<ExampleClass>()
+            //    .Where(t => t.Namespace == "FluentNHibernate.Automapping.TestFixtures")
+            //    .Setup(x => x.SubclassStrategy = type => SubclassStrategy.Subclass)
+            //    .Override<ExampleInheritedClass>(m => m.HasMany(x => x.Children).Inverse());
 
-            new AutoMappingTester<ExampleClass>(autoMapper)
-                .Element("//subclass/bag[@name='Children']").HasAttribute("inverse", "true");
+            //new AutoMappingTester<ExampleClass>(autoMapper)
+            //    .Element("//subclass/bag[@name='Children']").HasAttribute("inverse", "true");
+            Assert.Fail();
         }
 
         [Test]

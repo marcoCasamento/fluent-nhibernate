@@ -177,8 +177,7 @@ namespace FluentNHibernate.Testing.ConventionsTests.ApplyingToModel
         {
             var classMap = new ClassMap<ExampleParentClass>();
             classMap.Id(x => x.Id);
-            var map = classMap.HasMany(x => x.Examples)
-                .AsArray(x => x.Id);
+            var map = classMap.HasMany(x => x.ExampleArray);
 
             model.Add(classMap);
 

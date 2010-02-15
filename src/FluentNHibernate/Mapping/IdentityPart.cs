@@ -14,24 +14,15 @@ namespace FluentNHibernate.Mapping
         private readonly IList<string> columns = new List<string>();
         private readonly Member property;
         private readonly Type entityType;
-        private readonly AccessStrategyBuilder<IdentityPart> access;
+        private readonly AccessStrategyBuilder access;
         private readonly AttributeStore<IdMapping> attributes = new AttributeStore<IdMapping>();
         private readonly Type identityType;
         private bool nextBool = true;
         private readonly string columnName;
 
         public IdentityPart(Type entity, Member property)
-        {
-            this.property = property;
-            entityType = entity;
-            this.identityType = property.PropertyType;
-            this.columnName = property.Name;
-
-            access = new AccessStrategyBuilder<IdentityPart>(this, value => attributes.Set(x => x.Access, value));
-            GeneratedBy = new IdentityGenerationStrategyBuilder<IdentityPart>(this, property.PropertyType, entity);
-
-            SetDefaultGenerator();
-        }
+            : this(entity, property.PropertyType, property.Name)
+        {}
 
         public IdentityPart(Type entity, Type identityType, string columnName)
         {
@@ -40,7 +31,7 @@ namespace FluentNHibernate.Mapping
             this.identityType = identityType;
             this.columnName = columnName;
 
-            access = new AccessStrategyBuilder<IdentityPart>(this, value => attributes.Set(x => x.Access, value));
+            access = new AccessStrategyBuilder(value => attributes.Set(x => x.Access, value));
             GeneratedBy = new IdentityGenerationStrategyBuilder<IdentityPart>(this, this.identityType, entity);
 
             SetDefaultGenerator();
@@ -95,7 +86,7 @@ namespace FluentNHibernate.Mapping
         /// </summary>
         public AccessStrategyBuilder<IdentityPart> Access
         {
-            get { return access; }
+            get { return new AccessStrategyBuilder<IdentityPart>(this, access); }
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

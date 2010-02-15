@@ -11,7 +11,7 @@ namespace FluentNHibernate.Mapping
     {
         private readonly Type entity;
         private readonly Member property;
-        private readonly AccessStrategyBuilder<VersionPart> access;
+        private readonly AccessStrategyBuilder access;
         private readonly VersionGeneratedBuilder<IVersionMappingProvider> generated;
         private readonly AttributeStore<VersionMapping> attributes = new AttributeStore<VersionMapping>();
         private readonly AttributeStore<ColumnMapping> columnAttributes = new AttributeStore<ColumnMapping>();
@@ -22,7 +22,7 @@ namespace FluentNHibernate.Mapping
         {
             this.entity = entity;
             this.property = property;
-            access = new AccessStrategyBuilder<VersionPart>(this, value => attributes.Set(x => x.Access, value));
+            access = new AccessStrategyBuilder(value => attributes.Set(x => x.Access, value));
             generated = new VersionGeneratedBuilder<IVersionMappingProvider>(this, value => attributes.Set(x => x.Generated, value));
         }
 
@@ -48,7 +48,7 @@ namespace FluentNHibernate.Mapping
 
         public AccessStrategyBuilder<VersionPart> Access
         {
-            get { return access; }
+            get { return new AccessStrategyBuilder<VersionPart>(this, access); }
         }
 
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]

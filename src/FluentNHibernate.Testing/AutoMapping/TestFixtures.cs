@@ -119,6 +119,7 @@ namespace FluentNHibernate.Automapping.TestFixtures
         public int ExampleParentClassId { get; set; } 
         public virtual int Id { get; set; }
         public virtual IList<ExampleClass> Examples {get; set;}
+        public virtual ExampleClass[] ExampleArray {get; set;}
     }
 
 

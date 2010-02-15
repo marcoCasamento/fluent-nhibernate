@@ -565,7 +565,7 @@ namespace FluentNHibernate.Testing.DomainModel.Mapping
                 {
                     m.Id(x => x.Id);
                     m.DiscriminateSubClassesOnColumn("Type")
-                        .SubClass<MappedObjectSubclass>(("foo"), sc => sc.HasMany(x => x.Children).AsBag());
+                        .SubClass<MappedObjectSubclass>(("foo"), sc => sc.HasMany(x => x.Children));
                 })
                 .Element("//subclass/bag/key")
                     .HasAttribute("foreign-key", "test_fk");
@@ -583,8 +583,8 @@ namespace FluentNHibernate.Testing.DomainModel.Mapping
                     m.DiscriminateSubClassesOnColumn("Type")
                         .SubClass<MappedObjectSubclass>(("foo"), sc =>
                         {
-                            sc.HasMany(x => x.Children).AsBag();
-                            sc.SubClass<MappedObjectSubSubClass>("bar", ssc => ssc.HasMany(x => x.Children).AsBag());
+                            sc.HasMany(x => x.Children);
+                            sc.SubClass<MappedObjectSubSubClass>("bar", ssc => ssc.HasMany(x => x.Children));
                         });
                 })
                 .Element("//subclass/subclass/bag/key")

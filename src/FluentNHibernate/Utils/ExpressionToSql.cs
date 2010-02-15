@@ -28,7 +28,7 @@ namespace FluentNHibernate.Utils
         /// <summary>
         /// Converts a boolean Func expression to a best guess SQL string
         /// </summary>
-        public static string Convert<T>(Expression<Func<T, bool>> expression)
+        public static string Convert<T>(Expression<Predicate<T>> expression)
         {
             if (expression.Body is BinaryExpression)
                 return Convert<T>((BinaryExpression)expression.Body);

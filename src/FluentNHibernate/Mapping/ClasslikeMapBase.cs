@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using FluentNHibernate.Mapping.Providers;
 using FluentNHibernate.Utils;
+using Iesi.Collections.Generic;
 
 namespace FluentNHibernate.Mapping
 {
@@ -21,8 +22,9 @@ namespace FluentNHibernate.Mapping
 
         public HasManyElementBagBuilder<TChild> has_many_elements_in_a_bag<TChild>(Member member)
         {
-            HasManyElementBagBuilder<TChild> builder = new HasManyElementBagBuilderImpl<TChild>(containingEntityType, member);
+            var builder = new HasManyElementBuilderImpl<TChild>(containingEntityType, member);
 
+            builder.AsBag();
             addCollection(builder);
 
             return builder;
@@ -30,8 +32,30 @@ namespace FluentNHibernate.Mapping
 
         public HasManyElementBagBuilder<TChild> has_many_elements_in_a_bag<TChild>(Member member, string valueColumn)
         {
-            HasManyElementBagBuilder<TChild> builder = new HasManyElementBagBuilderImpl<TChild>(containingEntityType, member);
+            var builder = new HasManyElementBuilderImpl<TChild>(containingEntityType, member);
 
+            builder.AsBag();
+            builder.ValueColumn(valueColumn);
+            addCollection(builder);
+
+            return builder;
+        }
+
+        public HasManyElementSetBuilder<TChild> has_many_elements_in_a_set<TChild>(Member member)
+        {
+            var builder = new HasManyElementBuilderImpl<TChild>(containingEntityType, member);
+
+            builder.AsSet();
+            addCollection(builder);
+
+            return builder;
+        }
+
+        public HasManyElementSetBuilder<TChild> has_many_elements_in_a_set<TChild>(Member member, string valueColumn)
+        {
+            var builder = new HasManyElementBuilderImpl<TChild>(containingEntityType, member);
+
+            builder.AsSet();
             builder.ValueColumn(valueColumn);
             addCollection(builder);
 
@@ -211,6 +235,8 @@ namespace FluentNHibernate.Mapping
             return part;
         }
 
+        #region has many element
+
         public HasManyElementBagBuilder<string> HasMany(Expression<Func<T, IEnumerable<string>>> member)
         {
             return hasManyBuilderFactory.has_many_elements_in_a_bag<string>(member.ToMember());
@@ -221,17 +247,197 @@ namespace FluentNHibernate.Mapping
             return hasManyBuilderFactory.has_many_elements_in_a_bag<string>(member.ToMember(), valueColumn);
         }
 
-        /// <summary>
-        /// CreateProperties a one-to-many relationship
-        /// </summary>
-        /// <typeparam name="TChild">Child object type</typeparam>
-        /// <typeparam name="TReturn">Property return type</typeparam>
-        /// <param name="expression">Expression to get property from</param>
-        /// <returns>one-to-many part</returns>
-        private OneToManyPart<TChild> MapHasMany<TChild, TReturn>(Expression<Func<T, TReturn>> expression)
+        public HasManyElementBagBuilder<int> HasMany(Expression<Func<T, IEnumerable<int>>> member)
         {
-            return HasMany<TChild>(expression.ToMember());
+            return hasManyBuilderFactory.has_many_elements_in_a_bag<int>(member.ToMember());
         }
+
+        public HasManyElementBagBuilder<int> HasMany(Expression<Func<T, IEnumerable<int>>> member, string valueColumn)
+        {
+            return hasManyBuilderFactory.has_many_elements_in_a_bag<int>(member.ToMember(), valueColumn);
+        }
+
+        public HasManyElementBagBuilder<double> HasMany(Expression<Func<T, IEnumerable<double>>> member)
+        {
+            return hasManyBuilderFactory.has_many_elements_in_a_bag<double>(member.ToMember());
+        }
+
+        public HasManyElementBagBuilder<double> HasMany(Expression<Func<T, IEnumerable<double>>> member, string valueColumn)
+        {
+            return hasManyBuilderFactory.has_many_elements_in_a_bag<double>(member.ToMember(), valueColumn);
+        }
+
+        public HasManyElementBagBuilder<long> HasMany(Expression<Func<T, IEnumerable<long>>> member)
+        {
+            return hasManyBuilderFactory.has_many_elements_in_a_bag<long>(member.ToMember());
+        }
+
+        public HasManyElementBagBuilder<long> HasMany(Expression<Func<T, IEnumerable<long>>> member, string valueColumn)
+        {
+            return hasManyBuilderFactory.has_many_elements_in_a_bag<long>(member.ToMember(), valueColumn);
+        }
+
+        public HasManyElementBagBuilder<short> HasMany(Expression<Func<T, IEnumerable<short>>> member)
+        {
+            return hasManyBuilderFactory.has_many_elements_in_a_bag<short>(member.ToMember());
+        }
+
+        public HasManyElementBagBuilder<short> HasMany(Expression<Func<T, IEnumerable<short>>> member, string valueColumn)
+        {
+            return hasManyBuilderFactory.has_many_elements_in_a_bag<short>(member.ToMember(), valueColumn);
+        }
+
+        public HasManyElementBagBuilder<decimal> HasMany(Expression<Func<T, IEnumerable<decimal>>> member)
+        {
+            return hasManyBuilderFactory.has_many_elements_in_a_bag<decimal>(member.ToMember());
+        }
+
+        public HasManyElementBagBuilder<decimal> HasMany(Expression<Func<T, IEnumerable<decimal>>> member, string valueColumn)
+        {
+            return hasManyBuilderFactory.has_many_elements_in_a_bag<decimal>(member.ToMember(), valueColumn);
+        }
+
+        public HasManyElementBagBuilder<float> HasMany(Expression<Func<T, IEnumerable<float>>> member)
+        {
+            return hasManyBuilderFactory.has_many_elements_in_a_bag<float>(member.ToMember());
+        }
+
+        public HasManyElementBagBuilder<float> HasMany(Expression<Func<T, IEnumerable<float>>> member, string valueColumn)
+        {
+            return hasManyBuilderFactory.has_many_elements_in_a_bag<float>(member.ToMember(), valueColumn);
+        }
+
+        public HasManyElementBagBuilder<bool> HasMany(Expression<Func<T, IEnumerable<bool>>> member)
+        {
+            return hasManyBuilderFactory.has_many_elements_in_a_bag<bool>(member.ToMember());
+        }
+
+        public HasManyElementBagBuilder<bool> HasMany(Expression<Func<T, IEnumerable<bool>>> member, string valueColumn)
+        {
+            return hasManyBuilderFactory.has_many_elements_in_a_bag<bool>(member.ToMember(), valueColumn);
+        }
+
+        public HasManyElementBagBuilder<char> HasMany(Expression<Func<T, IEnumerable<char>>> member)
+        {
+            return hasManyBuilderFactory.has_many_elements_in_a_bag<char>(member.ToMember());
+        }
+
+        public HasManyElementBagBuilder<char> HasMany(Expression<Func<T, IEnumerable<char>>> member, string valueColumn)
+        {
+            return hasManyBuilderFactory.has_many_elements_in_a_bag<char>(member.ToMember(), valueColumn);
+        }
+
+        public HasManyElementBagBuilder<DateTime> HasMany(Expression<Func<T, IEnumerable<DateTime>>> member)
+        {
+            return hasManyBuilderFactory.has_many_elements_in_a_bag<DateTime>(member.ToMember());
+        }
+
+        public HasManyElementBagBuilder<DateTime> HasMany(Expression<Func<T, IEnumerable<DateTime>>> member, string valueColumn)
+        {
+            return hasManyBuilderFactory.has_many_elements_in_a_bag<DateTime>(member.ToMember(), valueColumn);
+        }
+
+        public HasManyElementSetBuilder<string> HasMany(Expression<Func<T, ISet<string>>> member)
+        {
+            return hasManyBuilderFactory.has_many_elements_in_a_set<string>(member.ToMember());
+        }
+
+        public HasManyElementSetBuilder<string> HasMany(Expression<Func<T, ISet<string>>> member, string valueColumn)
+        {
+            return hasManyBuilderFactory.has_many_elements_in_a_set<string>(member.ToMember(), valueColumn);
+        }
+
+        public HasManyElementSetBuilder<int> HasMany(Expression<Func<T, ISet<int>>> member)
+        {
+            return hasManyBuilderFactory.has_many_elements_in_a_set<int>(member.ToMember());
+        }
+
+        public HasManyElementSetBuilder<int> HasMany(Expression<Func<T, ISet<int>>> member, string valueColumn)
+        {
+            return hasManyBuilderFactory.has_many_elements_in_a_set<int>(member.ToMember(), valueColumn);
+        }
+
+        public HasManyElementSetBuilder<double> HasMany(Expression<Func<T, ISet<double>>> member)
+        {
+            return hasManyBuilderFactory.has_many_elements_in_a_set<double>(member.ToMember());
+        }
+
+        public HasManyElementSetBuilder<double> HasMany(Expression<Func<T, ISet<double>>> member, string valueColumn)
+        {
+            return hasManyBuilderFactory.has_many_elements_in_a_set<double>(member.ToMember(), valueColumn);
+        }
+
+        public HasManyElementSetBuilder<long> HasMany(Expression<Func<T, ISet<long>>> member)
+        {
+            return hasManyBuilderFactory.has_many_elements_in_a_set<long>(member.ToMember());
+        }
+
+        public HasManyElementSetBuilder<long> HasMany(Expression<Func<T, ISet<long>>> member, string valueColumn)
+        {
+            return hasManyBuilderFactory.has_many_elements_in_a_set<long>(member.ToMember(), valueColumn);
+        }
+
+        public HasManyElementSetBuilder<short> HasMany(Expression<Func<T, ISet<short>>> member)
+        {
+            return hasManyBuilderFactory.has_many_elements_in_a_set<short>(member.ToMember());
+        }
+
+        public HasManyElementSetBuilder<short> HasMany(Expression<Func<T, ISet<short>>> member, string valueColumn)
+        {
+            return hasManyBuilderFactory.has_many_elements_in_a_set<short>(member.ToMember(), valueColumn);
+        }
+
+        public HasManyElementSetBuilder<decimal> HasMany(Expression<Func<T, ISet<decimal>>> member)
+        {
+            return hasManyBuilderFactory.has_many_elements_in_a_set<decimal>(member.ToMember());
+        }
+
+        public HasManyElementSetBuilder<decimal> HasMany(Expression<Func<T, ISet<decimal>>> member, string valueColumn)
+        {
+            return hasManyBuilderFactory.has_many_elements_in_a_set<decimal>(member.ToMember(), valueColumn);
+        }
+
+        public HasManyElementSetBuilder<float> HasMany(Expression<Func<T, ISet<float>>> member)
+        {
+            return hasManyBuilderFactory.has_many_elements_in_a_set<float>(member.ToMember());
+        }
+
+        public HasManyElementSetBuilder<float> HasMany(Expression<Func<T, ISet<float>>> member, string valueColumn)
+        {
+            return hasManyBuilderFactory.has_many_elements_in_a_set<float>(member.ToMember(), valueColumn);
+        }
+
+        public HasManyElementSetBuilder<bool> HasMany(Expression<Func<T, ISet<bool>>> member)
+        {
+            return hasManyBuilderFactory.has_many_elements_in_a_set<bool>(member.ToMember());
+        }
+
+        public HasManyElementSetBuilder<bool> HasMany(Expression<Func<T, ISet<bool>>> member, string valueColumn)
+        {
+            return hasManyBuilderFactory.has_many_elements_in_a_set<bool>(member.ToMember(), valueColumn);
+        }
+
+        public HasManyElementSetBuilder<char> HasMany(Expression<Func<T, ISet<char>>> member)
+        {
+            return hasManyBuilderFactory.has_many_elements_in_a_set<char>(member.ToMember());
+        }
+
+        public HasManyElementSetBuilder<char> HasMany(Expression<Func<T, ISet<char>>> member, string valueColumn)
+        {
+            return hasManyBuilderFactory.has_many_elements_in_a_set<char>(member.ToMember(), valueColumn);
+        }
+
+        public HasManyElementSetBuilder<DateTime> HasMany(Expression<Func<T, ISet<DateTime>>> member)
+        {
+            return hasManyBuilderFactory.has_many_elements_in_a_set<DateTime>(member.ToMember());
+        }
+
+        public HasManyElementSetBuilder<DateTime> HasMany(Expression<Func<T, ISet<DateTime>>> member, string valueColumn)
+        {
+            return hasManyBuilderFactory.has_many_elements_in_a_set<DateTime>(member.ToMember(), valueColumn);
+        }
+
+        #endregion
 
         protected virtual OneToManyPart<TChild> HasMany<TChild>(Member member)
         {
@@ -242,15 +448,26 @@ namespace FluentNHibernate.Mapping
             return part;
         }
 
+        public HasManyArrayBuilder<TChild> HasMany<TChild>(Expression<Func<T, TChild[]>> expression)
+        {
+            return null;
+        }
+
+        public HasManyArrayBuilder<TChild> HasMany<TChild>(Expression<Func<T, TChild[]>> expression, string indexColumn)
+        {
+            return null;
+        }
+
         /// <summary>
         /// CreateProperties a one-to-many relationship
         /// </summary>
         /// <typeparam name="TChild">Child object type</typeparam>
         /// <param name="expression">Expression to get property from</param>
         /// <returns>one-to-many part</returns>
-        public OneToManyPart<TChild> HasMany<TChild>(Expression<Func<T, IEnumerable<TChild>>> expression)
+        public HasManyBagBuilder<TChild> HasMany<TChild>(Expression<Func<T, IEnumerable<TChild>>> expression)
         {
-            return MapHasMany<TChild, IEnumerable<TChild>>(expression);
+            return null;
+            //return MapHasMany<TChild, IEnumerable<TChild>>(expression);
         }
 
         /// <summary>
@@ -262,7 +479,8 @@ namespace FluentNHibernate.Mapping
         /// <returns>one-to-many part</returns>
         public OneToManyPart<TChild> HasMany<TKey, TChild>(Expression<Func<T, IDictionary<TKey, TChild>>> expression)
         {
-            return MapHasMany<TChild, IDictionary<TKey, TChild>>(expression);
+            return null;
+            //return MapHasMany<TChild, IDictionary<TKey, TChild>>(expression);
         }
 
         /// <summary>
@@ -273,7 +491,8 @@ namespace FluentNHibernate.Mapping
         /// <returns>one-to-many part</returns>
         public OneToManyPart<TChild> HasMany<TChild>(Expression<Func<T, object>> expression)
         {
-            return MapHasMany<TChild, object>(expression);
+            return null;
+            //return MapHasMany<TChild, object>(expression);
         }
 
         /// <summary>

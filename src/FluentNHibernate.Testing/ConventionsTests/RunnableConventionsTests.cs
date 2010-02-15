@@ -11,6 +11,7 @@ using FluentNHibernate.MappingModel.ClassBased;
 using FluentNHibernate.MappingModel.Collections;
 using FluentNHibernate.MappingModel.Identity;
 using FluentNHibernate.Testing.Utils;
+using Iesi.Collections.Generic;
 using NHibernate.SqlTypes;
 using NHibernate.UserTypes;
 using NUnit.Framework;
@@ -28,8 +29,7 @@ namespace FluentNHibernate.Testing.ConventionsTests
                 var map = new ClassMap<Target>();
 
                 map.Id(x => x.Id);
-                map.HasMany(x => x.Array)
-                    .AsArray(x => x.Id);
+                map.HasMany(x => x.Array, "Position");
 
                 return map;
             })
@@ -45,8 +45,7 @@ namespace FluentNHibernate.Testing.ConventionsTests
                 var map = new ClassMap<Target>();
 
                 map.Id(x => x.Id);
-                map.HasMany(x => x.Bag)
-                    .AsBag();
+                map.HasMany(x => x.Bag);
 
                 return map;
             })
@@ -221,8 +220,7 @@ namespace FluentNHibernate.Testing.ConventionsTests
                 var map = new ClassMap<Target>();
 
                 map.Id(x => x.Id);
-                map.HasMany(x => x.Array)
-                    .AsArray(x => x.Id);
+                map.HasMany(x => x.Array, "Position");
 
                 return map;
             })
@@ -235,20 +233,21 @@ namespace FluentNHibernate.Testing.ConventionsTests
         [Test]
         public void ShouldApplyIIndexManyToManyConvention()
         {
-            var collection = TestConvention(new IndexManyToManyConvention(), () =>
-            {
-                var map = new ClassMap<Target>();
+            //var collection = TestConvention(new IndexManyToManyConvention(), () =>
+            //{
+            //    var map = new ClassMap<Target>();
 
-                map.Id(x => x.Id);
-                map.HasManyToMany(x => x.DictionaryBag)
-                    .AsMap("index")
-                    .AsTernaryAssociation("index", "value");
+            //    map.Id(x => x.Id);
+            //    map.HasManyToMany(x => x.DictionaryBag)
+            //        .AsMap("index")
+            //        .AsTernaryAssociation("index", "value");
 
-                return map;
-            })
-                .Collections.First();
+            //    return map;
+            //})
+            //    .Collections.First();
 
-            ((IndexManyToManyMapping)((MapMapping)collection).Index).ForeignKey.ShouldEqual("fk");
+            //((IndexManyToManyMapping)((MapMapping)collection).Index).ForeignKey.ShouldEqual("fk");
+            Assert.Fail();
         }
 
         [Test]
@@ -298,7 +297,7 @@ namespace FluentNHibernate.Testing.ConventionsTests
                 var map = new ClassMap<Target>();
 
                 map.Id(x => x.Id);
-                map.HasMany(x => x.Array)
+                map.HasMany(x => x.Bag)
                     .AsList();
 
                 return map;
@@ -310,18 +309,19 @@ namespace FluentNHibernate.Testing.ConventionsTests
         [Test]
         public void ShouldApplyIMapConvention()
         {
-            TestConvention(new MapConvention(), () =>
-            {
-                var map = new ClassMap<Target>();
+            //TestConvention(new MapConvention(), () =>
+            //{
+            //    var map = new ClassMap<Target>();
 
-                map.Id(x => x.Id);
-                map.HasMany(x => x.DictionaryBag)
-                    .AsMap("index");
+            //    map.Id(x => x.Id);
+            //    map.HasMany(x => x.DictionaryBag)
+            //        .AsMap("index");
 
-                return map;
-            })
-                .Collections.First()
-                .Access.ShouldEqual("field");
+            //    return map;
+            //})
+            //    .Collections.First()
+            //    .Access.ShouldEqual("field");
+            Assert.Fail();
         }
 
         [Test]
@@ -364,7 +364,7 @@ namespace FluentNHibernate.Testing.ConventionsTests
                 var map = new ClassMap<Target>();
 
                 map.Id(x => x.Id);
-                map.HasMany(x => x.Array)
+                map.HasMany(x => x.Bag)
                     .AsSet();
 
                 return map;
@@ -719,6 +719,7 @@ namespace FluentNHibernate.Testing.ConventionsTests
         {
             public OtherObject[] Array { get; set; }
             public IList<OtherObject> Bag { get; set; }
+            public ISet<OtherObject> Set { get; set; }
             public string Property { get; set; }
             public OtherObject Component { get; set; }
             public IDictionary DynamicComponent { get; set; }
