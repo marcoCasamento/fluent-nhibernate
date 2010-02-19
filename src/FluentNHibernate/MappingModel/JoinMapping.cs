@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Reflection;
-using FluentNHibernate.Mapping;
 using FluentNHibernate.MappingModel.ClassBased;
 using FluentNHibernate.Visitors;
 
@@ -10,7 +7,7 @@ namespace FluentNHibernate.MappingModel
 {
     public class JoinMapping : IMappingBase
     {
-        private readonly AttributeStore<JoinMapping> attributes;
+        private readonly AttributeStore attributes;
 
         private readonly MappedMembers mappedMembers;
 
@@ -20,14 +17,14 @@ namespace FluentNHibernate.MappingModel
 
         public JoinMapping(AttributeStore underlyingStore)
         {
-            attributes = new AttributeStore<JoinMapping>(underlyingStore);
+            attributes = underlyingStore.Clone();
             mappedMembers = new MappedMembers();
         }
 
         public KeyMapping Key
         {
-            get { return attributes.Get(x => x.Key); }
-            set { attributes.Set(x => x.Key, value); }
+            get { return attributes.Get<KeyMapping>(Attr.Key); }
+            set { attributes.Set(Attr.Key, value); }
         }
 
         public IEnumerable<PropertyMapping> Properties
@@ -72,44 +69,44 @@ namespace FluentNHibernate.MappingModel
 
         public string TableName
         {
-            get { return attributes.Get(x => x.TableName); }
-            set { attributes.Set(x => x.TableName, value); }
+            get { return attributes.Get(Attr.Table); }
+            set { attributes.Set(Attr.Table, value); }
         }
 
         public string Schema
         {
-            get { return attributes.Get(x => x.Schema); }
-            set { attributes.Set(x => x.Schema, value); }
+            get { return attributes.Get(Attr.Schema); }
+            set { attributes.Set(Attr.Schema, value); }
         }
 
         public string Catalog
         {
-            get { return attributes.Get(x => x.Catalog); }
-            set { attributes.Set(x => x.Catalog, value); }
+            get { return attributes.Get(Attr.Catalog); }
+            set { attributes.Set(Attr.Catalog, value); }
         }
 
         public string Subselect
         {
-            get { return attributes.Get(x => x.Subselect); }
-            set { attributes.Set(x => x.Subselect, value); }
+            get { return attributes.Get(Attr.Subselect); }
+            set { attributes.Set(Attr.Subselect, value); }
         }
 
         public string Fetch
         {
-            get { return attributes.Get(x => x.Fetch); }
-            set { attributes.Set(x => x.Fetch, value); }
+            get { return attributes.Get(Attr.Fetch); }
+            set { attributes.Set(Attr.Fetch, value); }
         }
 
         public bool Inverse
         {
-            get { return attributes.Get(x => x.Inverse); }
-            set { attributes.Set(x => x.Inverse, value); }
+            get { return attributes.Get<bool>(Attr.Inverse); }
+            set { attributes.Set(Attr.Inverse, value); }
         }
 
         public bool Optional
         {
-            get { return attributes.Get(x => x.Optional); }
-            set { attributes.Set(x => x.Optional, value); }
+            get { return attributes.Get<bool>(Attr.Optional); }
+            set { attributes.Set(Attr.Optional, value); }
         }
 
         public Type ContainingEntityType { get; set; }
@@ -124,17 +121,17 @@ namespace FluentNHibernate.MappingModel
             mappedMembers.AcceptVisitor(visitor);
         }
 
-        public bool IsSpecified(string property)
+        public bool IsSpecified(Attr property)
         {
-            return attributes.IsSpecified(property);
+            return attributes.HasUserValue(property);
         }
 
-        public bool HasValue<TResult>(Expression<Func<JoinMapping, TResult>> property)
+        public bool HasValue(Attr property)
         {
-            return attributes.HasValue(property);
+            return attributes.HasAnyValue(property);
         }
 
-        public void SetDefaultValue<TResult>(Expression<Func<JoinMapping, TResult>> property, TResult value)
+        public void SetDefaultValue<TResult>(Attr property, TResult value)
         {
             attributes.SetDefault(property, value);
         }

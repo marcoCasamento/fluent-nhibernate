@@ -8,7 +8,7 @@ namespace FluentNHibernate.MappingModel.Identity
 {
     public class GeneratorMapping : MappingBase
     {
-        private readonly AttributeStore<GeneratorMapping> attributes = new AttributeStore<GeneratorMapping>();
+        private readonly AttributeStore attributes = new AttributeStore();
 
         public GeneratorMapping()
         {
@@ -22,26 +22,21 @@ namespace FluentNHibernate.MappingModel.Identity
 
         public string Class
         {
-            get { return attributes.Get(x => x.Class); }
-            set { attributes.Set(x => x.Class, value); }
+            get { return attributes.Get(Attr.Class); }
+            set { attributes.Set(Attr.Class, value); }
         }
 
         public IDictionary<string, string> Params { get; private set; }
         public Type ContainingEntityType { get; set; }
 
-        public override bool IsSpecified(string property)
+        public override bool IsSpecified(Attr property)
         {
-            return attributes.IsSpecified(property);
+            return attributes.HasUserValue(property);
         }
 
-        public bool HasValue<TResult>(Expression<Func<GeneratorMapping, TResult>> property)
+        public bool HasValue(Attr property)
         {
-            return attributes.HasValue(property);
-        }
-
-        public void SetDefaultValue<TResult>(Expression<Func<GeneratorMapping, TResult>> property, TResult value)
-        {
-            attributes.SetDefault(property, value);
+            return attributes.HasAnyValue(property);
         }
 
         public bool Equals(GeneratorMapping other)

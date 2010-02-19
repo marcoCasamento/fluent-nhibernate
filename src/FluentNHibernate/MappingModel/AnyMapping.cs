@@ -1,29 +1,28 @@
 using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
 using FluentNHibernate.Visitors;
 
 namespace FluentNHibernate.MappingModel
 {
     public class AnyMapping : MappingBase
     {
-        private readonly AttributeStore<AnyMapping> attributes;
         private readonly IDefaultableList<ColumnMapping> typeColumns = new DefaultableList<ColumnMapping>();
         private readonly IDefaultableList<ColumnMapping> identifierColumns = new DefaultableList<ColumnMapping>();
         private readonly IList<MetaValueMapping> metaValues = new List<MetaValueMapping>();
 
         public AnyMapping()
-            : this(new AttributeStore())
+            : this(null)
         {}
 
         public AnyMapping(AttributeStore underlyingStore)
         {
-            attributes = new AttributeStore<AnyMapping>(underlyingStore);
+            if (underlyingStore != null)
+                ReplaceAttributes(underlyingStore);
 
-            attributes.SetDefault(x => x.Insert, true);
-            attributes.SetDefault(x => x.Update, true);
-            attributes.SetDefault(x => x.OptimisticLock, true);
-            attributes.SetDefault(x => x.Lazy, false);
+            SetDefaultAttribute(Attr.Insert, true);
+            SetDefaultAttribute(Attr.Update, true);
+            SetDefaultAttribute(Attr.OptimisticLock, true);
+            SetDefaultAttribute(Attr.Lazy, false);
         }
 
         public override void AcceptVisitor(IMappingModelVisitor visitor)
@@ -42,56 +41,56 @@ namespace FluentNHibernate.MappingModel
 
         public string Name
         {
-            get { return attributes.Get(x => x.Name); }
-            set { attributes.Set(x => x.Name, value); }
+            get { return (string)GetAttribute(Attr.Name); }
+            set { SetAttribute(Attr.Name, value); }
         }
 
         public string IdType
         {
-            get { return attributes.Get(x => x.IdType); }
-            set { attributes.Set(x => x.IdType, value); }
+            get { return (string)GetAttribute(Attr.IdType); }
+            set { SetAttribute(Attr.IdType, value); }
         }
 
         public TypeReference MetaType
         {
-            get { return attributes.Get(x => x.MetaType); }
-            set { attributes.Set(x => x.MetaType, value); }
+            get { return (TypeReference)GetAttribute(Attr.MetaType); }
+            set { SetAttribute(Attr.MetaType, value); }
         }
 
         public string Access
         {
-            get { return attributes.Get(x => x.Access); }
-            set { attributes.Set(x => x.Access, value); }
+            get { return (string)GetAttribute(Attr.Access); }
+            set { SetAttribute(Attr.Access, value); }
         }
 
         public bool Insert
         {
-            get { return attributes.Get(x => x.Insert); }
-            set { attributes.Set(x => x.Insert, value); }
+            get { return (bool)GetAttribute(Attr.Insert); }
+            set { SetAttribute(Attr.Insert, value); }
         }
 
         public bool Update
         {
-            get { return attributes.Get(x => x.Update); }
-            set { attributes.Set(x => x.Update, value); }
+            get { return (bool)GetAttribute(Attr.Update); }
+            set { SetAttribute(Attr.Update, value); }
         }
 
         public string Cascade
         {
-            get { return attributes.Get(x => x.Cascade); }
-            set { attributes.Set(x => x.Cascade, value); }
+            get { return (string)GetAttribute(Attr.Cascade); }
+            set { SetAttribute(Attr.Cascade, value); }
         }
 
         public bool Lazy
         {
-            get { return attributes.Get(x => x.Lazy); }
-            set { attributes.Set(x => x.Lazy, value); }
+            get { return (bool)GetAttribute(Attr.Lazy); }
+            set { SetAttribute(Attr.Lazy, value); }
         }
 
         public bool OptimisticLock
         {
-            get { return attributes.Get(x => x.OptimisticLock); }
-            set { attributes.Set(x => x.OptimisticLock, value); }
+            get { return (bool)GetAttribute(Attr.OptimisticLock); }
+            set { SetAttribute(Attr.OptimisticLock, value); }
         }
 
         public IDefaultableEnumerable<ColumnMapping> TypeColumns
@@ -136,24 +135,9 @@ namespace FluentNHibernate.MappingModel
             metaValues.Add(metaValue);
         }
 
-        public override bool IsSpecified(string property)
-        {
-            return attributes.IsSpecified(property);
-        }
-
-        public bool HasValue<TResult>(Expression<Func<AnyMapping, TResult>> property)
-        {
-            return attributes.HasValue(property);
-        }
-
-        public void SetDefaultValue<TResult>(Expression<Func<AnyMapping, TResult>> property, TResult value)
-        {
-            attributes.SetDefault(property, value);
-        }
-
         public bool Equals(AnyMapping other)
         {
-            return Equals(other.attributes, attributes) &&
+            return base.Equals(other) &&
                 other.typeColumns.ContentEquals(typeColumns) &&
                 other.identifierColumns.ContentEquals(identifierColumns) &&
                 other.metaValues.ContentEquals(metaValues) &&
@@ -170,7 +154,7 @@ namespace FluentNHibernate.MappingModel
         {
             unchecked
             {
-                int result = (attributes != null ? attributes.GetHashCode() : 0);
+                var result = base.GetHashCode();
                 result = (result * 397) ^ (typeColumns != null ? typeColumns.GetHashCode() : 0);
                 result = (result * 397) ^ (identifierColumns != null ? identifierColumns.GetHashCode() : 0);
                 result = (result * 397) ^ (metaValues != null ? metaValues.GetHashCode() : 0);

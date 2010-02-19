@@ -7,11 +7,10 @@ namespace FluentNHibernate.MappingModel.Collections
 {
     public class MapMapping : CollectionMappingBase, IIndexedCollectionMapping
     {
-        private readonly AttributeStore<MapMapping> attributes;
         public IIndexMapping Index
         {
-            get { return attributes.Get(x => x.Index); }
-            set { attributes.Set(x => x.Index, value); }
+            get { return attributes.Get<IIndexMapping>(Attr.Index); }
+            set { attributes.Set(Attr.Index, value); }
         }
 
         public MapMapping()
@@ -21,7 +20,7 @@ namespace FluentNHibernate.MappingModel.Collections
         public MapMapping(AttributeStore underlyingStore)
             : base(underlyingStore)
         {
-            attributes = new AttributeStore<MapMapping>(underlyingStore);
+            attributes = underlyingStore.Clone();
         }
 
         public override void AcceptVisitor(IMappingModelVisitor visitor)
@@ -36,29 +35,19 @@ namespace FluentNHibernate.MappingModel.Collections
 
         public override string OrderBy
         {
-            get { return attributes.Get(x => x.OrderBy); }
-            set { attributes.Set(x => x.OrderBy, value); }
+            get { return attributes.Get(Attr.OrderBy); }
+            set { attributes.Set(Attr.OrderBy, value); }
         }
 
         public string Sort
         {
-            get { return attributes.Get(x => x.Sort); }
-            set { attributes.Set(x => x.Sort, value); }
+            get { return attributes.Get(Attr.Sort); }
+            set { attributes.Set(Attr.Sort, value); }
         }
 
-        public new bool IsSpecified(string property)
+        public new bool IsSpecified(Attr property)
         {
-            return attributes.IsSpecified(property);
-        }
-
-        public bool HasValue<TResult>(Expression<Func<MapMapping, TResult>> property)
-        {
-            return attributes.HasValue(property);
-        }
-
-        public void SetDefaultValue<TResult>(Expression<Func<MapMapping, TResult>> property, TResult value)
-        {
-            attributes.SetDefault(property, value);
+            return attributes.HasUserValue(property);
         }
 
         public bool Equals(MapMapping other)

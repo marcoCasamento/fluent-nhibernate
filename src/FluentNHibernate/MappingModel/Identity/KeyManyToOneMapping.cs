@@ -7,7 +7,7 @@ namespace FluentNHibernate.MappingModel.Identity
 {
     public class KeyManyToOneMapping : MappingBase
     {
-        private readonly AttributeStore<KeyManyToOneMapping> attributes = new AttributeStore<KeyManyToOneMapping>();
+        private readonly AttributeStore attributes = new AttributeStore();
         private readonly IList<ColumnMapping> columns = new List<ColumnMapping>();
 
         public override void AcceptVisitor(IMappingModelVisitor visitor)
@@ -20,44 +20,44 @@ namespace FluentNHibernate.MappingModel.Identity
 
         public string Access
         {
-            get { return attributes.Get(x => x.Access); }
-            set { attributes.Set(x => x.Access, value); }
+            get { return attributes.Get(Attr.Access); }
+            set { attributes.Set(Attr.Access, value); }
         }
 
         public string Name
         {
-            get { return attributes.Get(x => x.Name); }
-            set { attributes.Set(x => x.Name, value); }
+            get { return attributes.Get(Attr.Name); }
+            set { attributes.Set(Attr.Name, value); }
         }
 
         public TypeReference Class
         {
-            get { return attributes.Get(x => x.Class); }
-            set { attributes.Set(x => x.Class, value); }
+            get { return attributes.Get<TypeReference>(Attr.Class); }
+            set { attributes.Set(Attr.Class, value); }
         }
 
         public string ForeignKey
         {
-            get { return attributes.Get(x => x.ForeignKey); }
-            set { attributes.Set(x => x.ForeignKey, value); }
+            get { return attributes.Get(Attr.ForeignKey); }
+            set { attributes.Set(Attr.ForeignKey, value); }
         }
 
         public bool Lazy
         {
-            get { return attributes.Get(x => x.Lazy); }
-            set { attributes.Set(x => x.Lazy, value); }
+            get { return attributes.Get<bool>(Attr.Lazy); }
+            set { attributes.Set(Attr.Lazy, value); }
         }
 
         public string NotFound
         {
-            get { return attributes.Get(x => x.NotFound); }
-            set { attributes.Set(x => x.NotFound, value); }
+            get { return attributes.Get(Attr.NotFound); }
+            set { attributes.Set(Attr.NotFound, value); }
         }
 
         public string EntityName
         {
-            get { return attributes.Get(x => x.EntityName); }
-            set { attributes.Set(x => x.EntityName, value); }
+            get { return attributes.Get(Attr.EntityName); }
+            set { attributes.Set(Attr.EntityName, value); }
         }
 
         public IEnumerable<ColumnMapping> Columns
@@ -75,19 +75,14 @@ namespace FluentNHibernate.MappingModel.Identity
             columns.Add(mapping);
         }
 
-        public override bool IsSpecified(string property)
+        public override bool IsSpecified(Attr property)
         {
-            return attributes.IsSpecified(property);
+            return attributes.HasUserValue(property);
         }
 
-        public bool HasValue<TResult>(Expression<Func<KeyManyToOneMapping, TResult>> property)
+        public bool HasValue(Attr property)
         {
-            return attributes.HasValue(property);
-        }
-
-        public void SetDefaultValue<TResult>(Expression<Func<KeyManyToOneMapping, TResult>> property, TResult value)
-        {
-            attributes.SetDefault(property, value);
+            return attributes.HasAnyValue(property);
         }
 
         public bool Equals(KeyManyToOneMapping other)

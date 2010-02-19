@@ -9,22 +9,18 @@ namespace FluentNHibernate.Testing.MappingModel
     [TestFixture]
     public class AttributeStoreTester
     {
-        private sealed class TestStore : AttributeStore<TestStore>
+        private sealed class TestStore : AttributeStore
         {
-            public TestStore() : base(new AttributeStore())
+            public bool Lazy
             {
-            }
-
-            public bool IsSomething
-            {
-                get { return Get(x => x.IsSomething); }
-                set { Set(x => x.IsSomething, value); }
+                get { return Get<bool>(Attr.Lazy); }
+                set { Set(Attr.Lazy, value); }
             }
 
             public string Name
             {
-                get { return Get(x => x.Name); }
-                set { Set(x => x.Name, value); }
+                get { return Get(Attr.Name); }
+                set { Set(Attr.Name, value); }
             }
         }
 
@@ -32,15 +28,15 @@ namespace FluentNHibernate.Testing.MappingModel
         public void UnsetAttributeShouldBeDefault()
         {
             var store = new TestStore();
-            store.IsSomething.ShouldBeFalse();
+            store.Lazy.ShouldBeFalse();
         }
 
         [Test]
         public void CanGetAndSetAttribute()
         {
             var store = new TestStore();
-            store.IsSomething = true;
-            store.IsSomething.ShouldBeTrue();            
+            store.Lazy = true;
+            store.Lazy.ShouldBeTrue();            
         }
 
         [Test]
@@ -48,34 +44,34 @@ namespace FluentNHibernate.Testing.MappingModel
         {
 
             var store = new TestStore();            
-            store.IsSpecified(x => x.IsSomething).ShouldBeFalse();
-            store.IsSomething = true;
-            store.IsSpecified(x => x.IsSomething).ShouldBeTrue();
+            store.HasUserValue(Attr.Lazy).ShouldBeFalse();
+            store.Lazy = true;
+            store.HasUserValue(Attr.Lazy).ShouldBeTrue();
         }
 
         [Test]
         public void CanCopyAttributes()
         {
             var source = new TestStore();
-            source.IsSomething = true;
+            source.Lazy = true;
 
             var target = new TestStore();
             source.CopyTo(target);
 
-            target.IsSomething.ShouldBeTrue();
+            target.Lazy.ShouldBeTrue();
         }
 
         [Test]
         public void CopyingAttributesReplacesOldValues()
         {
             var source = new TestStore();
-            source.IsSomething = false;
+            source.Lazy = false;
 
             var target = new TestStore();
-            target.IsSomething = true;
+            target.Lazy = true;
             source.CopyTo(target);
 
-            target.IsSomething.ShouldBeFalse();
+            target.Lazy.ShouldBeFalse();
         }
 
         [Test]
@@ -84,32 +80,32 @@ namespace FluentNHibernate.Testing.MappingModel
             var source = new TestStore();
 
             var target = new TestStore();
-            target.IsSomething = true;
+            target.Lazy = true;
             source.CopyTo(target);
 
-            target.IsSomething.ShouldBeTrue();
+            target.Lazy.ShouldBeTrue();
         }
 
         [Test]
         public void CanSetDefaultValue()
         {
             var source = new TestStore();
-            source.SetDefault(x => x.IsSomething, true);
+            source.SetDefault(Attr.Lazy, true);
             
-            source.IsSomething.ShouldBeTrue();
+            source.Lazy.ShouldBeTrue();
         }
 
         [Test]
         public void DefaultValuesAreNotCopied()
         {
             var source = new TestStore();
-            source.SetDefault(x => x.IsSomething, true);
+            source.SetDefault(Attr.Lazy, true);
 
             var target = new TestStore();
-            target.IsSomething = false;
+            target.Lazy = false;
             source.CopyTo(target);
 
-            target.IsSomething.ShouldBeFalse();
+            target.Lazy.ShouldBeFalse();
         }
     }
 }

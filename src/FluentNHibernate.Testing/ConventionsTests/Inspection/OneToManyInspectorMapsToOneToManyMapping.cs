@@ -34,14 +34,14 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         public void ChildTypeIsSet()
         {
             mapping.ChildType = typeof(ExampleClass);
-            inspector.IsSet(Prop(x => x.ChildType))
+            inspector.IsSet(Attr.ChildType)
                 .ShouldBeTrue();
         }
 
         [Test]
         public void ChildTypeIsNotSet()
         {
-            inspector.IsSet(Prop(x => x.ChildType))
+            inspector.IsSet(Attr.ChildType)
                 .ShouldBeFalse();
         }
 
@@ -56,14 +56,14 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         public void ClassIsSet()
         {
             mapping.Class = new TypeReference(typeof(ExampleClass));
-            inspector.IsSet(Prop(x => x.Class))
+            inspector.IsSet(Attr.Class)
                 .ShouldBeTrue();
         }
 
         [Test]
         public void ClassIsNotSet()
         {
-            inspector.IsSet(Prop(x => x.Class))
+            inspector.IsSet(Attr.Class)
                 .ShouldBeFalse();
         }
 
@@ -78,14 +78,14 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         public void NotFoundIsSet()
         {
             mapping.NotFound = "exception";
-            inspector.IsSet(Prop(x => x.NotFound))
+            inspector.IsSet(Attr.NotFound)
                 .ShouldBeTrue();
         }
 
         [Test]
         public void NotFoundIsNotSet()
         {
-            inspector.IsSet(Prop(x => x.NotFound))
+            inspector.IsSet(Attr.NotFound)
                 .ShouldBeFalse();
         }
 

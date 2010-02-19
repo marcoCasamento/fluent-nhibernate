@@ -37,10 +37,10 @@ namespace FluentNHibernate.MappingModel.Output
         {
             document = WriteComponent("component", mapping);
 
-            if (mapping.HasValue(x => x.Class))
+            if (mapping.HasValue(Attr.Class))
                 document.DocumentElement.WithAtt("class", mapping.Class);
 
-            if (mapping.HasValue(x => x.Lazy))
+            if (mapping.HasValue(Attr.Lazy))
                 document.DocumentElement.WithAtt("lazy", mapping.Lazy);
         }
     }

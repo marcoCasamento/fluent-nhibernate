@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using FluentNHibernate.Mapping;
+using FluentNHibernate.MappingModel;
 using FluentNHibernate.MappingModel.Collections;
 
 namespace FluentNHibernate.Conventions.Inspections
@@ -17,9 +18,9 @@ namespace FluentNHibernate.Conventions.Inspections
             mappedProperties.Map(x => x.LazyLoad, x => x.Lazy);
         }
 
-        public new bool IsSet(Member property)
+        public new bool IsSet(Attr property)
         {
-            return mapping.IsSpecified(mappedProperties.Get(property));
+            return mapping.IsSpecified(property);
         }
 
         public IIndexInspectorBase Index

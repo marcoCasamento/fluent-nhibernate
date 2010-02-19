@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using FluentNHibernate.MappingModel.Collections;
+using FluentNHibernate.Utils;
 using FluentNHibernate.Visitors;
 
 namespace FluentNHibernate.MappingModel.ClassBased
@@ -16,8 +17,17 @@ namespace FluentNHibernate.MappingModel.ClassBased
             subclasses = new List<ISubclassMapping>();
         }
 
-        public abstract string Name { get; set; }
-        public abstract Type Type { get; set;}
+        public string Name
+        {
+            get { return (string)GetAttribute(Attr.Name); }
+            set { SetAttribute(Attr.Name, value); }
+        }
+
+        public Type Type
+        {
+            get { return (Type)GetAttribute(Attr.Type); }
+            set { SetAttribute(Attr.Type, value); }
+        }
 
         public override void AcceptVisitor(IMappingModelVisitor visitor)
         {
@@ -165,7 +175,11 @@ namespace FluentNHibernate.MappingModel.ClassBased
             return string.Format("ClassMapping({0})", Type.Name);
         }
 
-        public abstract void MergeAttributes(AttributeStore store);
+        public void MergeAttributes(AttributeStore store)
+        {
+            store.Defaults.Each(SetDefaultAttribute);
+            store.UserDefined.Each(SetAttribute);
+        }
 
         public bool Equals(ClassMappingBase other)
         {

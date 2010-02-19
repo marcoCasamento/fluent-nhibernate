@@ -1,3 +1,4 @@
+using FluentNHibernate.MappingModel;
 using FluentNHibernate.MappingModel.Collections;
 
 namespace FluentNHibernate.Visitors
@@ -12,27 +13,27 @@ namespace FluentNHibernate.Visitors
             if (mapping.OtherSide == null)
             {
                 // uni-directional
-                mapping.SetDefaultValue(x => x.TableName, mapping.ChildType.Name + "To" + mapping.ContainingEntityType.Name);
+                mapping.SetDefaultValue(Attr.Table, mapping.ChildType.Name + "To" + mapping.ContainingEntityType.Name);
             }
             else
             {
                 // bi-directional
-                if (mapping.IsSpecified("TableName") && mapping.OtherSide.IsSpecified("TableName"))
+                if (mapping.IsSpecified(Attr.Table) && mapping.OtherSide.IsSpecified(Attr.Table))
                 {
                     // TODO: We could check if they're the same here and warn the user if they're not
                     return;
                 }
 
-                if (mapping.IsSpecified("TableName") && !mapping.OtherSide.IsSpecified("TableName"))
-                    mapping.OtherSide.SetDefaultValue(x => x.TableName, mapping.TableName);
-                else if (!mapping.IsSpecified("TableName") && mapping.OtherSide.IsSpecified("TableName"))
-                    mapping.SetDefaultValue(x => x.TableName, mapping.OtherSide.TableName);
+                if (mapping.IsSpecified(Attr.Table) && !mapping.OtherSide.IsSpecified(Attr.Table))
+                    mapping.OtherSide.SetDefaultValue(Attr.Table, mapping.TableName);
+                else if (!mapping.IsSpecified(Attr.Table) && mapping.OtherSide.IsSpecified(Attr.Table))
+                    mapping.SetDefaultValue(Attr.Table, mapping.OtherSide.TableName);
                 else
                 {
                     var tableName = mapping.Member.Name + "To" + mapping.OtherSide.Member.Name;
 
-                    mapping.SetDefaultValue(x => x.TableName, tableName);
-                    mapping.OtherSide.SetDefaultValue(x => x.TableName, tableName);
+                    mapping.SetDefaultValue(Attr.Table, tableName);
+                    mapping.OtherSide.SetDefaultValue(Attr.Table, tableName);
                 }
             }
         }

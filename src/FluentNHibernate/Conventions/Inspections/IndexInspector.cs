@@ -27,9 +27,9 @@ namespace FluentNHibernate.Conventions.Inspections
             get { return mapping.Type.Name; }
         }
 
-        public bool IsSet(Member property)
+        public bool IsSet(Attr property)
         {
-            return mapping.IsSpecified(mappedProperties.Get(property));
+            return mapping.IsSpecified(property);
         }
 
         public TypeReference Type

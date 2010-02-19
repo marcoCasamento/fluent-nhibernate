@@ -32,14 +32,14 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         public void NameIsSet()
         {
             mapping.Name = "name";
-            inspector.IsSet(Prop(x => x.Name))
+            inspector.IsSet(Attr.Name)
                 .ShouldBeTrue();
         }
 
         [Test]
         public void NameIsNotSet()
         {
-            inspector.IsSet(Prop(x => x.Name))
+            inspector.IsSet(Attr.Name)
                 .ShouldBeFalse();
         }
 

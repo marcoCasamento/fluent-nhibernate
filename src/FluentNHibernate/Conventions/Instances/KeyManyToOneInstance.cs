@@ -1,4 +1,5 @@
 ﻿using FluentNHibernate.Conventions.Inspections;
+using FluentNHibernate.MappingModel;
 using FluentNHibernate.MappingModel.Identity;
 
 namespace FluentNHibernate.Conventions.Instances
@@ -20,7 +21,7 @@ namespace FluentNHibernate.Conventions.Instances
             {
                 return new AccessInstance(value =>
                 {
-                    if (!mapping.IsSpecified("Access"))
+                    if (!mapping.IsSpecified(Attr.Access))
                         mapping.Access = value;
                 });
             }
@@ -28,13 +29,13 @@ namespace FluentNHibernate.Conventions.Instances
 
         public new void ForeignKey(string name)
         {
-            if (!mapping.IsSpecified("ForeignKey"))
+            if (!mapping.IsSpecified(Attr.ForeignKey))
                 mapping.ForeignKey = name;
         }
 
         public void Lazy()
         {
-            if (!mapping.IsSpecified("Lazy"))
+            if (!mapping.IsSpecified(Attr.Lazy))
                 mapping.Lazy = nextBool;
             nextBool = true;
         }
@@ -45,7 +46,7 @@ namespace FluentNHibernate.Conventions.Instances
             {
                 return new NotFoundInstance(value =>
                 {
-                    if (!mapping.IsSpecified("NotFound"))
+                    if (!mapping.IsSpecified(Attr.NotFound))
                         mapping.NotFound = value;
                 });
             }

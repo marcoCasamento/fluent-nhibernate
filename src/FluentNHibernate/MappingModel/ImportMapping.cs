@@ -6,7 +6,7 @@ namespace FluentNHibernate.MappingModel
 {
     public class ImportMapping : MappingBase
     {
-        private readonly AttributeStore<ImportMapping> attributes = new AttributeStore<ImportMapping>();
+        private readonly AttributeStore attributes = new AttributeStore();
 
         public ImportMapping()
             : this(new AttributeStore())
@@ -14,7 +14,7 @@ namespace FluentNHibernate.MappingModel
 
         public ImportMapping(AttributeStore underlyingStore)
         {
-            attributes = new AttributeStore<ImportMapping>(underlyingStore);
+            attributes = underlyingStore.Clone();
         }
 
         public override void AcceptVisitor(IMappingModelVisitor visitor)
@@ -24,29 +24,24 @@ namespace FluentNHibernate.MappingModel
 
         public string Rename
         {
-            get { return attributes.Get(x => x.Rename); }
-            set { attributes.Set(x => x.Rename, value); }
+            get { return attributes.Get(Attr.Rename); }
+            set { attributes.Set(Attr.Rename, value); }
         }
 
         public TypeReference Class
         {
-            get { return attributes.Get(x => x.Class); }
-            set { attributes.Set(x => x.Class, value); }
+            get { return attributes.Get<TypeReference>(Attr.Class); }
+            set { attributes.Set(Attr.Class, value); }
         }
 
-        public override bool IsSpecified(string property)
+        public override bool IsSpecified(Attr property)
         {
-            return attributes.IsSpecified(property);
+            return attributes.HasUserValue(property);
         }
 
-        public bool HasValue<TResult>(Expression<Func<ImportMapping, TResult>> property)
+        public bool HasValue(Attr property)
         {
-            return attributes.HasValue(property);
-        }
-
-        public void SetDefaultValue<TResult>(Expression<Func<ImportMapping, TResult>> property, TResult value)
-        {
-            attributes.SetDefault(property, value);
+            return attributes.HasAnyValue(property);
         }
 
         public bool Equals(ImportMapping other)

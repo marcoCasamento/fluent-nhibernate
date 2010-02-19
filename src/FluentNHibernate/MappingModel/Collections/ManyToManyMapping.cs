@@ -8,7 +8,7 @@ namespace FluentNHibernate.MappingModel.Collections
 {
     public class ManyToManyMapping : MappingBase, ICollectionRelationshipMapping, IHasColumnMappings
     {
-        private readonly AttributeStore<ManyToManyMapping> attributes;
+        private readonly AttributeStore attributes;
         private readonly IDefaultableList<ColumnMapping> columns = new DefaultableList<ColumnMapping>();
         
         public ManyToManyMapping()
@@ -17,7 +17,7 @@ namespace FluentNHibernate.MappingModel.Collections
 
         public ManyToManyMapping(AttributeStore underlyingStore)
         {
-            attributes = new AttributeStore<ManyToManyMapping>(underlyingStore);
+            attributes = underlyingStore.Clone();
         }
 
         public override void AcceptVisitor(IMappingModelVisitor visitor)
@@ -30,56 +30,56 @@ namespace FluentNHibernate.MappingModel.Collections
 
         public Type ChildType
         {
-            get { return attributes.Get(x => x.ChildType); }
-            set { attributes.Set(x => x.ChildType, value); }
+            get { return attributes.Get<Type>(Attr.ChildType); }
+            set { attributes.Set(Attr.ChildType, value); }
         }
 
         public Type ParentType
         {
-            get { return attributes.Get(x => x.ParentType); }
-            set { attributes.Set(x => x.ParentType, value); }
+            get { return attributes.Get<Type>(Attr.ParentType); }
+            set { attributes.Set(Attr.ParentType, value); }
         }
 
         public TypeReference Class
         {
-            get { return attributes.Get(x => x.Class); }
-            set { attributes.Set(x => x.Class, value); }
+            get { return attributes.Get<TypeReference>(Attr.Class); }
+            set { attributes.Set(Attr.Class, value); }
         }
 
         public string ForeignKey
         {
-            get { return attributes.Get(x => x.ForeignKey); }
-            set { attributes.Set(x => x.ForeignKey, value); }
+            get { return attributes.Get(Attr.ForeignKey); }
+            set { attributes.Set(Attr.ForeignKey, value); }
         }
 
         public string Fetch
         {
-            get { return attributes.Get(x => x.Fetch); }
-            set { attributes.Set(x => x.Fetch, value); }
+            get { return attributes.Get(Attr.Fetch); }
+            set { attributes.Set(Attr.Fetch, value); }
         }
 
         public string NotFound
         {
-            get { return attributes.Get(x => x.NotFound); }
-            set { attributes.Set(x => x.NotFound, value); }
+            get { return attributes.Get(Attr.NotFound); }
+            set { attributes.Set(Attr.NotFound, value); }
         }
 
         public string Where
         {
-            get { return attributes.Get(x => x.Where); }
-            set { attributes.Set(x => x.Where, value); }
+            get { return attributes.Get(Attr.Where); }
+            set { attributes.Set(Attr.Where, value); }
         }
 
         public bool Lazy
         {
-            get { return attributes.Get(x => x.Lazy); }
-            set { attributes.Set(x => x.Lazy, value); }
+            get { return attributes.Get<bool>(Attr.Lazy); }
+            set { attributes.Set(Attr.Lazy, value); }
         }
 
         public string EntityName
         {
-            get { return attributes.Get(x => x.EntityName); }
-            set { attributes.Set(x => x.EntityName, value); }
+            get { return attributes.Get(Attr.EntityName); }
+            set { attributes.Set(Attr.EntityName, value); }
         }
 
         public IDefaultableEnumerable<ColumnMapping> Columns
@@ -104,19 +104,14 @@ namespace FluentNHibernate.MappingModel.Collections
             columns.Clear();
         }
 
-        public override bool IsSpecified(string property)
+        public override bool IsSpecified(Attr property)
         {
-            return attributes.IsSpecified(property);
+            return attributes.HasUserValue(property);
         }
 
-        public bool HasValue<TResult>(Expression<Func<ManyToManyMapping, TResult>> property)
+        public bool HasValue(Attr property)
         {
-            return attributes.HasValue(property);
-        }
-
-        public void SetDefaultValue<TResult>(Expression<Func<ManyToManyMapping, TResult>> property, TResult value)
-        {
-            attributes.SetDefault(property, value);
+            return attributes.HasAnyValue(property);
         }
 
         public bool Equals(ManyToManyMapping other)

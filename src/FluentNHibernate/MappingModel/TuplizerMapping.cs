@@ -6,7 +6,7 @@ namespace FluentNHibernate.MappingModel
 {
     public class TuplizerMapping : MappingBase
     {
-        private readonly AttributeStore<TuplizerMapping> attributes;
+        private readonly AttributeStore attributes;
 
         public TuplizerMapping()
             : this(new AttributeStore())
@@ -14,7 +14,7 @@ namespace FluentNHibernate.MappingModel
 
         public TuplizerMapping(AttributeStore underlyingStore)
         {
-            attributes = new AttributeStore<TuplizerMapping>(underlyingStore);
+            attributes = underlyingStore.Clone();
         }
 
         public override void AcceptVisitor(IMappingModelVisitor visitor)
@@ -24,24 +24,24 @@ namespace FluentNHibernate.MappingModel
 
         public TuplizerMode Mode
         {
-            get { return attributes.Get(x => x.Mode); }
-            set { attributes.Set(x => x.Mode, value); }
+            get { return attributes.Get<TuplizerMode>(Attr.Mode); }
+            set { attributes.Set(Attr.Mode, value); }
         }
 
         public TypeReference Type
         {
-            get { return attributes.Get(x => x.Type); }
-            set { attributes.Set(x => x.Type, value); }
+            get { return attributes.Get<TypeReference>(Attr.Type); }
+            set { attributes.Set(Attr.Type, value); }
         }
 
-        public override bool IsSpecified(string property)
+        public override bool IsSpecified(Attr property)
         {
-            return attributes.IsSpecified(property);            
+            return attributes.HasUserValue(property);            
         }
 
-        public bool HasValue<TResult>(Expression<Func<TuplizerMapping, TResult>> property)
+        public bool HasValue(Attr property)
         {
-            return attributes.HasValue(property);
+            return attributes.HasAnyValue(property);
         }
 
         public bool Equals(TuplizerMapping other)

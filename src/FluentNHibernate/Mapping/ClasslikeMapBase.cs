@@ -464,10 +464,9 @@ namespace FluentNHibernate.Mapping
         /// <typeparam name="TChild">Child object type</typeparam>
         /// <param name="expression">Expression to get property from</param>
         /// <returns>one-to-many part</returns>
-        public HasManyBagBuilder<TChild> HasMany<TChild>(Expression<Func<T, IEnumerable<TChild>>> expression)
+        public OneToManyPart<TChild> HasMany<TChild>(Expression<Func<T, IEnumerable<TChild>>> expression)
         {
-            return null;
-            //return MapHasMany<TChild, IEnumerable<TChild>>(expression);
+            return HasMany<TChild>(expression.ToMember());
         }
 
         /// <summary>

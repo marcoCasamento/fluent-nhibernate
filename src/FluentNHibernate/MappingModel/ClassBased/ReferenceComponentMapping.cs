@@ -196,7 +196,7 @@ namespace FluentNHibernate.MappingModel.ClassBased
             get { return mergedComponent; }
         }
 
-        public bool HasValue(string property)
+        public bool HasValue(Attr property)
         {
             if (!IsAssociated)
                 return false;

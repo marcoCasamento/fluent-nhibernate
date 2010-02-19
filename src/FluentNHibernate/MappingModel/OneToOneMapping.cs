@@ -6,7 +6,7 @@ namespace FluentNHibernate.MappingModel
 {
     public class OneToOneMapping : MappingBase
     {
-        private readonly AttributeStore<OneToOneMapping> attributes;
+        private readonly AttributeStore attributes;
 
         public OneToOneMapping()
             : this(new AttributeStore())
@@ -14,7 +14,7 @@ namespace FluentNHibernate.MappingModel
 
         public OneToOneMapping(AttributeStore underlyingStore)
         {
-            attributes = new AttributeStore<OneToOneMapping>(underlyingStore);
+            attributes = underlyingStore.Clone();
         }
 
         public override void AcceptVisitor(IMappingModelVisitor visitor)
@@ -24,76 +24,77 @@ namespace FluentNHibernate.MappingModel
 
         public string Name
         {
-            get { return attributes.Get(x => x.Name); }
-            set { attributes.Set(x => x.Name, value); }
+            get { return attributes.Get(Attr.Name); }
+            set { attributes.Set(Attr.Name, value); }
         }
 
         public string Access
         {
-            get { return attributes.Get(x => x.Access); }
-            set { attributes.Set(x => x.Access, value); }
+            get { return attributes.Get(Attr.Access); }
+            set { attributes.Set(Attr.Access, value); }
         }
 
         public TypeReference Class
         {
-            get { return attributes.Get(x => x.Class); }
-            set { attributes.Set(x => x.Class, value); }
+            get { return attributes.Get<TypeReference>(Attr.Class); }
+            set { attributes.Set(Attr.Class, value); }
         }
 
         public string Cascade
         {
-            get { return attributes.Get(x => x.Cascade); }
-            set { attributes.Set(x => x.Cascade, value); }
+            get { return attributes.Get(Attr.Cascade); }
+            set { attributes.Set(Attr.Cascade, value); }
         }
+
         public bool Constrained
         {
-            get { return attributes.Get(x => x.Constrained); }
-            set { attributes.Set(x => x.Constrained, value); }
+            get { return attributes.Get<bool>(Attr.Constrained); }
+            set { attributes.Set(Attr.Constrained, value); }
         }
 
         public string Fetch
         {
-            get { return attributes.Get(x => x.Fetch); }
-            set { attributes.Set(x => x.Fetch, value); }
+            get { return attributes.Get(Attr.Fetch); }
+            set { attributes.Set(Attr.Fetch, value); }
         }
 
         public string ForeignKey
         {
-            get { return attributes.Get(x => x.ForeignKey); }
-            set { attributes.Set(x => x.ForeignKey, value); }
+            get { return attributes.Get(Attr.ForeignKey); }
+            set { attributes.Set(Attr.ForeignKey, value); }
         }
 
         public string PropertyRef
         {
-            get { return attributes.Get(x => x.PropertyRef); }
-            set { attributes.Set(x => x.PropertyRef, value); }
+            get { return attributes.Get(Attr.PropertyRef); }
+            set { attributes.Set(Attr.PropertyRef, value); }
         }
 
         public bool Lazy
         {
-            get { return attributes.Get(x => x.Lazy); }
-            set { attributes.Set(x => x.Lazy, value); }
+            get { return attributes.Get<bool>(Attr.Lazy); }
+            set { attributes.Set(Attr.Lazy, value); }
         }
 
         public string EntityName
         {
-            get { return attributes.Get(x => x.EntityName); }
-            set { attributes.Set(x => x.EntityName, value); }
+            get { return attributes.Get(Attr.EntityName); }
+            set { attributes.Set(Attr.EntityName, value); }
         }
 
         public Type ContainingEntityType { get; set; }
 
-        public override bool IsSpecified(string property)
+        public override bool IsSpecified(Attr property)
         {
-            return attributes.IsSpecified(property);
+            return attributes.HasUserValue(property);
         }
 
-        public bool HasValue<TResult>(Expression<Func<OneToOneMapping, TResult>> property)
+        public bool HasValue(Attr property)
         {
-            return attributes.HasValue(property);
+            return attributes.HasAnyValue(property);
         }
 
-        public void SetDefaultValue<TResult>(Expression<Func<OneToOneMapping, TResult>> property, TResult value)
+        public void SetDefaultValue<TResult>(Attr property, TResult value)
         {
             attributes.SetDefault(property, value);
         }

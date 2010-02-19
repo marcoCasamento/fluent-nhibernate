@@ -5,7 +5,7 @@ namespace FluentNHibernate.MappingModel
 {
     public class FilterMapping : IMappingBase
     {
-        private readonly AttributeStore<FilterMapping> attributes;
+        private readonly AttributeStore attributes;
 
         public FilterMapping()
             : this(new AttributeStore())
@@ -13,19 +13,19 @@ namespace FluentNHibernate.MappingModel
 
         public FilterMapping(AttributeStore underlyingStore)
         {
-            attributes = new AttributeStore<FilterMapping>(underlyingStore);
+            attributes = underlyingStore.Clone();
         }
 
         public string Name
         {
-            get { return attributes.Get(x => x.Name); }
-            set { attributes.Set(x => x.Name, value); }
+            get { return attributes.Get(Attr.Name); }
+            set { attributes.Set(Attr.Name, value); }
         }
 
         public string Condition
         {
-            get { return attributes.Get(x => x.Condition); }
-            set { attributes.Set(x => x.Condition, value); }
+            get { return attributes.Get(Attr.Condition); }
+            set { attributes.Set(Attr.Condition, value); }
         }
 
         public void AcceptVisitor(IMappingModelVisitor visitor)
@@ -33,9 +33,9 @@ namespace FluentNHibernate.MappingModel
             visitor.ProcessFilter(this);
         }
 
-        public bool IsSpecified(string property)
+        public bool IsSpecified(Attr property)
         {
-            return attributes.IsSpecified(property);
+            return attributes.HasUserValue(property);
         }
 
         public bool Equals(FilterMapping other)

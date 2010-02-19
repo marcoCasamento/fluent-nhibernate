@@ -8,7 +8,7 @@ namespace FluentNHibernate.MappingModel.Identity
 {
     public class CompositeIdMapping : MappingBase, IIdentityMapping
     {
-        private readonly AttributeStore<CompositeIdMapping> attributes;
+        private readonly AttributeStore attributes;
         private readonly IList<KeyPropertyMapping> keyProperties = new List<KeyPropertyMapping>();
         private readonly IList<KeyManyToOneMapping> keyManyToOnes = new List<KeyManyToOneMapping>();
 
@@ -18,9 +18,9 @@ namespace FluentNHibernate.MappingModel.Identity
 
         public CompositeIdMapping(AttributeStore underlyingStore)
         {
-            attributes = new AttributeStore<CompositeIdMapping>(underlyingStore);
-            attributes.SetDefault(x => x.Mapped, false);
-            attributes.SetDefault(x => x.UnsavedValue, "undefined");
+            attributes = underlyingStore.Clone();
+            attributes.SetDefault(Attr.Mapped, false);
+            attributes.SetDefault(Attr.UnsavedValue, "undefined");
         }
 
         public override void AcceptVisitor(IMappingModelVisitor visitor)
@@ -36,32 +36,32 @@ namespace FluentNHibernate.MappingModel.Identity
 
         public string Name
         {
-            get { return attributes.Get(x => x.Name); }
-            set { attributes.Set(x => x.Name, value); }
+            get { return attributes.Get(Attr.Name); }
+            set { attributes.Set(Attr.Name, value); }
         }
 
         public string Access
         {
-            get { return attributes.Get(x => x.Access); }
-            set { attributes.Set(x => x.Access, value); }
+            get { return attributes.Get(Attr.Access); }
+            set { attributes.Set(Attr.Access, value); }
         }
 
         public bool Mapped
         {
-            get { return attributes.Get(x => x.Mapped); }
-            set { attributes.Set(x => x.Mapped, value); }
+            get { return attributes.Get<bool>(Attr.Mapped); }
+            set { attributes.Set(Attr.Mapped, value); }
         }
 
         public TypeReference Class
         {
-            get { return attributes.Get(x => x.Class); }
-            set { attributes.Set(x => x.Class, value); }
+            get { return attributes.Get<TypeReference>(Attr.Class); }
+            set { attributes.Set(Attr.Class, value); }
         }
 
         public string UnsavedValue
         {
-            get { return attributes.Get(x => x.UnsavedValue); }
-            set { attributes.Set(x => x.UnsavedValue, value); }
+            get { return attributes.Get(Attr.UnsavedValue); }
+            set { attributes.Set(Attr.UnsavedValue, value); }
         }
 
         public IEnumerable<KeyPropertyMapping> KeyProperties
@@ -86,19 +86,14 @@ namespace FluentNHibernate.MappingModel.Identity
             keyManyToOnes.Add(mapping);
         }
 
-        public override bool IsSpecified(string property)
+        public override bool IsSpecified(Attr property)
         {
-            return attributes.IsSpecified(property);
+            return attributes.HasUserValue(property);
         }
 
-        public bool HasValue<TResult>(Expression<Func<CompositeIdMapping, TResult>> property)
+        public bool HasValue(Attr property)
         {
-            return attributes.HasValue(property);
-        }
-
-        public void SetDefaultValue<TResult>(Expression<Func<CompositeIdMapping, TResult>> property, TResult value)
-        {
-            attributes.SetDefault(property, value);
+            return attributes.HasAnyValue(property);
         }
 
         public bool Equals(CompositeIdMapping other)

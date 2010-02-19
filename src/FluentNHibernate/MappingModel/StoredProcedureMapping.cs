@@ -6,7 +6,7 @@ namespace FluentNHibernate.MappingModel
 {
     public class StoredProcedureMapping : MappingBase
     {
-        private readonly AttributeStore<StoredProcedureMapping> attributes;
+        private readonly AttributeStore attributes;
 
         public StoredProcedureMapping() : this("sql-insert", "")
         {
@@ -14,7 +14,7 @@ namespace FluentNHibernate.MappingModel
 
         public StoredProcedureMapping(AttributeStore attributes)
         {
-            this.attributes = new AttributeStore<StoredProcedureMapping>(attributes);
+            this.attributes = attributes.Clone();
         }
 
         public StoredProcedureMapping(string spType, string innerText): this(spType, innerText, new AttributeStore())
@@ -23,7 +23,7 @@ namespace FluentNHibernate.MappingModel
 
         public StoredProcedureMapping(string spType, string innerText, AttributeStore underlyingStore)
         {
-            attributes = new AttributeStore<StoredProcedureMapping>(underlyingStore);
+            attributes = underlyingStore.Clone();
             SPType = spType;
             Query = innerText;
             Check = "none";
@@ -32,14 +32,14 @@ namespace FluentNHibernate.MappingModel
 
         public string Name
         {
-            get { return attributes.Get(x => x.Name); }
-            set { attributes.Set(x => x.Name, value); }
+            get { return attributes.Get(Attr.Name); }
+            set { attributes.Set(Attr.Name, value); }
         }
 
         public Type Type
         {
-            get { return attributes.Get(x => x.Type); }
-            set { attributes.Set(x => x.Type, value); }
+            get { return attributes.Get<Type>(Attr.Type); }
+            set { attributes.Set(Attr.Type, value); }
         }
 
         public override void AcceptVisitor(IMappingModelVisitor visitor)
@@ -47,35 +47,30 @@ namespace FluentNHibernate.MappingModel
             visitor.ProcessStoredProcedure(this);
         }
 
-        public void MergeAttributes(AttributeStore store)
+        public override bool IsSpecified(Attr property)
         {
-            attributes.Merge(new AttributeStore<StoredProcedureMapping>(store));
-        }
-
-        public override bool IsSpecified(string property)
-        {
-            return attributes.IsSpecified(property);
+            return attributes.HasUserValue(property);
         }
 
         public string Check
         {
-            get { return attributes.Get(x => x.Check); }
-            set { attributes.Set(x => x.Check, value); }
+            get { return attributes.Get(Attr.Check); }
+            set { attributes.Set(Attr.Check, value); }
         }
 
         public string SPType
         {
-            get { return attributes.Get(x => x.SPType); }
-            set { attributes.Set(x => x.SPType, value); }
+            get { return attributes.Get(Attr.SPType); }
+            set { attributes.Set(Attr.SPType, value); }
         }     
         
         public string Query
         {
-            get { return attributes.Get(x => x.Query); }
-            set { attributes.Set(x => x.Query, value); }
+            get { return attributes.Get(Attr.Query); }
+            set { attributes.Set(Attr.Query, value); }
         }
 
-        public void SetDefaultValue<TResult>(Expression<Func<StoredProcedureMapping, TResult>> property, TResult value)
+        public void SetDefaultValue<TResult>(Attr property, TResult value)
         {
             attributes.SetDefault(property, value);
         }

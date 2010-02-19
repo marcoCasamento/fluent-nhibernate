@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using FluentNHibernate.MappingModel;
 using FluentNHibernate.MappingModel.Identity;
 
 namespace FluentNHibernate.Conventions.Inspections
@@ -31,9 +32,9 @@ namespace FluentNHibernate.Conventions.Inspections
             get { return mapping.Class; }
         }
 
-        public bool IsSet(Member property)
+        public bool IsSet(Attr property)
         {
-            return mapping.IsSpecified(propertyMappings.Get(property));
+            return mapping.IsSpecified(property);
         }
 
         public string Class

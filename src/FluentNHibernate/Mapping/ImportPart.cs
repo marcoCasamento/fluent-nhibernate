@@ -6,21 +6,21 @@ namespace FluentNHibernate.Mapping
 {
     public class ImportPart
     {
-        private readonly AttributeStore<ImportMapping> attributes = new AttributeStore<ImportMapping>();
+        private readonly AttributeStore attributes = new AttributeStore();
 
         public ImportPart(Type importType)
         {
-            attributes.SetDefault(x => x.Class, new TypeReference(importType));
+            attributes.SetDefault(Attr.Class, new TypeReference(importType));
         }
 
         public void As(string alternativeName)
         {
-            attributes.Set( x=> x.Rename, alternativeName);
+            attributes.Set(Attr.Rename, alternativeName);
         }
 
         public ImportMapping GetImportMapping()
         {
-            return new ImportMapping(attributes.CloneInner());
+            return new ImportMapping(attributes.Clone());
         }
     }
 }

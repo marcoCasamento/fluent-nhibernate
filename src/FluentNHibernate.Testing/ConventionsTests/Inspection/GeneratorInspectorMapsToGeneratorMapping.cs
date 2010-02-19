@@ -2,6 +2,7 @@ using System;
 using System.Linq.Expressions;
 using FluentNHibernate.Conventions;
 using FluentNHibernate.Conventions.Inspections;
+using FluentNHibernate.MappingModel;
 using FluentNHibernate.MappingModel.Identity;
 using FluentNHibernate.Utils.Reflection;
 using FluentNHibernate.Testing.Utils;
@@ -33,14 +34,14 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         public void ClassIsSet()
         {
             mapping.Class = "class";
-            inspector.IsSet(Prop(x => x.Class))
+            inspector.IsSet(Attr.Class)
                 .ShouldBeTrue();
         }
 
         [Test]
         public void ClassIsNotSet()
         {
-            inspector.IsSet(Prop(x => x.Class))
+            inspector.IsSet(Attr.Class)
                 .ShouldBeFalse();
         }
 

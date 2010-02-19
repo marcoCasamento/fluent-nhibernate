@@ -29,9 +29,9 @@ namespace FluentNHibernate.Conventions.Inspections
             get { return mapping.Name; }
         }
 
-        public bool IsSet(Member property)
+        public bool IsSet(Attr property)
         {
-            return mapping.IsSpecified(propertyMappings.Get(property));
+            return mapping.IsSpecified(property);
         }
 
         public Member Property

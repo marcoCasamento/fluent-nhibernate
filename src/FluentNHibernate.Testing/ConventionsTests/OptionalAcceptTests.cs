@@ -2,6 +2,7 @@ using FluentNHibernate.Conventions;
 using FluentNHibernate.Conventions.AcceptanceCriteria;
 using FluentNHibernate.Conventions.Inspections;
 using FluentNHibernate.Conventions.Instances;
+using FluentNHibernate.MappingModel;
 using FluentNHibernate.MappingModel.ClassBased;
 using FluentNHibernate.Testing.Utils;
 using FluentNHibernate.Visitors;
@@ -32,7 +33,7 @@ namespace FluentNHibernate.Testing.ConventionsTests
             
             visitor.ProcessClass(mapping);
 
-            mapping.IsSpecified(x => x.TableName).ShouldBeFalse();
+            mapping.IsSpecified(Attr.Table).ShouldBeFalse();
         }
 
         [Test]
@@ -44,7 +45,7 @@ namespace FluentNHibernate.Testing.ConventionsTests
 
             visitor.ProcessClass(mapping);
 
-            mapping.IsSpecified(x => x.TableName).ShouldBeTrue();
+            mapping.IsSpecified(Attr.Table).ShouldBeTrue();
         }
 
         [Test]
@@ -56,7 +57,7 @@ namespace FluentNHibernate.Testing.ConventionsTests
 
             visitor.ProcessClass(mapping);
 
-            mapping.IsSpecified(x => x.TableName).ShouldBeTrue();
+            mapping.IsSpecified(Attr.Table).ShouldBeTrue();
         }
 
         private class ConventionWithFailingAccept : IClassConvention, IConventionAcceptance<IClassInspector>

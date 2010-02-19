@@ -1,7 +1,6 @@
 using System;
 using System.Diagnostics;
 using System.Linq.Expressions;
-using System.Reflection;
 using FluentNHibernate.Mapping.Providers;
 using FluentNHibernate.MappingModel;
 using FluentNHibernate.Utils;
@@ -15,29 +14,29 @@ namespace FluentNHibernate.Mapping
         private readonly AccessStrategyBuilder access;
         private readonly FetchBuilder fetch;
         private readonly CascadeBuilder cascade;
-        private readonly AttributeStore<OneToOneMapping> attributes = new AttributeStore<OneToOneMapping>();
+        private readonly AttributeStore attributes = new AttributeStore();
         private bool nextBool = true;
 
         public OneToOnePart(Type entity, Member property)
         {
-            access = new AccessStrategyBuilder(value => attributes.Set(x => x.Access, value));
-            fetch = new FetchBuilder(value => attributes.Set(x => x.Fetch, value));
-            cascade = new CascadeBuilder(value => attributes.Set(x => x.Cascade, value));
+            access = new AccessStrategyBuilder(value => attributes.Set(Attr.Access, value));
+            fetch = new FetchBuilder(value => attributes.Set(Attr.Fetch, value));
+            cascade = new CascadeBuilder(value => attributes.Set(Attr.Cascade, value));
             this.entity = entity;
             this.property = property;
         }
 
         OneToOneMapping IOneToOneMappingProvider.GetOneToOneMapping()
         {
-            var mapping = new OneToOneMapping(attributes.CloneInner());
+            var mapping = new OneToOneMapping(attributes.Clone());
 
             mapping.ContainingEntityType = entity;
 
-            if (!mapping.IsSpecified("Class"))
-                mapping.SetDefaultValue(x => x.Class, new TypeReference(typeof(TOther)));
+            if (!mapping.IsSpecified(Attr.Class))
+                mapping.SetDefaultValue(Attr.Class, new TypeReference(typeof(TOther)));
 
-            if (!mapping.IsSpecified("Name"))
-                mapping.SetDefaultValue(x => x.Name, property.Name);
+            if (!mapping.IsSpecified(Attr.Name))
+                mapping.SetDefaultValue(Attr.Name, property.Name);
 
             return mapping;
         }
@@ -49,7 +48,7 @@ namespace FluentNHibernate.Mapping
 
         public OneToOnePart<TOther> Class(Type type)
         {
-            attributes.Set(x => x.Class, new TypeReference(type));
+            attributes.Set(Attr.Class, new TypeReference(type));
             return this;
         }
 
@@ -65,7 +64,7 @@ namespace FluentNHibernate.Mapping
 
         public OneToOnePart<TOther> ForeignKey(string foreignKeyName)
         {
-            attributes.Set(x => x.ForeignKey, foreignKeyName);
+            attributes.Set(Attr.ForeignKey, foreignKeyName);
             return this;
         }
 
@@ -78,14 +77,14 @@ namespace FluentNHibernate.Mapping
 
         public OneToOnePart<TOther> PropertyRef(string propertyName)
         {
-            attributes.Set(x => x.PropertyRef, propertyName);
+            attributes.Set(Attr.PropertyRef, propertyName);
 
             return this;
         }
 
         public OneToOnePart<TOther> Constrained()
         {
-            attributes.Set(x => x.Constrained, nextBool);
+            attributes.Set(Attr.Constrained, nextBool);
             nextBool = true;
 
             return this;
@@ -103,7 +102,7 @@ namespace FluentNHibernate.Mapping
 
         public OneToOnePart<TOther> LazyLoad()
         {
-            attributes.Set(x => x.Lazy, nextBool);
+            attributes.Set(Attr.Lazy, nextBool);
             nextBool = true;
             return this;
         }

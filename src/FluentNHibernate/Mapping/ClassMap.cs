@@ -13,7 +13,7 @@ namespace FluentNHibernate.Mapping
 {
     public class ClassMap<T> : ClasslikeMapBase<T>, IMappingProvider
     {
-        protected readonly AttributeStore<ClassMapping> attributes = new AttributeStore<ClassMapping>();
+        protected readonly AttributeStore attributes = new AttributeStore();
         private readonly IList<JoinMapping> joins = new List<JoinMapping>();
         private readonly OptimisticLockBuilder optimisticLock;
 
@@ -36,15 +36,15 @@ namespace FluentNHibernate.Mapping
 
         public ClassMap()
         {
-            optimisticLock = new OptimisticLockBuilder(value => attributes.Set(x => x.OptimisticLock, value));
-            polymorphism = new PolymorphismBuilder<ClassMap<T>>(this, value => attributes.Set(x => x.Polymorphism, value));
-            schemaAction = new SchemaActionBuilder<ClassMap<T>>(this, value => attributes.Set(x => x.SchemaAction, value));
+            optimisticLock = new OptimisticLockBuilder(value => attributes.Set(Attr.OptimisticLock, value));
+            polymorphism = new PolymorphismBuilder<ClassMap<T>>(this, value => attributes.Set(Attr.Polymorphism, value));
+            schemaAction = new SchemaActionBuilder<ClassMap<T>>(this, value => attributes.Set(Attr.SchemaAction, value));
             Cache = new CachePart(typeof(T));
         }
 
         ClassMapping IMappingProvider.GetClassMapping()
         {
-		    var mapping = new ClassMapping(attributes.CloneInner());
+		    var mapping = new ClassMapping(attributes.Clone());
 
             mapping.Type = typeof(T);
             mapping.Name = typeof(T).AssemblyQualifiedName;
@@ -88,9 +88,6 @@ namespace FluentNHibernate.Mapping
             if (compositeId != null)
                 mapping.Id = compositeId.GetCompositeIdMapping();
 
-            if (!mapping.IsSpecified("TableName"))
-                mapping.SetDefaultValue(x => x.TableName, GetDefaultTableName());
-
             foreach (var filter in filters)
                 mapping.AddFilter(filter.GetFilterMapping());
 
@@ -100,25 +97,6 @@ namespace FluentNHibernate.Mapping
             mapping.Tuplizer = tuplizerMapping;
 
             return mapping;
-        }
-
-        private string GetDefaultTableName()
-        {
-            var tableName = EntityType.Name;
-
-            if (EntityType.IsGenericType)
-            {
-                // special case for generics: GenericType_GenericParameterType
-                tableName = EntityType.Name.Substring(0, EntityType.Name.IndexOf('`'));
-
-                foreach (var argument in EntityType.GetGenericArguments())
-                {
-                    tableName += "_";
-                    tableName += argument.Name;
-                }
-            }
-
-            return "`" + tableName + "`";
         }
 
         public HibernateMapping GetHibernateMapping()
@@ -179,7 +157,7 @@ namespace FluentNHibernate.Mapping
 
             discriminator = part;
 
-            attributes.Set(x => x.DiscriminatorValue, baseClassDiscriminator);
+            attributes.Set(Attr.DiscriminatorValue, baseClassDiscriminator);
 
             return part;
         }
@@ -244,7 +222,7 @@ namespace FluentNHibernate.Mapping
         /// <param name="schema">Schema name</param>
         public void Schema(string schema)
         {
-            attributes.Set(x => x.Schema, schema);
+            attributes.Set(Attr.Schema, schema);
         }
 
         /// <summary>
@@ -253,7 +231,7 @@ namespace FluentNHibernate.Mapping
         /// <param name="tableName">Table name</param>
         public void Table(string tableName)
         {
-            attributes.Set(x => x.TableName, tableName);
+            attributes.Set(Attr.Table, tableName);
         }
 
         /// <summary>
@@ -274,7 +252,7 @@ namespace FluentNHibernate.Mapping
         /// </summary>
         public void LazyLoad()
         {
-            attributes.Set(x => x.Lazy, nextBool);
+            attributes.Set(Attr.Lazy, nextBool);
             nextBool = true;
         }
 
@@ -310,7 +288,7 @@ namespace FluentNHibernate.Mapping
         /// </summary>
         public void ReadOnly()
         {
-            attributes.Set(x => x.Mutable, !nextBool);
+            attributes.Set(Attr.Mutable, !nextBool);
             nextBool = true;
         }
 
@@ -319,7 +297,7 @@ namespace FluentNHibernate.Mapping
         /// </summary>
         public void DynamicUpdate()
         {
-            attributes.Set(x => x.DynamicUpdate, nextBool);
+            attributes.Set(Attr.DynamicUpdate, nextBool);
             nextBool = true;
         }
 
@@ -328,13 +306,13 @@ namespace FluentNHibernate.Mapping
         /// </summary>
         public void DynamicInsert()
         {
-            attributes.Set(x => x.DynamicInsert, nextBool);
+            attributes.Set(Attr.DynamicInsert, nextBool);
             nextBool = true;
         }
 
         public ClassMap<T> BatchSize(int size)
         {
-            attributes.Set(x => x.BatchSize, size);
+            attributes.Set(Attr.BatchSize, size);
             return this;
         }
 
@@ -358,7 +336,7 @@ namespace FluentNHibernate.Mapping
 
         public void CheckConstraint(string constraint)
         {
-            attributes.Set(x => x.Check, constraint);
+            attributes.Set(Attr.Check, constraint);
         }
 
         public void Persister<TPersister>() where TPersister : IEntityPersister
@@ -373,7 +351,7 @@ namespace FluentNHibernate.Mapping
 
         private void Persister(string type)
         {
-            attributes.Set(x => x.Persister, type);
+            attributes.Set(Attr.Persister, type);
         }
 
         public void Proxy<TProxy>()
@@ -388,12 +366,12 @@ namespace FluentNHibernate.Mapping
 
         public void Proxy(string type)
         {
-            attributes.Set(x => x.Proxy, type);
+            attributes.Set(Attr.Proxy, type);
         }
 
         public void SelectBeforeUpdate()
         {
-            attributes.Set(x => x.SelectBeforeUpdate, nextBool);
+            attributes.Set(Attr.SelectBeforeUpdate, nextBool);
             nextBool = true;
         }
 
@@ -402,7 +380,7 @@ namespace FluentNHibernate.Mapping
 		/// </summary>
     	public void Where(string where)
     	{
-            attributes.Set(x => x.Where, where);
+            attributes.Set(Attr.Where, where);
     	}
 
         /// <summary>
@@ -411,7 +389,7 @@ namespace FluentNHibernate.Mapping
         /// <param name="subselectSql">Subselect SQL Query</param>
         public void Subselect(string subselectSql)
         {
-            attributes.Set(x => x.Subselect, subselectSql);
+            attributes.Set(Attr.Subselect, subselectSql);
         }
 
         /// <summary>
@@ -420,7 +398,7 @@ namespace FluentNHibernate.Mapping
         /// <remarks>See http://nhforge.org/blogs/nhibernate/archive/2008/10/21/entity-name-in-action-a-strongly-typed-entity.aspx</remarks>
         public void EntityName(string entityName)
         {
-            attributes.Set(x => x.EntityName, entityName);
+            attributes.Set(Attr.EntityName, entityName);
         }
 
         /// <overloads>

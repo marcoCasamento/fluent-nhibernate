@@ -7,8 +7,6 @@ namespace FluentNHibernate.MappingModel.ClassBased
 {
     public class ComponentMapping : ComponentMappingBase
     {
-        private AttributeStore<ComponentMapping> attributes = new AttributeStore<ComponentMapping>();
-
         public ComponentMapping()
             : this(new AttributeStore())
         {}
@@ -16,7 +14,7 @@ namespace FluentNHibernate.MappingModel.ClassBased
         public ComponentMapping(AttributeStore store)
             : base(store)
         {
-            attributes = new AttributeStore<ComponentMapping>(store);
+            attributes = store.Clone();
         }
 
         public override void AcceptVisitor(IMappingModelVisitor visitor)
@@ -26,53 +24,16 @@ namespace FluentNHibernate.MappingModel.ClassBased
             base.AcceptVisitor(visitor);
         }
 
-        public override void MergeAttributes(AttributeStore store)
-        {
-            attributes.Merge(new AttributeStore<ComponentMapping>(store));
-        }
-
-        public override string Name
-        {
-            get { return attributes.Get(x => x.Name); }
-            set { attributes.Set(x => x.Name, value); }
-        }
-
-        public override Type Type
-        {
-            get { return attributes.Get(x => x.Type); }
-            set { attributes.Set(x => x.Type, value); }
-        }
-
         public TypeReference Class
         {
-            get { return attributes.Get(x => x.Class); }
-            set { attributes.Set(x => x.Class, value); }
+            get { return attributes.Get<TypeReference>(Attr.Class); }
+            set { attributes.Set(Attr.Class, value); }
         }
 
         public bool Lazy
         {
-            get { return attributes.Get(x => x.Lazy); }
-            set { attributes.Set(x => x.Lazy, value); }
-        }
-
-        public override bool IsSpecified(string property)
-        {
-            return attributes.IsSpecified(property);
-        }
-
-        public bool HasValue<TResult>(Expression<Func<ComponentMapping, TResult>> property)
-        {
-            return attributes.HasValue(property);
-        }
-
-        public override bool HasValue(string property)
-        {
-            return attributes.HasValue(property);
-        }
-
-        public void SetDefaultValue<TResult>(Expression<Func<ComponentMapping, TResult>> property, TResult value)
-        {
-            attributes.SetDefault(property, value);
+            get { return attributes.Get<bool>(Attr.Lazy); }
+            set { attributes.Set(Attr.Lazy, value); }
         }
 
         public bool Equals(ComponentMapping other)

@@ -8,15 +8,15 @@ namespace FluentNHibernate.MappingModel.Collections
 {
     public abstract class CollectionMappingBase : MappingBase, ICollectionMapping
     {
-        private readonly AttributeStore<ICollectionMapping> attributes;
+        protected AttributeStore attributes;
         private readonly IList<FilterMapping> filters = new List<FilterMapping>();
         public Type ContainingEntityType { get; set; }
         public Member Member { get; set; }
 
         protected CollectionMappingBase(AttributeStore underlyingStore)
         {
-            attributes = new AttributeStore<ICollectionMapping>(underlyingStore);
-            attributes.SetDefault(x => x.Mutable, true);
+            attributes = underlyingStore.Clone();
+            attributes.SetDefault(Attr.Mutable, true);
         }
 
         public IList<FilterMapping> Filters
@@ -47,157 +47,142 @@ namespace FluentNHibernate.MappingModel.Collections
 
         public Type ChildType
         {
-            get { return attributes.Get(x => x.ChildType); }
-            set { attributes.Set(x => x.ChildType, value); }
+            get { return attributes.Get<Type>(Attr.ChildType); }
+            set { attributes.Set(Attr.ChildType, value); }
         }
 
         public ICollectionMapping OtherSide { get; set; }
 
         public KeyMapping Key
         {
-            get { return attributes.Get(x => x.Key); }
-            set { attributes.Set(x => x.Key, value); }
+            get { return attributes.Get<KeyMapping>(Attr.Key); }
+            set { attributes.Set(Attr.Key, value); }
         }
 
         public ElementMapping Element
         {
-            get { return attributes.Get(x => x.Element); }
-            set { attributes.Set(x => x.Element, value); }
+            get { return attributes.Get<ElementMapping>(Attr.Element); }
+            set { attributes.Set(Attr.Element, value); }
         }
 
         public CompositeElementMapping CompositeElement
         {
-            get { return attributes.Get(x => x.CompositeElement); }
-            set { attributes.Set(x => x.CompositeElement, value); }
+            get { return attributes.Get<CompositeElementMapping>(Attr.CompositeElement); }
+            set { attributes.Set(Attr.CompositeElement, value); }
         }
 
         public CacheMapping Cache
         {
-            get { return attributes.Get(x => x.Cache); }
-            set { attributes.Set(x => x.Cache, value); }
+            get { return attributes.Get<CacheMapping>(Attr.Cache); }
+            set { attributes.Set(Attr.Cache, value); }
         }
 
         public ICollectionRelationshipMapping Relationship
         {
-            get { return attributes.Get(x => x.Relationship); }
-            set { attributes.Set(x => x.Relationship, value); }
+            get { return attributes.Get<ICollectionRelationshipMapping>(Attr.Relationship); }
+            set { attributes.Set(Attr.Relationship, value); }
         }
 
         public bool Generic
         {
-            get { return attributes.Get(x => x.Generic); }
-            set { attributes.Set(x => x.Generic, value); }
+            get { return attributes.Get<bool>(Attr.Generic); }
+            set { attributes.Set(Attr.Generic, value); }
         }
 
         public bool Lazy
         {
-            get { return attributes.Get(x => x.Lazy); }
-            set { attributes.Set(x => x.Lazy, value); }
+            get { return attributes.Get<bool>(Attr.Lazy); }
+            set { attributes.Set(Attr.Lazy, value); }
         }
 
         public bool Inverse
         {
-            get { return attributes.Get(x => x.Inverse); }
-            set { attributes.Set(x => x.Inverse, value); }
+            get { return attributes.Get<bool>(Attr.Inverse); }
+            set { attributes.Set(Attr.Inverse, value); }
         }
 
         public string Name
         {
-            get { return attributes.Get(x => x.Name); }
-            set { attributes.Set(x => x.Name, value); }
+            get { return attributes.Get(Attr.Name); }
+            set { attributes.Set(Attr.Name, value); }
         }
 
         public string Access
         {
-            get { return attributes.Get(x => x.Access); }
-            set { attributes.Set(x => x.Access, value); }
+            get { return attributes.Get(Attr.Access); }
+            set { attributes.Set(Attr.Access, value); }
         }
 
         public string TableName
         {
-            get { return attributes.Get(x => x.TableName); }
-            set { attributes.Set(x => x.TableName, value); }
+            get { return attributes.Get(Attr.Table); }
+            set { attributes.Set(Attr.Table, value); }
         }
 
         public string Schema
         {
-            get { return attributes.Get(x => x.Schema); }
-            set { attributes.Set(x => x.Schema, value); }
+            get { return attributes.Get(Attr.Schema); }
+            set { attributes.Set(Attr.Schema, value); }
         }
 
         public string Fetch
         {
-            get { return attributes.Get(x => x.Fetch); }
-            set { attributes.Set(x => x.Fetch, value); }
+            get { return attributes.Get(Attr.Fetch); }
+            set { attributes.Set(Attr.Fetch, value); }
         }
 
         public string Cascade
         {
-            get { return attributes.Get(x => x.Cascade); }
-            set { attributes.Set(x => x.Cascade, value); }
+            get { return attributes.Get(Attr.Cascade); }
+            set { attributes.Set(Attr.Cascade, value); }
         }
 
         public string Where
         {
-            get { return attributes.Get(x => x.Where); }
-            set { attributes.Set(x => x.Where, value); }
+            get { return attributes.Get(Attr.Where); }
+            set { attributes.Set(Attr.Where, value); }
         }
 
         public bool Mutable
         {
-            get { return attributes.Get(x => x.Mutable); }
-            set { attributes.Set(x => x.Mutable, value); }
+            get { return attributes.Get<bool>(Attr.Mutable); }
+            set { attributes.Set(Attr.Mutable, value); }
         }
 
         public string Subselect
         {
-            get { return attributes.Get(x => x.Subselect); }
-            set { attributes.Set(x => x.Subselect, value); }
+            get { return attributes.Get(Attr.Subselect); }
+            set { attributes.Set(Attr.Subselect, value); }
         }
 
     	public TypeReference Persister
         {
-            get { return attributes.Get(x => x.Persister); }
-            set { attributes.Set(x => x.Persister, value); }
+            get { return attributes.Get<TypeReference>(Attr.Persister); }
+            set { attributes.Set(Attr.Persister, value); }
         }
 
         public int BatchSize
         {
-            get { return attributes.Get(x => x.BatchSize); }
-            set { attributes.Set(x => x.BatchSize, value); }
+            get { return attributes.Get<int>(Attr.BatchSize); }
+            set { attributes.Set(Attr.BatchSize, value); }
         }
 
         public string Check
         {
-            get { return attributes.Get(x => x.Check); }
-            set { attributes.Set(x => x.Check, value); }
+            get { return attributes.Get(Attr.Check); }
+            set { attributes.Set(Attr.Check, value); }
         }
 
         public TypeReference CollectionType
         {
-            get { return attributes.Get(x => x.CollectionType); }
-            set { attributes.Set(x => x.CollectionType, value); }
+            get { return attributes.Get<TypeReference>(Attr.CollectionType); }
+            set { attributes.Set(Attr.CollectionType, value); }
         }
 
         public string OptimisticLock
         {
-            get { return attributes.Get(x => x.OptimisticLock); }
-            set { attributes.Set(x => x.OptimisticLock, value); }
-        }
-
-        public override bool IsSpecified(string property)
-        {
-            return attributes.IsSpecified(property);
-        }
-
-        public bool HasValue<TResult>(Expression<Func<ICollectionMapping, TResult>> property)
-        {
-            return attributes.HasValue(property);
-        }
-
-        public void SetDefaultValue<TResult>(Expression<Func<ICollectionMapping, TResult>> property, TResult value)
-        {
-            attributes.SetDefault(property, value);
+            get { return attributes.Get(Attr.OptimisticLock); }
+            set { attributes.Set(Attr.OptimisticLock, value); }
         }
 
 		public abstract string OrderBy { get; set; }

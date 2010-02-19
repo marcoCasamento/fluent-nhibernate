@@ -1,5 +1,6 @@
 using System.Reflection;
 using FluentNHibernate.Mapping;
+using FluentNHibernate.MappingModel;
 using FluentNHibernate.MappingModel.ClassBased;
 
 namespace FluentNHibernate.Conventions.Inspections
@@ -15,9 +16,9 @@ namespace FluentNHibernate.Conventions.Inspections
             this.mapping = mapping;
         }
 
-        public override bool IsSet(Member property)
+        public override bool IsSet(Attr property)
         {
-            return mapping.IsSpecified(mappedProperties.Get(property));
+            return mapping.IsSpecified(property);
         }
     }
 }

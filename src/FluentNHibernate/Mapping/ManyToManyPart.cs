@@ -31,7 +31,7 @@ namespace FluentNHibernate.Mapping
             this.entity = entity;
             childType = collectionType;
 
-            notFound = new NotFoundExpression<ManyToManyPart<TChild>>(this, value => relationshipAttributes.Set(x => x.NotFound, value));
+            notFound = new NotFoundExpression<ManyToManyPart<TChild>>(this, value => relationshipAttributes.Set(Attr.NotFound, value));
         }
 
         public override ICollectionMapping GetCollectionMapping()
@@ -80,7 +80,7 @@ namespace FluentNHibernate.Mapping
         public ManyToManyPart<TChild> ForeignKeyConstraintNames(string parentForeignKeyName, string childForeignKeyName)
         {
             keyMapping.ForeignKey = parentForeignKeyName;
-            relationshipAttributes.Set(x => x.ForeignKey, childForeignKeyName);
+            relationshipAttributes.Set(Attr.ForeignKey, childForeignKeyName);
             return this;
         }
 
@@ -201,7 +201,7 @@ namespace FluentNHibernate.Mapping
 
         protected override ICollectionRelationshipMapping GetRelationship()
         {
-            var mapping = new ManyToManyMapping(relationshipAttributes.CloneInner())
+            var mapping = new ManyToManyMapping(relationshipAttributes.Clone())
             {
                 ContainingEntityType = entity,
 
@@ -218,20 +218,20 @@ namespace FluentNHibernate.Mapping
         /// </summary>
         public ManyToManyPart<TChild> OrderBy(string orderBy)
         {
-            collectionAttributes.Set(x => x.OrderBy, orderBy);
+            collectionAttributes.Set(Attr.OrderBy, orderBy);
             return this;
         }
 
         public ManyToManyPart<TChild> ReadOnly()
         {
-            collectionAttributes.Set(x => x.Mutable, !nextBool);
+            collectionAttributes.Set(Attr.Mutable, !nextBool);
             nextBool = true;
             return this;
         }
 
         public ManyToManyPart<TChild> Subselect(string subselect)
         {
-            collectionAttributes.Set(x => x.Subselect, subselect);
+            collectionAttributes.Set(Attr.Subselect, subselect);
             return this;
         }
     }

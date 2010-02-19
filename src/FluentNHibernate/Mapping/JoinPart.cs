@@ -14,15 +14,15 @@ namespace FluentNHibernate.Mapping
     {
         private readonly IList<string> columns = new List<string>();
         private readonly FetchBuilder fetch;
-        private readonly AttributeStore<JoinMapping> attributes = new AttributeStore<JoinMapping>();
+        private readonly AttributeStore attributes = new AttributeStore();
         private bool nextBool = true;
 
         public JoinPart(string tableName)
         {
-            fetch = new FetchBuilder(value => attributes.Set(x => x.Fetch, value));
+            fetch = new FetchBuilder(value => attributes.Set(Attr.Fetch, value));
 
-            attributes.SetDefault(x => x.TableName, tableName);
-            attributes.Set(x => x.Key, new KeyMapping { ContainingEntityType = typeof(T) });
+            attributes.SetDefault(Attr.Table, tableName);
+            attributes.Set(Attr.Key, new KeyMapping { ContainingEntityType = typeof(T) });
         }
 
         public JoinPart<T> KeyColumn(string column)
@@ -34,7 +34,7 @@ namespace FluentNHibernate.Mapping
 
         public JoinPart<T> Schema(string schema)
         {
-            attributes.Set(x => x.Schema, schema);
+            attributes.Set(Attr.Schema, schema);
             return this;
         }
 
@@ -45,27 +45,27 @@ namespace FluentNHibernate.Mapping
 
         public JoinPart<T> Inverse()
         {
-            attributes.Set(x => x.Inverse, nextBool);
+            attributes.Set(Attr.Inverse, nextBool);
             nextBool = true;
             return this;
         }
 
         public JoinPart<T> Optional()
         {
-            attributes.Set(x => x.Optional, nextBool);
+            attributes.Set(Attr.Optional, nextBool);
             nextBool = true;
             return this;
         }
 
         public JoinPart<T> Catalog(string catalog)
         {
-            attributes.Set(x => x.Catalog, catalog);
+            attributes.Set(Attr.Catalog, catalog);
             return this;
         }
 
         public JoinPart<T> Subselect(string subselect)
         {
-            attributes.Set(x => x.Subselect, subselect);
+            attributes.Set(Attr.Subselect, subselect);
             return this;
         }
 
@@ -81,7 +81,7 @@ namespace FluentNHibernate.Mapping
 
         JoinMapping IJoinMappingProvider.GetJoinMapping()
         {
-            var mapping = new JoinMapping(attributes.CloneInner());
+            var mapping = new JoinMapping(attributes.Clone());
 
             mapping.ContainingEntityType = typeof(T);
 
@@ -108,7 +108,7 @@ namespace FluentNHibernate.Mapping
 
         public void Table(string tableName)
         {
-            attributes.Set(x => x.TableName, tableName);
+            attributes.Set(Attr.Table, tableName);
         }
     }
 }

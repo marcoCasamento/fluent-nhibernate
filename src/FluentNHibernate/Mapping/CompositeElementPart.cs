@@ -18,7 +18,7 @@ namespace FluentNHibernate.Mapping
         private readonly Type entity;
         private readonly IList<IPropertyMappingProvider> properties = new List<IPropertyMappingProvider>();
         private readonly IList<IManyToOneMappingProvider> references = new List<IManyToOneMappingProvider>();
-        private readonly AttributeStore<CompositeElementMapping> attributes = new AttributeStore<CompositeElementMapping>();
+        private readonly AttributeStore attributes = new AttributeStore();
 
         public CompositeElementPart(Type entity)
         {
@@ -77,7 +77,7 @@ namespace FluentNHibernate.Mapping
         public CompositeElementPart<T> ParentReference(Expression<Func<T, object>> expression)
         {
             var member = expression.ToMember();
-            attributes.Set(x => x.Parent, new ParentMapping
+            attributes.Set(Attr.Parent, new ParentMapping
             {
                 Name = member.Name,
                 ContainingEntityType = entity
@@ -87,11 +87,11 @@ namespace FluentNHibernate.Mapping
 
         CompositeElementMapping ICompositeElementMappingProvider.GetCompositeElementMapping()
         {
-            var mapping = new CompositeElementMapping(attributes.CloneInner());
+            var mapping = new CompositeElementMapping(attributes.Clone());
 
             mapping.ContainingEntityType = entity;
 
-            if (!mapping.IsSpecified("Class"))
+            if (!mapping.IsSpecified(Attr.Class))
                 mapping.Class = new TypeReference(typeof(T));
 
             foreach (var property in properties)

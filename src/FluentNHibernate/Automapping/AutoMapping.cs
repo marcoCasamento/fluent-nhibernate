@@ -31,7 +31,7 @@ namespace FluentNHibernate.Automapping
 
         void IAutoClasslike.AlterModel(ClassMappingBase mapping)
         {
-            mapping.MergeAttributes(attributes.CloneInner());
+            mapping.MergeAttributes(attributes.Clone());
 
             if (mapping is ClassMapping)
             {

@@ -5,7 +5,7 @@ namespace FluentNHibernate.MappingModel
 {
     public abstract class ColumnBasedMappingBase : MappingBase, IHasColumnMappings
     {
-        private readonly string[] columnAttributes = new[] { "Length", "Precision", "Scale", "NotNull", "Unique", "UniqueKey", "SqlType", "Index", "Check", "Default" };
+        private readonly Attr[] columnAttributes = new[] { Attr.Length, Attr.Precision, Attr.Scale, Attr.NotNull, Attr.Unique, Attr.UniqueKey, Attr.SqlType, Attr.Index, Attr.Check, Attr.Default };
         protected readonly IDefaultableList<ColumnMapping> columns = new DefaultableList<ColumnMapping>();
         protected readonly AttributeStore attributes;
 
@@ -14,20 +14,20 @@ namespace FluentNHibernate.MappingModel
             attributes = underlyingStore.Clone();
         }
 
-        public override bool IsSpecified(string property)
+        public override bool IsSpecified(Attr property)
         {
             if (columnAttributes.Contains(property))
                 return columns.Any(x => x.IsSpecified(property));
 
-            return attributes.IsSpecified(property);
+            return attributes.HasUserValue(property);
         }
 
-        public bool HasValue(string property)
+        public bool HasValue(Attr property)
         {
-            return attributes.HasValue(property);
+            return attributes.HasAnyValue(property);
         }
 
-        public void SetDefaultValue<TResult>(string property, TResult value)
+        public void SetDefaultValue<TResult>(Attr property, TResult value)
         {
             attributes.SetDefault(property, value);
         }

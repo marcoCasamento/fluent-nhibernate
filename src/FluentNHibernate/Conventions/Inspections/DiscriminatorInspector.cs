@@ -13,7 +13,6 @@ namespace FluentNHibernate.Conventions.Inspections
             : base(mapping.Columns)
         {
             this.mapping = mapping;
-            propertyMappings.Map(x => x.Nullable, "NotNull");
         }
 
         public bool Insert
@@ -59,9 +58,9 @@ namespace FluentNHibernate.Conventions.Inspections
             }
         }
 
-        public bool IsSet(Member property)
+        public bool IsSet(Attr property)
         {
-            return mapping.IsSpecified(propertyMappings.Get(property));
+            return mapping.IsSpecified(property);
         }
     }
 }

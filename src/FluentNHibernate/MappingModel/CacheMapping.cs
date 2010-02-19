@@ -7,15 +7,14 @@ namespace FluentNHibernate.MappingModel
 {
     public class CacheMapping : MappingBase
     {
-        private readonly AttributeStore<CacheMapping> attributes;
-
         public CacheMapping()
-            : this(new AttributeStore())
+            : this(null)
         {}
 
         public CacheMapping(AttributeStore underlyingStore)
         {
-            attributes = new AttributeStore<CacheMapping>(underlyingStore);
+            if (underlyingStore != null)
+                ReplaceAttributes(underlyingStore);
         }
 
         public override void AcceptVisitor(IMappingModelVisitor visitor)
@@ -25,44 +24,29 @@ namespace FluentNHibernate.MappingModel
 
         public string Region
         {
-            get { return attributes.Get(x => x.Region); }
-            set { attributes.Set(x => x.Region, value); }
+            get { return (string)GetAttribute(Attr.Region); }
+            set { SetAttribute(Attr.Region, value); }
         }
 
         public string Usage
         {
-            get { return attributes.Get(x => x.Usage); }
-            set { attributes.Set(x => x.Usage, value); }
+            get { return (string)GetAttribute(Attr.Usage); }
+            set { SetAttribute(Attr.Usage, value); }
         }
 
         public string Include
         {
-            get { return attributes.Get(x => x.Include); }
-            set { attributes.Set(x => x.Include, value); }
+            get { return (string)GetAttribute(Attr.Include); }
+            set { SetAttribute(Attr.Include, value); }
         }
 
         public Type ContainedEntityType { get; set; }
-
-        public override bool IsSpecified(string property)
-        {
-            return attributes.IsSpecified(property);
-        }
-
-        public bool HasValue<TResult>(Expression<Func<CacheMapping, TResult>> property)
-        {
-            return attributes.HasValue(property);
-        }
-
-        public void SetDefaultValue<TResult>(Expression<Func<CacheMapping, TResult>> property, TResult value)
-        {
-            attributes.SetDefault(property, value);
-        }
 
         public bool Equals(CacheMapping other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return Equals(other.attributes, attributes) && Equals(other.ContainedEntityType, ContainedEntityType);
+            return base.Equals(other) && Equals(other.ContainedEntityType, ContainedEntityType);
         }
 
         public override bool Equals(object obj)
@@ -77,7 +61,7 @@ namespace FluentNHibernate.MappingModel
         {
             unchecked
             {
-                return ((attributes != null ? attributes.GetHashCode() : 0) * 397) ^ (ContainedEntityType != null ? ContainedEntityType.GetHashCode() : 0);
+                return base.GetHashCode() ^ (ContainedEntityType != null ? ContainedEntityType.GetHashCode() : 0);
             }
         }
     }

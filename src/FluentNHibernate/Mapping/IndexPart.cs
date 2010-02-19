@@ -11,7 +11,7 @@ namespace FluentNHibernate.Mapping
     {
         private readonly Type entity;
         private readonly List<string> columns = new List<string>();
-        private readonly AttributeStore<IndexMapping> attributes = new AttributeStore<IndexMapping>();
+        private readonly AttributeStore attributes = new AttributeStore();
 
         public IndexPart(Type entity)
         {
@@ -26,19 +26,19 @@ namespace FluentNHibernate.Mapping
 
         public IndexPart Type<TIndex>()
         {
-            attributes.Set(x => x.Type, new TypeReference(typeof(TIndex)));
+            attributes.Set(Attr.Type, new TypeReference(typeof(TIndex)));
             return this;
         }
 
 	public IndexPart Type(Type type)
 	{
-            attributes.Set(x => x.Type, new TypeReference(type));
+            attributes.Set(Attr.Type, new TypeReference(type));
             return this;
 	}
 
         public IndexMapping GetIndexMapping()
         {
-            var mapping = new IndexMapping(attributes.CloneInner());
+            var mapping = new IndexMapping(attributes.Clone());
 
             mapping.ContainingEntityType = entity;
 

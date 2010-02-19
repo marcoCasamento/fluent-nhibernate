@@ -14,19 +14,19 @@ namespace FluentNHibernate.Mapping
     public class CompositeIdentityPart<T> : ICompositeIdMappingProvider
 	{
         private readonly AccessStrategyBuilder access;
-        private readonly AttributeStore<CompositeIdMapping> attributes = new AttributeStore<CompositeIdMapping>();
+        private readonly AttributeStore attributes = new AttributeStore();
         private readonly IList<KeyPropertyMapping> keyProperties = new List<KeyPropertyMapping>();
         private readonly IList<KeyManyToOneMapping> keyManyToOnes = new List<KeyManyToOneMapping>();
         private bool nextBool = true;
 
         public CompositeIdentityPart()
         {
-            access = new AccessStrategyBuilder(value => attributes.Set(x => x.Access, value));
+            access = new AccessStrategyBuilder(value => attributes.Set(Attr.Access, value));
         }
 
         public CompositeIdentityPart(string name) : this()
         {
-            attributes.Set(x => x.Name, name);
+            attributes.Set(Attr.Name, name);
         }
 
         /// <summary>
@@ -169,20 +169,20 @@ namespace FluentNHibernate.Mapping
 
         public CompositeIdentityPart<T> Mapped()
         {
-            attributes.Set(x => x.Mapped, nextBool);
+            attributes.Set(Attr.Mapped, nextBool);
             nextBool = true;
             return this;
         }
 
         public CompositeIdentityPart<T> UnsavedValue(string value)
         {
-            attributes.Set(x => x.UnsavedValue, value);
+            attributes.Set(Attr.UnsavedValue, value);
             return this;
         }
 
 	    CompositeIdMapping ICompositeIdMappingProvider.GetCompositeIdMapping()
 	    {
-            var mapping = new CompositeIdMapping(attributes.CloneInner());
+            var mapping = new CompositeIdMapping(attributes.Clone());
 
 	        mapping.ContainingEntityType = typeof(T);
 

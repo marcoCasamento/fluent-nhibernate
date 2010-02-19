@@ -25,26 +25,26 @@ namespace FluentNHibernate.MappingModel
 
         public bool Force
         {
-            get { return attributes.Get<bool>("Force"); }
-            set { attributes.Set("Force", value); }
+            get { return attributes.Get<bool>(Attr.Force); }
+            set { attributes.Set(Attr.Force, value); }
         }
 
         public bool Insert
         {
-            get { return attributes.Get<bool>("Insert"); }
-            set { attributes.Set("Insert", value); }
+            get { return attributes.Get<bool>(Attr.Insert); }
+            set { attributes.Set(Attr.Insert, value); }
         }
 
         public string Formula
         {
-            get { return attributes.Get("Formula"); }
-            set { attributes.Set("Formula", value); }
+            get { return attributes.Get(Attr.Formula); }
+            set { attributes.Set(Attr.Formula, value); }
         }
 
         public TypeReference Type
         {
-            get { return attributes.Get<TypeReference>("Type"); }
-            set { attributes.Set("Type", value); }
+            get { return attributes.Get<TypeReference>(Attr.Type); }
+            set { attributes.Set(Attr.Type, value); }
         }
 
         public Type ContainingEntityType { get; set; }

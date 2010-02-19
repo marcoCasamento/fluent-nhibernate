@@ -54,14 +54,14 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         public void CatalogIsSet()
         {
             mapping.Catalog = "value";
-            inspector.IsSet(Prop(x => x.Catalog))
+            inspector.IsSet(Attr.Catalog)
                 .ShouldBeTrue();
         }
 
         [Test]
         public void CatalogIsNotSet()
         {
-            inspector.IsSet(Prop(x => x.Catalog))
+            inspector.IsSet(Attr.Catalog)
                 .ShouldBeFalse();
         }
 
@@ -76,14 +76,14 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         public void FetchIsSet()
         {
             mapping.Fetch = "join";
-            inspector.IsSet(Prop(x => x.Fetch))
+            inspector.IsSet(Attr.Fetch)
                 .ShouldBeTrue();
         }
 
         [Test]
         public void FetchIsNotSet()
         {
-            inspector.IsSet(Prop(x => x.Fetch))
+            inspector.IsSet(Attr.Fetch)
                 .ShouldBeFalse();
         }
 
@@ -98,14 +98,14 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         public void InverseIsSet()
         {
             mapping.Inverse = true;
-            inspector.IsSet(Prop(x => x.Inverse))
+            inspector.IsSet(Attr.Inverse)
                 .ShouldBeTrue();
         }
 
         [Test]
         public void InverseIsNotSet()
         {
-            inspector.IsSet(Prop(x => x.Inverse))
+            inspector.IsSet(Attr.Inverse)
                 .ShouldBeFalse();
         }
 
@@ -122,14 +122,14 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         {
             mapping.Key = new KeyMapping();
             mapping.Key.PropertyRef = "ref";
-            inspector.IsSet(Prop(x => x.Key))
+            inspector.IsSet(Attr.Key)
                 .ShouldBeTrue();
         }
 
         [Test]
         public void KeyIsNotSet()
         {
-            inspector.IsSet(Prop(x => x.Key))
+            inspector.IsSet(Attr.Key)
                 .ShouldBeFalse();
         }
 
@@ -144,14 +144,14 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         public void OptionalIsSet()
         {
             mapping.Optional = true;
-            inspector.IsSet(Prop(x => x.Optional))
+            inspector.IsSet(Attr.Optional)
                 .ShouldBeTrue();
         }
 
         [Test]
         public void OptionalIsNotSet()
         {
-            inspector.IsSet(Prop(x => x.Optional))
+            inspector.IsSet(Attr.Optional)
                 .ShouldBeFalse();
         }
 
@@ -206,14 +206,14 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         public void SchemaIsSet()
         {
             mapping.Schema = "dbo";
-            inspector.IsSet(Prop(x => x.Schema))
+            inspector.IsSet(Attr.Schema)
                 .ShouldBeTrue();
         }
 
         [Test]
         public void SchemaIsNotSet()
         {
-            inspector.IsSet(Prop(x => x.Schema))
+            inspector.IsSet(Attr.Schema)
                 .ShouldBeFalse();
         }
 
@@ -228,14 +228,14 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         public void SubselectIsSet()
         {
             mapping.Subselect = "value";
-            inspector.IsSet(Prop(x => x.Subselect))
+            inspector.IsSet(Attr.Subselect)
                 .ShouldBeTrue();
         }
 
         [Test]
         public void SubselectIsNotSet()
         {
-            inspector.IsSet(Prop(x => x.Subselect))
+            inspector.IsSet(Attr.Subselect)
                 .ShouldBeFalse();
         }
 
@@ -250,14 +250,14 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         public void TableNameIsSet()
         {
             mapping.TableName = "tbl";
-            inspector.IsSet(Prop(x => x.TableName))
+            inspector.IsSet(Attr.Table)
                 .ShouldBeTrue();
         }
 
         [Test]
         public void TableNameIsNotSet()
         {
-            inspector.IsSet(Prop(x => x.TableName))
+            inspector.IsSet(Attr.Table)
                 .ShouldBeFalse();
         }
 

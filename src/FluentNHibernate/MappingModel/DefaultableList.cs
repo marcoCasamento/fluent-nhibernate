@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace FluentNHibernate.MappingModel
 {
@@ -26,10 +27,7 @@ namespace FluentNHibernate.MappingModel
 
         public IEnumerator<T> GetEnumerator()
         {
-            if (userDefined.Count == 0)
-                return defaults.GetEnumerator();
-
-            return userDefined.GetEnumerator();
+            return defaults.Concat(userDefined).ToList().GetEnumerator();
         }
 
         public void AddDefault(T item)

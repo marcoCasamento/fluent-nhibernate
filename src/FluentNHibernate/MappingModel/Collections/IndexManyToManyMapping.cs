@@ -8,7 +8,7 @@ namespace FluentNHibernate.MappingModel.Collections
 {
     public class IndexManyToManyMapping : MappingBase, IIndexMapping, IHasColumnMappings
     {
-        private readonly AttributeStore<IndexManyToManyMapping> attributes;
+        private readonly AttributeStore attributes;
         private readonly IDefaultableList<ColumnMapping> columns = new DefaultableList<ColumnMapping>();
 
         public IndexManyToManyMapping()
@@ -17,7 +17,7 @@ namespace FluentNHibernate.MappingModel.Collections
 
         public IndexManyToManyMapping(AttributeStore underlyingStore)
         {
-            attributes = new AttributeStore<IndexManyToManyMapping>(underlyingStore);
+            attributes = underlyingStore.Clone();
         }
 
         public override void AcceptVisitor(IMappingModelVisitor visitor)
@@ -32,8 +32,8 @@ namespace FluentNHibernate.MappingModel.Collections
 
         public TypeReference Class
         {
-            get { return attributes.Get(x => x.Class); }
-            set { attributes.Set(x => x.Class, value); }
+            get { return attributes.Get<TypeReference>(Attr.Class); }
+            set { attributes.Set(Attr.Class, value); }
         }
 
         public IDefaultableEnumerable<ColumnMapping> Columns
@@ -58,27 +58,27 @@ namespace FluentNHibernate.MappingModel.Collections
 
         public string ForeignKey
         {
-            get { return attributes.Get(x => x.ForeignKey); }
-            set { attributes.Set(x => x.ForeignKey, value); }
+            get { return attributes.Get(Attr.ForeignKey); }
+            set { attributes.Set(Attr.ForeignKey, value); }
         }
 
         public string EntityName
         {
-            get { return attributes.Get(x => x.EntityName); }
-            set { attributes.Set(x => x.EntityName, value); }
+            get { return attributes.Get(Attr.EntityName); }
+            set { attributes.Set(Attr.EntityName, value); }
         }     
 
-        public override bool IsSpecified(string property)
+        public override bool IsSpecified(Attr property)
         {
-            return attributes.IsSpecified(property);
+            return attributes.HasUserValue(property);
         }
 
-        public bool HasValue<TResult>(Expression<Func<IndexManyToManyMapping, TResult>> property)
+        public bool HasValue(Attr property)
         {
-            return attributes.HasValue(property);
+            return attributes.HasAnyValue(property);
         }
 
-        public void SetDefaultValue<TResult>(Expression<Func<IndexManyToManyMapping, TResult>> property, TResult value)
+        public void SetDefaultValue<TResult>(Attr property, TResult value)
         {
             attributes.SetDefault(property, value);
         }

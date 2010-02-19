@@ -41,7 +41,7 @@ namespace FluentNHibernate.Automapping
 
             mapping.ContainingEntityType = classMap.Type;
             mapping.Member = property;
-            mapping.SetDefaultValue(x => x.Name, property.Name);
+            mapping.SetDefaultValue(Attr.Name, property.Name);
 
             keys.SetKey(property, classMap, mapping);
             SetElement(property, classMap, mapping);
@@ -58,7 +58,7 @@ namespace FluentNHibernate.Automapping
             };
 
             element.AddDefaultColumn(new ColumnMapping { Name = expressions.SimpleTypeCollectionValueColumn(property) });
-            mapping.SetDefaultValue(x => x.Element, element);
+            mapping.SetDefaultValue(Attr.Element, element);
         }
     }
 }

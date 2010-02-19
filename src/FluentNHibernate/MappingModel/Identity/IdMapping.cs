@@ -19,8 +19,8 @@ namespace FluentNHibernate.MappingModel.Identity
 
         public GeneratorMapping Generator
         {
-            get { return attributes.Get<GeneratorMapping>("Generator"); }
-            set { attributes.Set("Generator", value); }
+            get { return attributes.Get<GeneratorMapping>(Attr.Generator); }
+            set { attributes.Set(Attr.Generator, value); }
         }
 
         public override void AcceptVisitor(IMappingModelVisitor visitor)
@@ -36,26 +36,26 @@ namespace FluentNHibernate.MappingModel.Identity
 
         public string Name
         {
-            get { return attributes.Get("Name"); }
-            set { attributes.Set("Name", value); }
+            get { return attributes.Get(Attr.Name); }
+            set { attributes.Set(Attr.Name, value); }
         }
 
         public string Access
         {
-            get { return attributes.Get("Access"); }
-            set { attributes.Set("Access", value); }
+            get { return attributes.Get(Attr.Access); }
+            set { attributes.Set(Attr.Access, value); }
         }
 
         public TypeReference Type
         {
-            get { return attributes.Get<TypeReference>("Type"); }
-            set { attributes.Set("Type", value); }
+            get { return attributes.Get<TypeReference>(Attr.Type); }
+            set { attributes.Set(Attr.Type, value); }
         }
 
         public string UnsavedValue
         {
-            get { return attributes.Get("UnsavedValue"); }
-            set { attributes.Set("UnsavedValue", value); }
+            get { return attributes.Get(Attr.UnsavedValue); }
+            set { attributes.Set(Attr.UnsavedValue, value); }
         }
 
         public Type ContainingEntityType { get; set; }

@@ -1,65 +1,54 @@
 using System;
-using System.Linq.Expressions;
-using System.Reflection;
 using FluentNHibernate.MappingModel.Identity;
+using FluentNHibernate.Utils;
 using FluentNHibernate.Visitors;
 
 namespace FluentNHibernate.MappingModel.ClassBased
 {
     public class ClassMapping : ClassMappingBase
     {
-        private readonly AttributeStore<ClassMapping> attributes;
-
         public ClassMapping()
             : this(new AttributeStore())
         {}
 
         public ClassMapping(AttributeStore store)
         {
-            attributes = new AttributeStore<ClassMapping>(store);
-            attributes.SetDefault(x => x.Mutable, true);
+            if (store != null)
+                ReplaceAttributes(store);
+            
+            SetDefaultAttribute(Attr.Mutable, true);
+            SetDefaultAttribute(Attr.Name, Type.AssemblyQualifiedName);
+            SetDefaultAttribute(Attr.Table, GetDefaultTableName(Type));
         }
 
         public IIdentityMapping Id
         {
-            get { return attributes.Get(x => x.Id); }
-            set { attributes.Set(x => x.Id, value); }
-        }
-
-        public override string Name
-        {
-            get { return attributes.Get(x => x.Name); }
-            set { attributes.Set(x => x.Name, value); }
-        }
-
-        public override Type Type
-        {
-            get { return attributes.Get(x => x.Type); }
-            set { attributes.Set(x => x.Type, value); }
+            get { return (IIdentityMapping)GetAttribute(Attr.Id); }
+            set { SetAttribute(Attr.Id, value); }
         }
 
         public CacheMapping Cache
         {
-            get { return attributes.Get(x => x.Cache); }
-            set { attributes.Set(x => x.Cache, value); }
+            get { return (CacheMapping)GetAttribute(Attr.Cache); }
+            set { SetAttribute(Attr.Cache, value); }
         }
 
         public VersionMapping Version
         {
-            get { return attributes.Get(x => x.Version); }
-            set { attributes.Set(x => x.Version, value); }
+            get { return (VersionMapping)GetAttribute(Attr.Version); }
+            set { SetAttribute(Attr.Version, value); }
         }
 
         public DiscriminatorMapping Discriminator
         {
-            get { return attributes.Get(x => x.Discriminator); }
-            set { attributes.Set(x => x.Discriminator, value); }
+            get { return (DiscriminatorMapping)GetAttribute(Attr.Discriminator); }
+            set { SetAttribute(Attr.Discriminator, value); }
         }
 
         public TuplizerMapping Tuplizer
         {
-            get { return attributes.Get(x => x.Tuplizer); }
-            set { attributes.Set(x => x.Tuplizer, value); }
+            get { return (TuplizerMapping)GetAttribute(Attr.Tuplizer); }
+            set { SetAttribute(Attr.Tuplizer, value); }
         }
 
         public override void AcceptVisitor(IMappingModelVisitor visitor)
@@ -84,159 +73,137 @@ namespace FluentNHibernate.MappingModel.ClassBased
             base.AcceptVisitor(visitor);
         }
 
-        public override void MergeAttributes(AttributeStore store)
-        {
-            attributes.Merge(new AttributeStore<ClassMapping>(store));
-        }
-
         public string TableName
         {
-            get { return attributes.Get(x => x.TableName); }
-            set { attributes.Set(x => x.TableName, value); }
+            get { return (string)GetAttribute(Attr.Table); }
+            set { SetAttribute(Attr.Table, value); }
         }
 
         public int BatchSize
         {
-            get { return attributes.Get(x => x.BatchSize); }
-            set { attributes.Set(x => x.BatchSize, value); }
+            get { return (int)GetAttribute(Attr.BatchSize); }
+            set { SetAttribute(Attr.BatchSize, value); }
         }
 
         public object DiscriminatorValue
         {
-            get { return attributes.Get(x => x.DiscriminatorValue); }
-            set { attributes.Set(x => x.DiscriminatorValue, value); }
+            get { return GetAttribute(Attr.DiscriminatorValue); }
+            set { SetAttribute(Attr.DiscriminatorValue, value); }
         }
 
         public string Schema
         {
-            get { return attributes.Get(x => x.Schema); }
-            set { attributes.Set(x => x.Schema, value); }
+            get { return (string)GetAttribute(Attr.Schema); }
+            set { SetAttribute(Attr.Schema, value); }
         }
 
         public bool Lazy
         {
-            get { return attributes.Get(x => x.Lazy); }
-            set { attributes.Set(x => x.Lazy, value); }
+            get { return (bool)GetAttribute(Attr.Lazy); }
+            set { SetAttribute(Attr.Lazy, value); }
         }
 
         public bool Mutable
         {
-            get { return attributes.Get(x => x.Mutable); }
-            set { attributes.Set(x => x.Mutable, value); }
+            get { return (bool)GetAttribute(Attr.Mutable); }
+            set { SetAttribute(Attr.Mutable, value); }
         }
 
         public bool DynamicUpdate
         {
-            get { return attributes.Get(x => x.DynamicUpdate); }
-            set { attributes.Set(x => x.DynamicUpdate, value); }
+            get { return (bool)GetAttribute(Attr.DynamicUpdate); }
+            set { SetAttribute(Attr.DynamicUpdate, value); }
         }
 
         public bool DynamicInsert
         {
-            get { return attributes.Get(x => x.DynamicInsert); }
-            set { attributes.Set(x => x.DynamicInsert, value); }
+            get { return (bool)GetAttribute(Attr.DynamicInsert); }
+            set { SetAttribute(Attr.DynamicInsert, value); }
         }
 
         public string OptimisticLock
         {
-            get { return attributes.Get(x => x.OptimisticLock); }
-            set { attributes.Set(x => x.OptimisticLock, value); }
+            get { return (string)GetAttribute(Attr.OptimisticLock); }
+            set { SetAttribute(Attr.OptimisticLock, value); }
         }
 
         public string Polymorphism
         {
-            get { return attributes.Get(x => x.Polymorphism); }
-            set { attributes.Set(x => x.Polymorphism, value); }
+            get { return (string)GetAttribute(Attr.Polymorphism); }
+            set { SetAttribute(Attr.Polymorphism, value); }
         }
 
         public string Persister
         {
-            get { return attributes.Get(x => x.Persister); }
-            set { attributes.Set(x => x.Persister, value); }
+            get { return (string)GetAttribute(Attr.Persister); }
+            set { SetAttribute(Attr.Persister, value); }
         }
 
         public string Where
         {
-            get { return attributes.Get(x => x.Where); }
-            set { attributes.Set(x => x.Where, value); }
+            get { return (string)GetAttribute(Attr.Where); }
+            set { SetAttribute(Attr.Where, value); }
         }
 
         public string Check
         {
-            get { return attributes.Get(x => x.Check); }
-            set { attributes.Set(x => x.Check, value); }
+            get { return (string)GetAttribute(Attr.Check); }
+            set { SetAttribute(Attr.Check, value); }
         }
 
         public string Proxy
         {
-            get { return attributes.Get(x => x.Proxy); }
-            set { attributes.Set(x => x.Proxy, value); }
+            get { return (string)GetAttribute(Attr.Proxy); }
+            set { SetAttribute(Attr.Proxy, value); }
         }
 
         public bool SelectBeforeUpdate
         {
-            get { return attributes.Get(x => x.SelectBeforeUpdate); }
-            set { attributes.Set(x => x.SelectBeforeUpdate, value); }
+            get { return (bool)GetAttribute(Attr.SelectBeforeUpdate); }
+            set { SetAttribute(Attr.SelectBeforeUpdate, value); }
         }
 
         public bool Abstract
         {
-            get { return attributes.Get(x => x.Abstract); }
-            set { attributes.Set(x => x.Abstract, value); }
+            get { return (bool)GetAttribute(Attr.Abstract); }
+            set { SetAttribute(Attr.Abstract, value); }
         }
 
         public string Subselect
         {
-            get { return attributes.Get(x => x.Subselect); }
-            set { attributes.Set(x => x.Subselect, value); }
+            get { return (string)GetAttribute(Attr.Subselect); }
+            set { SetAttribute(Attr.Subselect, value); }
         }
 
         public string SchemaAction
         {
-            get { return attributes.Get(x => x.SchemaAction); }
-            set { attributes.Set(x => x.SchemaAction, value); }
+            get { return (string)GetAttribute(Attr.SchemaAction); }
+            set { SetAttribute(Attr.SchemaAction, value); }
         }
 
         public string EntityName
         {
-            get { return attributes.Get(x => x.EntityName); }
-            set { attributes.Set(x => x.EntityName, value); }
-        }       
-
-        public override bool IsSpecified(string property)
-        {
-            return attributes.IsSpecified(property);
+            get { return (string)GetAttribute(Attr.EntityName); }
+            set { SetAttribute(Attr.EntityName, value); }
         }
 
-        public bool HasValue<TResult>(Expression<Func<ClassMapping, TResult>> property)
+        private string GetDefaultTableName(Type type)
         {
-            return attributes.HasValue(property);
-        }
+            var tableName = type.Name;
 
-        public void SetDefaultValue<TResult>(Expression<Func<ClassMapping, TResult>> property, TResult value)
-        {
-            attributes.SetDefault(property, value);
-        }
+            if (type.IsGenericType)
+            {
+                // special case for generics: GenericType_GenericParameterType
+                tableName = type.Name.Substring(0, type.Name.IndexOf('`'));
 
-        public bool Equals(ClassMapping other)
-        {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-            return base.Equals(other) &&
-                Equals(other.attributes, attributes);
-        }
+                foreach (var argument in type.GetGenericArguments())
+                {
+                    tableName += "_";
+                    tableName += argument.Name;
+                }
+            }
 
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != typeof(ClassMapping)) return false;
-            return Equals((ClassMapping)obj);
-        }
-
-        public override int GetHashCode()
-        {
-            return (attributes != null ? attributes.GetHashCode() : 0);
+            return "`" + tableName + "`";
         }
     }
 }

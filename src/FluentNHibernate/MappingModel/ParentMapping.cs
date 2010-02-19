@@ -6,7 +6,7 @@ namespace FluentNHibernate.MappingModel
 {
     public class ParentMapping : MappingBase
     {
-        private readonly AttributeStore<ParentMapping> attributes;
+        private readonly AttributeStore attributes;
 
         public ParentMapping()
             : this(new AttributeStore())
@@ -14,7 +14,7 @@ namespace FluentNHibernate.MappingModel
 
         protected ParentMapping(AttributeStore underlyingStore)
         {
-            attributes = new AttributeStore<ParentMapping>(underlyingStore);
+            attributes = underlyingStore.Clone();
         }
 
         public override void AcceptVisitor(IMappingModelVisitor visitor)
@@ -24,25 +24,20 @@ namespace FluentNHibernate.MappingModel
 
         public string Name
         {
-            get { return attributes.Get(x => x.Name); }
-            set { attributes.Set(x => x.Name, value); }
+            get { return attributes.Get(Attr.Name); }
+            set { attributes.Set(Attr.Name, value); }
         }
 
         public Type ContainingEntityType { get; set; }
 
-        public override bool IsSpecified(string property)
+        public override bool IsSpecified(Attr property)
         {
-            return attributes.IsSpecified(property);
+            return attributes.HasUserValue(property);
         }
 
-        public bool HasValue<TResult>(Expression<Func<ParentMapping, TResult>> property)
+        public bool HasValue(Attr property)
         {
-            return attributes.HasValue(property);
-        }
-
-        public void SetDefaultValue<TResult>(Expression<Func<ParentMapping, TResult>> property, TResult value)
-        {
-            attributes.SetDefault(property, value);
+            return attributes.HasAnyValue(property);
         }
 
         public override bool Equals(object obj)

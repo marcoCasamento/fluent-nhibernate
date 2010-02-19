@@ -15,19 +15,19 @@ namespace FluentNHibernate.Mapping
         private readonly string propertyName;
         private readonly AccessStrategyBuilder access;
         protected bool nextBool = true;
-        private readonly AttributeStore<ComponentMappingBase> attributes;
+        private readonly AttributeStore attributes;
 
         protected ComponentPartBase(AttributeStore underlyingStore, string propertyName)
         {
-            attributes = new AttributeStore<ComponentMappingBase>(underlyingStore);
-            access = new AccessStrategyBuilder(value => attributes.Set(x => x.Access, value));
+            attributes = underlyingStore.Clone();
+            access = new AccessStrategyBuilder(value => attributes.Set(Attr.Access, value));
             this.propertyName = propertyName;
         }
 
         protected abstract IComponentMapping CreateComponentMappingRoot(AttributeStore store);
         protected IComponentMapping CreateComponentMapping()
         {
-            var mapping = CreateComponentMappingRoot(attributes.CloneInner());
+            var mapping = CreateComponentMappingRoot(attributes.Clone());
 
             mapping.Name = propertyName;
 
@@ -67,7 +67,7 @@ namespace FluentNHibernate.Mapping
 
         private ComponentPartBase<T> ParentReference(Member property)
         {
-            attributes.Set(x => x.Parent, new ParentMapping
+            attributes.Set(Attr.Parent, new ParentMapping
             {
                 Name = property.Name,
                 ContainingEntityType = typeof(T)
@@ -88,8 +88,8 @@ namespace FluentNHibernate.Mapping
 
         public ComponentPartBase<T> ReadOnly()
         {
-            attributes.Set(x => x.Insert, !nextBool);
-            attributes.Set(x => x.Update, !nextBool);
+            attributes.Set(Attr.Insert, !nextBool);
+            attributes.Set(Attr.Update, !nextBool);
             nextBool = true;
 
             return this;
@@ -97,28 +97,28 @@ namespace FluentNHibernate.Mapping
 
         public ComponentPartBase<T> Insert()
         {
-            attributes.Set(x => x.Insert, nextBool);
+            attributes.Set(Attr.Insert, nextBool);
             nextBool = true;
             return this;
         }
 
         public ComponentPartBase<T> Update()
         {
-            attributes.Set(x => x.Update, nextBool);
+            attributes.Set(Attr.Update, nextBool);
             nextBool = true;
             return this;
         }
 
         public ComponentPartBase<T> Unique()
         {
-            attributes.Set(x => x.Unique, nextBool);
+            attributes.Set(Attr.Unique, nextBool);
             nextBool = true;
             return this;
         }
 
         public ComponentPartBase<T> OptimisticLock()
         {
-            attributes.Set(x => x.OptimisticLock, nextBool);
+            attributes.Set(Attr.OptimisticLock, nextBool);
             nextBool = true;
             return this;
         }

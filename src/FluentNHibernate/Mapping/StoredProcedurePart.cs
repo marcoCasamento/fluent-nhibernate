@@ -8,7 +8,7 @@ namespace FluentNHibernate.Mapping
         private readonly CheckTypeExpression<StoredProcedurePart> check;
         private readonly string _element;
         private readonly string _innerText;
-        private readonly AttributeStore<StoredProcedureMapping> attributes = new AttributeStore<StoredProcedureMapping>();
+        private readonly AttributeStore attributes = new AttributeStore();
 
 
         public StoredProcedurePart(string element, string innerText)
@@ -16,7 +16,7 @@ namespace FluentNHibernate.Mapping
             _element = element;
             _innerText = innerText;
 
-            check = new CheckTypeExpression<StoredProcedurePart>(this, value => attributes.Set(x => x.Check, value));
+            check = new CheckTypeExpression<StoredProcedurePart>(this, value => attributes.Set(Attr.Check, value));
         }
 
 
@@ -28,13 +28,13 @@ namespace FluentNHibernate.Mapping
 
         public StoredProcedureMapping GetStoredProcedureMapping()
         {
-            var mapping = new StoredProcedureMapping(attributes.CloneInner());
+            var mapping = new StoredProcedureMapping(attributes.Clone());
 
             mapping.SPType = _element;
             mapping.Query = _innerText;
 
-            if (!mapping.IsSpecified("Check"))
-                mapping.SetDefaultValue(x => x.Check, "rowcount");
+            if (!mapping.IsSpecified(Attr.Check))
+                mapping.SetDefaultValue(Attr.Check, "rowcount");
 
             return mapping;
         }

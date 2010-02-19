@@ -13,8 +13,8 @@ namespace FluentNHibernate.Mapping
         private readonly Member property;
         private readonly AccessStrategyBuilder access;
         private readonly VersionGeneratedBuilder<IVersionMappingProvider> generated;
-        private readonly AttributeStore<VersionMapping> attributes = new AttributeStore<VersionMapping>();
-        private readonly AttributeStore<ColumnMapping> columnAttributes = new AttributeStore<ColumnMapping>();
+        private readonly AttributeStore attributes = new AttributeStore();
+        private readonly AttributeStore columnAttributes = new AttributeStore();
         private readonly List<string> columns = new List<string>();
         private bool nextBool = true;
 
@@ -22,21 +22,21 @@ namespace FluentNHibernate.Mapping
         {
             this.entity = entity;
             this.property = property;
-            access = new AccessStrategyBuilder(value => attributes.Set(x => x.Access, value));
-            generated = new VersionGeneratedBuilder<IVersionMappingProvider>(this, value => attributes.Set(x => x.Generated, value));
+            access = new AccessStrategyBuilder(value => attributes.Set(Attr.Access, value));
+            generated = new VersionGeneratedBuilder<IVersionMappingProvider>(this, value => attributes.Set(Attr.Generated, value));
         }
 
         VersionMapping IVersionMappingProvider.GetVersionMapping()
         {
-            var mapping = new VersionMapping(attributes.CloneInner());
+            var mapping = new VersionMapping(attributes.Clone());
 
             mapping.ContainingEntityType = entity;
 
-            mapping.SetDefaultValue("Name", property.Name);
-            mapping.SetDefaultValue("Type", property.PropertyType == typeof(DateTime) ? new TypeReference("timestamp") : new TypeReference(property.PropertyType));
-            mapping.AddDefaultColumn(new ColumnMapping(columnAttributes.CloneInner()) { Name = property.Name });
+            mapping.SetDefaultValue(Attr.Name, property.Name);
+            mapping.SetDefaultValue(Attr.Name, property.PropertyType == typeof(DateTime) ? new TypeReference("timestamp") : new TypeReference(property.PropertyType));
+            mapping.AddDefaultColumn(new ColumnMapping(columnAttributes.Clone()) { Name = property.Name });
 
-            columns.ForEach(column => mapping.AddColumn(new ColumnMapping(columnAttributes.CloneInner()) { Name = column }));
+            columns.ForEach(column => mapping.AddColumn(new ColumnMapping(columnAttributes.Clone()) { Name = column }));
 
             return mapping;
         }
@@ -69,87 +69,87 @@ namespace FluentNHibernate.Mapping
 
         public VersionPart UnsavedValue(string value)
         {
-            attributes.Set(x => x.UnsavedValue, value);
+            attributes.Set(Attr.UnsavedValue, value);
             return this;
         }
 
         public VersionPart Length(int length)
         {
-            columnAttributes.Set(x => x.Length, length);
+            columnAttributes.Set(Attr.Length, length);
             return this;
         }
 
         public VersionPart Precision(int precision)
         {
-            columnAttributes.Set(x => x.Precision, precision);
+            columnAttributes.Set(Attr.Precision, precision);
             return this;
         }
 
         public VersionPart Scale(int scale)
         {
-            columnAttributes.Set(x => x.Scale, scale);
+            columnAttributes.Set(Attr.Scale, scale);
             return this;
         }
 
         public VersionPart Nullable()
         {
-            columnAttributes.Set(x => x.NotNull, !nextBool);
+            columnAttributes.Set(Attr.NotNull, !nextBool);
             nextBool = true;
             return this;
         }
 
         public VersionPart Unique()
         {
-            columnAttributes.Set(x => x.Unique, nextBool);
+            columnAttributes.Set(Attr.Unique, nextBool);
             nextBool = true;
             return this;
         }
 
         public VersionPart UniqueKey(string keyColumns)
         {
-            columnAttributes.Set(x => x.UniqueKey, keyColumns);
+            columnAttributes.Set(Attr.UniqueKey, keyColumns);
             return this;
         }
 
         public VersionPart Index(string index)
         {
-            columnAttributes.Set(x => x.Index, index);
+            columnAttributes.Set(Attr.Index, index);
             return this;
         }
 
         public VersionPart Check(string constraint)
         {
-            columnAttributes.Set(x => x.Check, constraint);
+            columnAttributes.Set(Attr.Check, constraint);
             return this;
         }
 
         public VersionPart Default(object value)
         {
-            columnAttributes.Set(x => x.Default, value.ToString());
+            columnAttributes.Set(Attr.Default, value.ToString());
             return this;
         }
 
         public VersionPart CustomType<T>()
         {
-            attributes.Set(x => x.Type, new TypeReference(typeof(T)));
+            attributes.Set(Attr.Type, new TypeReference(typeof(T)));
             return this;
         }
 
         public VersionPart CustomType(Type type)
         {
-            attributes.Set(x => x.Type, new TypeReference(type));
+            attributes.Set(Attr.Type, new TypeReference(type));
             return this;
         }
 
         public VersionPart CustomType(string type)
         {
-            attributes.Set(x => x.Type, new TypeReference(type));
+            attributes.Set(Attr.Type, new TypeReference(type));
             return this;
         }
 
         public VersionPart CustomSqlType(string sqlType)
         {
-            columnAttributes.Set(x => x.SqlType, sqlType);
+            columnAttributes.Set(Attr.SqlType, sqlType);
             return this;
         }
     }

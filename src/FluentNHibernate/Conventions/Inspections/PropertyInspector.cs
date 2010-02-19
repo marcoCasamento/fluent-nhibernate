@@ -13,9 +13,6 @@ namespace FluentNHibernate.Conventions.Inspections
             : base(mapping.Columns)
         {
             this.mapping = mapping;
-
-            propertyMappings.Map(x => x.LazyLoad, x => x.Lazy);
-            propertyMappings.Map(x => x.Nullable, "NotNull");
         }
 
         public bool Insert
@@ -75,7 +72,7 @@ namespace FluentNHibernate.Conventions.Inspections
         {
             get
             {
-                if (mapping.IsSpecified("Access"))
+                if (mapping.IsSpecified(Attr.Access))
                     return Access.FromString(mapping.Access);
 
                 return Access.Unset;
@@ -102,9 +99,9 @@ namespace FluentNHibernate.Conventions.Inspections
             get { return mapping.Member; }
         }
 
-        public bool IsSet(Member property)
+        public bool IsSet(Attr property)
         {
-            return mapping.IsSpecified(propertyMappings.Get(property));
+            return mapping.IsSpecified(property);
         }
     }
 }

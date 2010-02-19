@@ -1,15 +1,11 @@
 using System;
 using System.Linq.Expressions;
-using System.Reflection;
-using FluentNHibernate.Utils;
 using FluentNHibernate.Visitors;
 
 namespace FluentNHibernate.MappingModel.Collections
 {
     public class BagMapping : CollectionMappingBase
     {
-        private readonly AttributeStore<BagMapping> attributes;
-
         public BagMapping()
             : this(new AttributeStore())
         {}
@@ -17,7 +13,7 @@ namespace FluentNHibernate.MappingModel.Collections
         public BagMapping(AttributeStore underlyingStore)
             : base(underlyingStore)
         {
-            attributes = new AttributeStore<BagMapping>(underlyingStore);
+            attributes = underlyingStore.Clone();
         }
 
         public override void AcceptVisitor(IMappingModelVisitor visitor)
@@ -28,23 +24,8 @@ namespace FluentNHibernate.MappingModel.Collections
 
         public override string OrderBy
         {
-            get { return attributes.Get(x => x.OrderBy); }
-            set { attributes.Set(x => x.OrderBy, value); }
-        }
-
-        public new bool IsSpecified(string property)
-        {
-            return attributes.IsSpecified(property);
-        }
-
-        public bool HasValue<TResult>(Expression<Func<BagMapping, TResult>> property)
-        {
-            return attributes.HasValue(property);
-        }
-
-        public void SetDefaultValue<TResult>(Expression<Func<BagMapping, TResult>> property, TResult value)
-        {
-            attributes.SetDefault(property, value);
+            get { return attributes.Get(Attr.OrderBy); }
+            set { attributes.Set(Attr.OrderBy, value); }
         }
 
         public bool Equals(BagMapping other)

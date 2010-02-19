@@ -8,12 +8,10 @@ namespace FluentNHibernate.MappingModel.Collections
 {
     public class ArrayMapping : CollectionMappingBase, IIndexedCollectionMapping
     {
-        private readonly AttributeStore<ArrayMapping> attributes;
-
         public IIndexMapping Index
         {
-            get { return attributes.Get(x => x.Index); }
-            set { attributes.Set(x => x.Index, value); }
+            get { return attributes.Get<IIndexMapping>(Attr.Index); }
+            set { attributes.Set(Attr.Index, value); }
         }
 
         public ArrayMapping()
@@ -23,7 +21,7 @@ namespace FluentNHibernate.MappingModel.Collections
         public ArrayMapping(AttributeStore underlyingStore)
             : base(underlyingStore)
         {
-            attributes = new AttributeStore<ArrayMapping>(underlyingStore);
+            attributes = underlyingStore.Clone();
         }
 
         public override void AcceptVisitor(IMappingModelVisitor visitor)
@@ -41,21 +39,6 @@ namespace FluentNHibernate.MappingModel.Collections
 			get { return null; }
     		set { /* no-op */  }
     	}
-
-        public new bool IsSpecified(string property)
-        {
-            return attributes.IsSpecified(property);
-        }
-
-        public bool HasValue<TResult>(Expression<Func<ArrayMapping, TResult>> property)
-        {
-            return attributes.HasValue(property);
-        }
-
-        public void SetDefaultValue<TResult>(Expression<Func<ArrayMapping, TResult>> property, TResult value)
-        {
-            attributes.SetDefault(property, value);
-        }
 
         public bool Equals(ArrayMapping other)
         {

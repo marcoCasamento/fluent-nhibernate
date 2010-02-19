@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Linq.Expressions;
-using System.Reflection;
-using FluentNHibernate.Utils;
 using FluentNHibernate.Visitors;
 
 namespace FluentNHibernate.MappingModel.Collections
 {
     public class IndexMapping : MappingBase, IIndexMapping, IHasColumnMappings
     {
-        private readonly AttributeStore<IndexMapping> attributes;
+        private readonly AttributeStore attributes;
         private readonly IDefaultableList<ColumnMapping> columns = new DefaultableList<ColumnMapping>();
 
         public IndexMapping()
@@ -17,7 +14,7 @@ namespace FluentNHibernate.MappingModel.Collections
 
         public IndexMapping(AttributeStore underlyingStore)
         {
-            attributes = new AttributeStore<IndexMapping>(underlyingStore);
+            attributes = underlyingStore.Clone();
         }
 
         public override void AcceptVisitor(IMappingModelVisitor visitor)
@@ -30,8 +27,8 @@ namespace FluentNHibernate.MappingModel.Collections
 
         public TypeReference Type
         {
-            get { return attributes.Get(x => x.Type); }
-            set { attributes.Set(x => x.Type, value); }
+            get { return attributes.Get<TypeReference>(Attr.Type); }
+            set { attributes.Set(Attr.Type, value); }
         }
 
         public Type ContainingEntityType { get; set; }
@@ -56,17 +53,17 @@ namespace FluentNHibernate.MappingModel.Collections
             columns.Clear();
         }
 
-        public override bool IsSpecified(string property)
+        public override bool IsSpecified(Attr property)
         {
-            return attributes.IsSpecified(property);
+            return attributes.HasUserValue(property);
         }
 
-        public bool HasValue<TResult>(Expression<Func<IndexMapping, TResult>> property)
+        public bool HasValue(Attr property)
         {
-            return attributes.HasValue(property);
+            return attributes.HasAnyValue(property);
         }
 
-        public void SetDefaultValue<TResult>(Expression<Func<IndexMapping, TResult>> property, TResult value)
+        public void SetDefaultValue<TResult>(Attr property, TResult value)
         {
             attributes.SetDefault(property, value);
         }

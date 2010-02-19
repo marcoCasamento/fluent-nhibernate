@@ -8,7 +8,7 @@ namespace FluentNHibernate.MappingModel
 {
     public class KeyMapping : MappingBase, IHasColumnMappings
     {
-        private readonly AttributeStore<KeyMapping> attributes;
+        private readonly AttributeStore attributes;
         private readonly IDefaultableList<ColumnMapping> columns = new DefaultableList<ColumnMapping>();
         public Type ContainingEntityType { get; set; }
 
@@ -18,7 +18,7 @@ namespace FluentNHibernate.MappingModel
 
         public KeyMapping(AttributeStore underlyingStore)
         {
-            attributes = new AttributeStore<KeyMapping>(underlyingStore);
+            attributes = underlyingStore.Clone();
         }
 
         public override void AcceptVisitor(IMappingModelVisitor visitor)
@@ -31,38 +31,38 @@ namespace FluentNHibernate.MappingModel
 
         public string ForeignKey
         {
-            get { return attributes.Get(x => x.ForeignKey); }
-            set { attributes.Set(x => x.ForeignKey, value); }
+            get { return attributes.Get(Attr.ForeignKey); }
+            set { attributes.Set(Attr.ForeignKey, value); }
         }
 
         public string PropertyRef
         {
-            get { return attributes.Get(x => x.PropertyRef); }
-            set { attributes.Set(x => x.PropertyRef, value); }
+            get { return attributes.Get(Attr.PropertyRef); }
+            set { attributes.Set(Attr.PropertyRef, value); }
         }
 
         public string OnDelete
         {
-            get { return attributes.Get(x => x.OnDelete); }
-            set { attributes.Set(x => x.OnDelete, value); }
+            get { return attributes.Get(Attr.OnDelete); }
+            set { attributes.Set(Attr.OnDelete, value); }
         }
 
         public bool NotNull
         {
-            get { return attributes.Get(x => x.NotNull); }
-            set { attributes.Set(x => x.NotNull, value); }
+            get { return attributes.Get<bool>(Attr.NotNull); }
+            set { attributes.Set(Attr.NotNull, value); }
         }
 
         public bool Update
         {
-            get { return attributes.Get(x => x.Update); }
-            set { attributes.Set(x => x.Update, value); }
+            get { return attributes.Get<bool>(Attr.Update); }
+            set { attributes.Set(Attr.Update, value); }
         }
 
         public bool Unique
         {
-            get { return attributes.Get(x => x.Unique); }
-            set { attributes.Set(x => x.Unique, value); }
+            get { return attributes.Get<bool>(Attr.Unique); }
+            set { attributes.Set(Attr.Unique, value); }
         }
 
         public IDefaultableEnumerable<ColumnMapping> Columns
@@ -85,19 +85,14 @@ namespace FluentNHibernate.MappingModel
             columns.Clear();
         }
 
-        public override bool IsSpecified(string property)
+        public override bool IsSpecified(Attr property)
         {
-            return attributes.IsSpecified(property);
+            return attributes.HasUserValue(property);
         }
 
-        public bool HasValue<TResult>(Expression<Func<KeyMapping, TResult>> property)
+        public bool HasValue(Attr property)
         {
-            return attributes.HasValue(property);
-        }
-
-        public void SetDefaultValue<TResult>(Expression<Func<KeyMapping, TResult>> property, TResult value)
-        {
-            attributes.SetDefault(property, value);
+            return attributes.HasAnyValue(property);
         }
 
         public bool Equals(KeyMapping other)

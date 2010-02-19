@@ -12,5 +12,12 @@ namespace FluentNHibernate.Utils
             foreach (var item in enumerable)
                 each(item);
         }
+
+        [DebuggerStepThrough]
+        public static void Each<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> enumerable, Action<TKey, TValue> each)
+        {
+            foreach (var item in enumerable)
+                each(item.Key, item.Value);
+        }
     }
 }

@@ -32,14 +32,14 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         public void AccessIsSet()
         {
             mapping.Access = "field";
-            inspector.IsSet(Prop(x => x.Access))
+            inspector.IsSet(Attr.Access)
                 .ShouldBeTrue();
         }
 
         [Test]
         public void AccessIsNotSet()
         {
-            inspector.IsSet(Prop(x => x.Access))
+            inspector.IsSet(Attr.Access)
                 .ShouldBeFalse();
         }
 
@@ -54,14 +54,14 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         public void CascadeIsSet()
         {
             mapping.Cascade = "all";
-            inspector.IsSet(Prop(x => x.Cascade))
+            inspector.IsSet(Attr.Cascade)
                 .ShouldBeTrue();
         }
 
         [Test]
         public void CascadeIsNotSet()
         {
-            inspector.IsSet(Prop(x => x.Cascade))
+            inspector.IsSet(Attr.Cascade)
                 .ShouldBeFalse();
         }
 
@@ -76,14 +76,14 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         public void ConstrainedIsSet()
         {
             mapping.Constrained = true;
-            inspector.IsSet(Prop(x => x.Constrained))
+            inspector.IsSet(Attr.Constrained)
                 .ShouldBeTrue();
         }
 
         [Test]
         public void ConstrainedIsNotSet()
         {
-            inspector.IsSet(Prop(x => x.Constrained))
+            inspector.IsSet(Attr.Constrained)
                 .ShouldBeFalse();
         }
 
@@ -98,14 +98,14 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         public void FetchIsSet()
         {
             mapping.Fetch = "join";
-            inspector.IsSet(Prop(x => x.Fetch))
+            inspector.IsSet(Attr.Fetch)
                 .ShouldBeTrue();
         }
 
         [Test]
         public void FetchIsNotSet()
         {
-            inspector.IsSet(Prop(x => x.Fetch))
+            inspector.IsSet(Attr.Fetch)
                 .ShouldBeFalse();
         }
 
@@ -120,14 +120,14 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         public void ForeignKeyIsSet()
         {
             mapping.ForeignKey = "key";
-            inspector.IsSet(Prop(x => x.ForeignKey))
+            inspector.IsSet(Attr.ForeignKey)
                 .ShouldBeTrue();
         }
 
         [Test]
         public void ForeignKeyIsNotSet()
         {
-            inspector.IsSet(Prop(x => x.ForeignKey))
+            inspector.IsSet(Attr.ForeignKey)
                 .ShouldBeFalse();
         }
 
@@ -142,14 +142,14 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         public void LazyIsSet()
         {
             mapping.Lazy = true;
-            inspector.IsSet(Prop(x => x.LazyLoad))
+            inspector.IsSet(Attr.Lazy)
                 .ShouldBeTrue();
         }
 
         [Test]
         public void LazyIsNotSet()
         {
-            inspector.IsSet(Prop(x => x.LazyLoad))
+            inspector.IsSet(Attr.Lazy)
                 .ShouldBeFalse();
         }
 
@@ -164,14 +164,14 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         public void NameIsSet()
         {
             mapping.Name = "name";
-            inspector.IsSet(Prop(x => x.Name))
+            inspector.IsSet(Attr.Name)
                 .ShouldBeTrue();
         }
 
         [Test]
         public void NameIsNotSet()
         {
-            inspector.IsSet(Prop(x => x.Name))
+            inspector.IsSet(Attr.Name)
                 .ShouldBeFalse();
         }
 
@@ -186,14 +186,14 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         public void PropertyRefIsSet()
         {
             mapping.PropertyRef = "ref";
-            inspector.IsSet(Prop(x => x.PropertyRef))
+            inspector.IsSet(Attr.PropertyRef)
                 .ShouldBeTrue();
         }
 
         [Test]
         public void PropertyRefIsNotSet()
         {
-            inspector.IsSet(Prop(x => x.PropertyRef))
+            inspector.IsSet(Attr.PropertyRef)
                 .ShouldBeFalse();
         }
 

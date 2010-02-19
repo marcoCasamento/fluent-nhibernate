@@ -154,30 +154,8 @@ namespace FluentNHibernate.Automapping
         {
             var classMap = new ClassMapping { Type = classType };
 
-            classMap.SetDefaultValue(x => x.Name, classType.AssemblyQualifiedName);
-            classMap.SetDefaultValue(x => x.TableName, GetDefaultTableName(classType));
-
             mappingTypes = types;
             return (ClassMapping)MergeMap(classType, classMap, new List<string>());
-        }
-
-        private string GetDefaultTableName(Type type)
-        {
-            var tableName = type.Name;
-
-            if (type.IsGenericType)
-            {
-                // special case for generics: GenericType_GenericParameterType
-                tableName = type.Name.Substring(0, type.Name.IndexOf('`'));
-
-                foreach (var argument in type.GetGenericArguments())
-                {
-                    tableName += "_";
-                    tableName += argument.Name;
-                }
-            }
-
-            return "`" + tableName + "`";
         }
 
         /// <summary>

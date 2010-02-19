@@ -22,7 +22,7 @@ namespace FluentNHibernate.Conventions.Instances
 
         public new void UnsavedValue(string unsavedValue)
         {
-            if (!mapping.IsSpecified("UnsavedValue"))
+            if (!mapping.IsSpecified(Attr.UnsavedValue))
                 mapping.UnsavedValue = unsavedValue;
         }
 
@@ -32,7 +32,7 @@ namespace FluentNHibernate.Conventions.Instances
             {
                 return new AccessInstance(value =>
                 {
-                    if (!mapping.IsSpecified("Access"))
+                    if (!mapping.IsSpecified(Attr.Access))
                         mapping.Access = value;
                 });
             }
@@ -40,7 +40,7 @@ namespace FluentNHibernate.Conventions.Instances
 
         public new void Mapped()
         {
-            if (!mapping.IsSpecified("Mapped"))
+            if (!mapping.IsSpecified(Attr.Mapped))
                 mapping.Mapped = nextBool;
             nextBool = true;
         }

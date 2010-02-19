@@ -12,7 +12,7 @@ namespace FluentNHibernate.Mapping
     {
         private readonly DiscriminatorPart parent;
         private readonly object discriminatorValue;
-        private readonly AttributeStore<SubclassMapping> attributes = new AttributeStore<SubclassMapping>();
+        private readonly AttributeStore attributes = new AttributeStore();
         private readonly List<ISubclassMapping> subclassMappings = new List<ISubclassMapping>();
         private bool nextBool = true;
 
@@ -24,13 +24,13 @@ namespace FluentNHibernate.Mapping
 
         ISubclassMapping ISubclassMappingProvider.GetSubclassMapping()
         {
-            var mapping = new SubclassMapping(attributes.CloneInner());
+            var mapping = new SubclassMapping(attributes.Clone());
 
             if (discriminatorValue != null)
                 mapping.DiscriminatorValue = discriminatorValue;
 
-            mapping.SetDefaultValue(x => x.Type, typeof(TSubclass));
-            mapping.SetDefaultValue(x => x.Name, typeof(TSubclass).AssemblyQualifiedName);
+            mapping.SetDefaultValue(Attr.Type, typeof(TSubclass));
+            mapping.SetDefaultValue(Attr.Name, typeof(TSubclass).AssemblyQualifiedName);
             
             foreach (var property in properties)
                 mapping.AddProperty(property.GetPropertyMapping());
@@ -77,14 +77,14 @@ namespace FluentNHibernate.Mapping
         /// <returns></returns>
         public SubClassPart<TSubclass> LazyLoad()
         {
-            attributes.Set(x => x.Lazy, nextBool);
+            attributes.Set(Attr.Lazy, nextBool);
             nextBool = true;
             return this;
         }
 
         public SubClassPart<TSubclass> Proxy(Type type)
         {
-            attributes.Set(x => x.Proxy, type.AssemblyQualifiedName);
+            attributes.Set(Attr.Proxy, type.AssemblyQualifiedName);
             return this;
         }
 
@@ -95,28 +95,28 @@ namespace FluentNHibernate.Mapping
 
         public SubClassPart<TSubclass> DynamicUpdate()
         {
-            attributes.Set(x => x.DynamicUpdate, nextBool);
+            attributes.Set(Attr.DynamicUpdate, nextBool);
             nextBool = true;
             return this;
         }
 
         public SubClassPart<TSubclass> DynamicInsert()
         {
-            attributes.Set(x => x.DynamicInsert, nextBool);
+            attributes.Set(Attr.DynamicInsert, nextBool);
             nextBool = true;
             return this;
         }
 
         public SubClassPart<TSubclass> SelectBeforeUpdate()
         {
-            attributes.Set(x => x.SelectBeforeUpdate, nextBool);
+            attributes.Set(Attr.SelectBeforeUpdate, nextBool);
             nextBool = true;
             return this;
         }
 
         public SubClassPart<TSubclass> Abstract()
         {
-            attributes.Set(x => x.Abstract, nextBool);
+            attributes.Set(Attr.Abstract, nextBool);
             nextBool = true;
             return this;
         }
@@ -127,7 +127,7 @@ namespace FluentNHibernate.Mapping
         /// <remarks>See http://nhforge.org/blogs/nhibernate/archive/2008/10/21/entity-name-in-action-a-strongly-typed-entity.aspx</remarks>
         public void EntityName(string entityName)
         {
-            attributes.Set(x => x.EntityName, entityName);
+            attributes.Set(Attr.EntityName, entityName);
         }
 
         /// <summary>

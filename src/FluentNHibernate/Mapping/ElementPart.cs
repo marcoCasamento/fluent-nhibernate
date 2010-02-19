@@ -1,16 +1,14 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using FluentNHibernate.MappingModel;
 using FluentNHibernate.MappingModel.Collections;
-using FluentNHibernate.Utils;
 
 namespace FluentNHibernate.Mapping
 {
     public class ElementPart
     {
         private readonly Type containingEntityType;
-        private readonly AttributeStore<ElementMapping> attributes = new AttributeStore<ElementMapping>();
+        private readonly AttributeStore attributes = new AttributeStore();
         private readonly ColumnMappingCollection<ElementPart> columns;
 
         public ElementPart(Type containingEntityType, Type elementType)
@@ -18,7 +16,7 @@ namespace FluentNHibernate.Mapping
             this.containingEntityType = containingEntityType;
             columns = new ColumnMappingCollection<ElementPart>(this);
 
-            attributes.SetDefault(x => x.Type, new TypeReference(elementType));
+            attributes.SetDefault(Attr.Type, new TypeReference(elementType));
         }
 
         public ElementPart Column(string elementColumnName)
@@ -34,13 +32,13 @@ namespace FluentNHibernate.Mapping
 
         public ElementPart Type<TElement>()
         {
-            attributes.Set(x => x.Type, new TypeReference(typeof(TElement)));
+            attributes.Set(Attr.Type, new TypeReference(typeof(TElement)));
             return this;
         }
 
         public ElementMapping GetElementMapping()
         {
-            var mapping = new ElementMapping(attributes.CloneInner());
+            var mapping = new ElementMapping(attributes.Clone());
             mapping.ContainingEntityType = containingEntityType;
 
             if (Columns.Any())
@@ -56,13 +54,13 @@ namespace FluentNHibernate.Mapping
 
         public ElementPart Length(int length)
         {
-            attributes.Set(x => x.Length, length);
+            attributes.Set(Attr.Length, length);
             return this;
         }
 
         public ElementPart Formula(string formula)
         {
-            attributes.Set(x => x.Formula, formula);
+            attributes.Set(Attr.Formula, formula);
             return this;
         }
     }

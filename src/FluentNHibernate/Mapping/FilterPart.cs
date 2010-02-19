@@ -20,7 +20,7 @@ namespace FluentNHibernate.Mapping
     {
         private readonly string filterName;
         private readonly string condition;
-        private readonly AttributeStore<FilterMapping> attributes = new AttributeStore<FilterMapping>();
+        private readonly AttributeStore attributes = new AttributeStore();
 
         public FilterPart(string name) : this(name, null) { }
 

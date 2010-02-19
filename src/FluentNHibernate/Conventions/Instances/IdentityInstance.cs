@@ -35,13 +35,13 @@ namespace FluentNHibernate.Conventions.Instances
 
         public new void UnsavedValue(string unsavedValue)
         {
-            if (!mapping.IsSpecified("UnsavedValue"))
+            if (!mapping.IsSpecified(Attr.UnsavedValue))
                 mapping.UnsavedValue = unsavedValue;
         }
 
         public new void Length(int length)
         {
-            if (mapping.Columns.First().IsSpecified("Length"))
+            if (mapping.Columns.First().IsSpecified(Attr.Length))
                 return;
 
             foreach (var column in mapping.Columns)
@@ -50,13 +50,13 @@ namespace FluentNHibernate.Conventions.Instances
 
         public void CustomType(string type)
         {
-            if (!mapping.IsSpecified("Type"))
+            if (!mapping.IsSpecified(Attr.Type))
                 mapping.Type = new TypeReference(type);
         }
 
         public void CustomType(Type type)
         {
-            if (!mapping.IsSpecified("Type"))
+            if (!mapping.IsSpecified(Attr.Type))
                 mapping.Type = new TypeReference(type);
         }
 
@@ -71,7 +71,7 @@ namespace FluentNHibernate.Conventions.Instances
             {
                 return new AccessInstance(value =>
                 {
-                    if (!mapping.IsSpecified("Access"))
+                    if (!mapping.IsSpecified(Attr.Access))
                         mapping.Access = value;
                 });
             }
@@ -81,7 +81,7 @@ namespace FluentNHibernate.Conventions.Instances
         {
             get
             {
-                if (!mapping.IsSpecified("Generator"))
+                if (!mapping.IsSpecified(Attr.Generator))
                     mapping.Generator = new GeneratorMapping();
                 
                 return new GeneratorInstance(mapping.Generator, mapping.Type.GetUnderlyingSystemType());
@@ -100,7 +100,7 @@ namespace FluentNHibernate.Conventions.Instances
 
         public new void Precision(int precision)
         {
-            if (mapping.Columns.First().IsSpecified("Precision"))
+            if (mapping.Columns.First().IsSpecified(Attr.Precision))
                 return;
 
             foreach (var column in mapping.Columns)
@@ -109,7 +109,7 @@ namespace FluentNHibernate.Conventions.Instances
 
         public new void Scale(int scale)
         {
-            if (mapping.Columns.First().IsSpecified("Scale"))
+            if (mapping.Columns.First().IsSpecified(Attr.Scale))
                 return;
 
             foreach (var column in mapping.Columns)
@@ -118,7 +118,7 @@ namespace FluentNHibernate.Conventions.Instances
 
         public new void Nullable()
         {
-            if (!mapping.Columns.First().IsSpecified("NotNull"))
+            if (!mapping.Columns.First().IsSpecified(Attr.NotNull))
                 foreach (var column in mapping.Columns)
                     column.NotNull = !nextBool;
 
@@ -127,7 +127,7 @@ namespace FluentNHibernate.Conventions.Instances
 
         public new void Unique()
         {
-            if (!mapping.Columns.First().IsSpecified("Unique"))
+            if (!mapping.Columns.First().IsSpecified(Attr.Unique))
                 foreach (var column in mapping.Columns)
                     column.Unique = nextBool;
 
@@ -136,7 +136,7 @@ namespace FluentNHibernate.Conventions.Instances
 
         public new void UniqueKey(string columns)
         {
-            if (mapping.Columns.First().IsSpecified("UniqueKey"))
+            if (mapping.Columns.First().IsSpecified(Attr.UniqueKey))
                 return;
 
             foreach (var column in mapping.Columns)
@@ -145,7 +145,7 @@ namespace FluentNHibernate.Conventions.Instances
 
         public void CustomSqlType(string sqlType)
         {
-            if (mapping.Columns.First().IsSpecified("SqlType"))
+            if (mapping.Columns.First().IsSpecified(Attr.SqlType))
                 return;
 
             foreach (var column in mapping.Columns)
@@ -154,7 +154,7 @@ namespace FluentNHibernate.Conventions.Instances
 
         public new void Index(string index)
         {
-            if (mapping.Columns.First().IsSpecified("Index"))
+            if (mapping.Columns.First().IsSpecified(Attr.Index))
                 return;
 
             foreach (var column in mapping.Columns)
@@ -163,7 +163,7 @@ namespace FluentNHibernate.Conventions.Instances
 
         public new void Check(string constraint)
         {
-            if (mapping.Columns.First().IsSpecified("Check"))
+            if (mapping.Columns.First().IsSpecified(Attr.Check))
                 return;
 
             foreach (var column in mapping.Columns)
@@ -172,7 +172,7 @@ namespace FluentNHibernate.Conventions.Instances
 
         public new void Default(object value)
         {
-            if (mapping.Columns.First().IsSpecified("Default"))
+            if (mapping.Columns.First().IsSpecified(Attr.Default))
                 return;
 
             foreach (var column in mapping.Columns)

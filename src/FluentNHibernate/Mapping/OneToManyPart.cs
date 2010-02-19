@@ -49,6 +49,29 @@ namespace FluentNHibernate.Mapping
         HasManyElementSetBuilder<TChild> ValueColumn(string valueColumn);
         HasManyElementBagBuilder<TChild> AsBag();
         HasManyElementListBuilder<TChild> AsList();
+        AccessStrategyBuilder<HasManyElementSetBuilder<TChild>> Access { get; }
+        CollectionCascadeBuilder<HasManyElementSetBuilder<TChild>> Cascade { get; }
+        FetchBuilder<HasManyElementSetBuilder<TChild>> Fetch { get; }
+        OptimisticLockBuilder<HasManyElementSetBuilder<TChild>> OptimisticLock { get; }
+        HasManyElementSetBuilder<TChild> BatchSize(int batchSize);
+        HasManyElementSetBuilder<TChild> Check(string constraint);
+        HasManyElementSetBuilder<TChild> CollectionType(string type);
+        HasManyElementSetBuilder<TChild> CollectionType(Type type);
+        HasManyElementSetBuilder<TChild> CollectionType<TCollection>();
+        HasManyElementSetBuilder<TChild> Inverse();
+        HasManyElementSetBuilder<TChild> LazyLoad();
+        HasManyElementSetBuilder<TChild> ReadOnly();
+        HasManyElementSetBuilder<TChild> OrderBy(string orderBy);
+        HasManyElementSetBuilder<TChild> Persister(string type);
+        HasManyElementSetBuilder<TChild> Persister(Type type);
+        HasManyElementSetBuilder<TChild> Persister<TPersister>() where TPersister : IEntityPersister;
+        HasManyElementSetBuilder<TChild> Schema(string schema);
+        HasManyElementSetBuilder<TChild> Not { get; }
+        HasManyElementSetBuilder<TChild> Subselect(string subselect);
+        HasManyElementSetBuilder<TChild> Table(string table);
+        HasManyElementSetBuilder<TChild> Where(string clause);
+        HasManyElementSetBuilder<TChild> Where(Expression<Predicate<TChild>> clause);
+        HasManyElementSetBuilder<TChild> Sort(string clause);
     }
 
     public interface HasManyElementListBuilder<TChild> : ICollectionMappingProvider
@@ -74,6 +97,11 @@ namespace FluentNHibernate.Mapping
             Element(valueColumn);
         }
 
+        private void Sort(string clause)
+        {
+            collectionAttributes.Set(Attr.Sort, clause);
+        }
+
         #region set
 
         HasManyElementBagBuilder<TChild> HasManyElementSetBuilder<TChild>.AsBag()
@@ -88,9 +116,147 @@ namespace FluentNHibernate.Mapping
             return this;
         }
 
+        AccessStrategyBuilder<HasManyElementSetBuilder<TChild>> HasManyElementSetBuilder<TChild>.Access
+        {
+            get { return new AccessStrategyBuilder<HasManyElementSetBuilder<TChild>>(this, access); }
+        }
+
+        CollectionCascadeBuilder<HasManyElementSetBuilder<TChild>> HasManyElementSetBuilder<TChild>.Cascade
+        {
+            get { return new CollectionCascadeBuilder<HasManyElementSetBuilder<TChild>>(this, cascade); }
+        }
+
+        FetchBuilder<HasManyElementSetBuilder<TChild>> HasManyElementSetBuilder<TChild>.Fetch
+        {
+            get { return new FetchBuilder<HasManyElementSetBuilder<TChild>>(this, fetch); }
+        }
+
+        OptimisticLockBuilder<HasManyElementSetBuilder<TChild>> HasManyElementSetBuilder<TChild>.OptimisticLock
+        {
+            get { return new OptimisticLockBuilder<HasManyElementSetBuilder<TChild>>(this, optimisticLock); }
+        }
+
         HasManyElementSetBuilder<TChild> HasManyElementSetBuilder<TChild>.ValueColumn(string valueColumn)
         {
             ValueColumn(valueColumn);
+            return this;
+        }
+
+
+        HasManyElementSetBuilder<TChild> HasManyElementSetBuilder<TChild>.Check(string constraint)
+        {
+            Check(constraint);
+            return this;
+        }
+
+        HasManyElementSetBuilder<TChild> HasManyElementSetBuilder<TChild>.CollectionType(string type)
+        {
+            CollectionType(type);
+            return this;
+        }
+
+        HasManyElementSetBuilder<TChild> HasManyElementSetBuilder<TChild>.CollectionType(Type type)
+        {
+            CollectionType(type);
+            return this;
+        }
+
+        HasManyElementSetBuilder<TChild> HasManyElementSetBuilder<TChild>.CollectionType<TCollection>()
+        {
+            CollectionType<TCollection>();
+            return this;
+        }
+
+        HasManyElementSetBuilder<TChild> HasManyElementSetBuilder<TChild>.Inverse()
+        {
+            Inverse();
+            return this;
+        }
+
+        HasManyElementSetBuilder<TChild> HasManyElementSetBuilder<TChild>.LazyLoad()
+        {
+            LazyLoad();
+            return this;
+        }
+
+        HasManyElementSetBuilder<TChild> HasManyElementSetBuilder<TChild>.ReadOnly()
+        {
+            ReadOnly();
+            return this;
+        }
+
+        HasManyElementSetBuilder<TChild> HasManyElementSetBuilder<TChild>.OrderBy(string orderBy)
+        {
+            OrderBy(orderBy);
+            return this;
+        }
+
+        HasManyElementSetBuilder<TChild> HasManyElementSetBuilder<TChild>.Persister(string type)
+        {
+            Persister(type);
+            return this;
+        }
+
+        HasManyElementSetBuilder<TChild> HasManyElementSetBuilder<TChild>.Persister(Type type)
+        {
+            Persister(type);
+            return this;
+        }
+
+        HasManyElementSetBuilder<TChild> HasManyElementSetBuilder<TChild>.Persister<TPersister>()
+        {
+            Persister<TPersister>();
+            return this;
+        }
+
+        HasManyElementSetBuilder<TChild> HasManyElementSetBuilder<TChild>.Schema(string schema)
+        {
+            Schema(schema);
+            return this;
+        }
+
+        HasManyElementSetBuilder<TChild> HasManyElementSetBuilder<TChild>.Not
+        {
+            get
+            {
+                var tmp = Not;
+                return this;
+            }
+        }
+
+        HasManyElementSetBuilder<TChild> HasManyElementSetBuilder<TChild>.BatchSize(int batchSize)
+        {
+            BatchSize(batchSize);
+            return this;
+        }
+
+        HasManyElementSetBuilder<TChild> HasManyElementSetBuilder<TChild>.Table(string table)
+        {
+            Table(table);
+            return this;
+        }
+
+        HasManyElementSetBuilder<TChild> HasManyElementSetBuilder<TChild>.Where(string clause)
+        {
+            Where(clause);
+            return this;
+        }
+
+        HasManyElementSetBuilder<TChild> HasManyElementSetBuilder<TChild>.Where(Expression<Predicate<TChild>> clause)
+        {
+            Where(clause);
+            return this;
+        }
+
+        HasManyElementSetBuilder<TChild> HasManyElementSetBuilder<TChild>.Sort(string clause)
+        {
+            Sort(clause);
+            return this;
+        }
+
+        HasManyElementSetBuilder<TChild> HasManyElementSetBuilder<TChild>.Subselect(string subselect)
+        {
+            Subselect(subselect);
             return this;
         }
 
@@ -321,20 +487,20 @@ namespace FluentNHibernate.Mapping
         private bool isTernary;
 
         public OneToManyPart(Type entity, Member member)
-            : this(entity, member, member.PropertyType, new AttributeStore(), new AttributeStore())
+            : this(entity, member, member.PropertyType)
         {}
 
-        protected OneToManyPart(Type entity, Member member, Type collectionType, AttributeStore underlyingCollectionAttributes, AttributeStore underlyingRelationshipAttributes)
+        protected OneToManyPart(Type entity, Member member, Type collectionType)
             : base(entity, member, collectionType)
         {
             this.entity = entity;
             childType = collectionType;
 
             keyColumns = new ColumnMappingCollection<OneToManyPart<TChild>>(this);
-            cascade = new CascadeBuilder(value => collectionAttributes.Set(x => x.Cascade, value));
-            notFound = new NotFoundExpression<OneToManyPart<TChild>>(this, value => relationshipAttributes.Set(x => x.NotFound, value));
+            cascade = new CascadeBuilder(value => collectionAttributes.Set(Attr.Cascade, value));
+            notFound = new NotFoundExpression<OneToManyPart<TChild>>(this, value => relationshipAttributes.Set(Attr.NotFound, value));
 
-            collectionAttributes.SetDefault(x => x.Name, member.Name);
+            collectionAttributes.SetDefault(Attr.Name, member.Name);
         }
 
         public NotFoundExpression<OneToManyPart<TChild>> NotFound
@@ -411,7 +577,7 @@ namespace FluentNHibernate.Mapping
 
         protected override ICollectionRelationshipMapping GetRelationship()
         {
-            var mapping = new OneToManyMapping(relationshipAttributes.CloneInner())
+            var mapping = new OneToManyMapping(relationshipAttributes.Clone())
             {
                 ContainingEntityType = entity
             };
@@ -457,20 +623,20 @@ namespace FluentNHibernate.Mapping
         /// </summary>
         public OneToManyPart<TChild> OrderBy(string orderBy)
         {
-            collectionAttributes.Set(x => x.OrderBy, orderBy);
+            collectionAttributes.Set(Attr.OrderBy, orderBy);
             return this;
         }
 
         public OneToManyPart<TChild> ReadOnly()
         {
-            collectionAttributes.Set(x => x.Mutable, !nextBool);
+            collectionAttributes.Set(Attr.Mutable, !nextBool);
             nextBool = true;
             return this;
         }
 
         public OneToManyPart<TChild> Subselect(string subselect)
         {
-            collectionAttributes.Set(x => x.Subselect, subselect);
+            collectionAttributes.Set(Attr.Subselect, subselect);
             return this;
         }
 

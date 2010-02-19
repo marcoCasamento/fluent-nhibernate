@@ -12,7 +12,7 @@ namespace FluentNHibernate.MappingModel
         private readonly IList<ClassMapping> classes;
         private readonly IList<FilterDefinitionMapping> filters;
         private readonly IList<ImportMapping> imports;
-        private readonly AttributeStore<HibernateMapping> attributes;
+        private readonly AttributeStore attributes;
 
         public HibernateMapping()
             : this(new AttributeStore())
@@ -20,15 +20,15 @@ namespace FluentNHibernate.MappingModel
 
         public HibernateMapping(AttributeStore underlyingStore)
         {
-            attributes = new AttributeStore<HibernateMapping>(underlyingStore);
+            attributes = underlyingStore.Clone();
             classes = new List<ClassMapping>();
             filters = new List<FilterDefinitionMapping>();
             imports = new List<ImportMapping>();
 
-            attributes.SetDefault(x => x.DefaultCascade, "none");
-            attributes.SetDefault(x => x.DefaultAccess, "property");
-            attributes.SetDefault(x => x.DefaultLazy, true);
-            attributes.SetDefault(x => x.AutoImport, true);
+            attributes.SetDefault(Attr.DefaultCascade, "none");
+            attributes.SetDefault(Attr.DefaultAccess, "property");
+            attributes.SetDefault(Attr.DefaultLazy, true);
+            attributes.SetDefault(Attr.AutoImport, true);
         }
 
         public override void AcceptVisitor(IMappingModelVisitor visitor)
@@ -77,65 +77,60 @@ namespace FluentNHibernate.MappingModel
 
         public string Catalog
         {
-            get { return attributes.Get(x => x.Catalog); }
-            set { attributes.Set(x => x.Catalog, value); }
+            get { return attributes.Get(Attr.Catalog); }
+            set { attributes.Set(Attr.Catalog, value); }
         }
 
         public string DefaultAccess
         {
-            get { return attributes.Get(x => x.DefaultAccess); }
-            set { attributes.Set(x => x.DefaultAccess, value); }
+            get { return attributes.Get(Attr.DefaultAccess); }
+            set { attributes.Set(Attr.DefaultAccess, value); }
         }
 
         public string DefaultCascade
         {
-            get { return attributes.Get(x => x.DefaultCascade); }
-            set { attributes.Set(x => x.DefaultCascade, value); }
+            get { return attributes.Get(Attr.DefaultCascade); }
+            set { attributes.Set(Attr.DefaultCascade, value); }
         }
 
         public bool AutoImport
         {
-            get { return attributes.Get(x => x.AutoImport); }
-            set { attributes.Set(x => x.AutoImport, value); }
+            get { return attributes.Get<bool>(Attr.AutoImport); }
+            set { attributes.Set(Attr.AutoImport, value); }
         }
 
         public string Schema
         {
-            get { return attributes.Get(x => x.Schema); }
-            set { attributes.Set(x => x.Schema, value); }
+            get { return attributes.Get(Attr.Schema); }
+            set { attributes.Set(Attr.Schema, value); }
         }
 
         public bool DefaultLazy
         {
-            get { return attributes.Get(x => x.DefaultLazy); }
-            set { attributes.Set(x => x.DefaultLazy, value); }
+            get { return attributes.Get<bool>(Attr.DefaultLazy); }
+            set { attributes.Set(Attr.DefaultLazy, value); }
         }
 
         public string Namespace
         {
-            get { return attributes.Get(x => x.Namespace); }
-            set { attributes.Set(x => x.Namespace, value); }
+            get { return attributes.Get(Attr.Namespace); }
+            set { attributes.Set(Attr.Namespace, value); }
         }
 
         public string Assembly
         {
-            get { return attributes.Get(x => x.Assembly); }
-            set { attributes.Set(x => x.Assembly, value); }
+            get { return attributes.Get(Attr.Assembly); }
+            set { attributes.Set(Attr.Assembly, value); }
         }
 
-        public override bool IsSpecified(string property)
+        public override bool IsSpecified(Attr property)
         {
-            return attributes.IsSpecified(property);
+            return attributes.HasUserValue(property);
         }
 
-        public bool HasValue<TResult>(Expression<Func<HibernateMapping, TResult>> property)
+        public bool HasValue(Attr property)
         {
-            return attributes.HasValue(property);
-        }
-
-        public void SetDefaultValue<TResult>(Expression<Func<HibernateMapping, TResult>> property, TResult value)
-        {
-            attributes.SetDefault(property, value);
+            return attributes.HasAnyValue(property);
         }
 
         public bool Equals(HibernateMapping other)

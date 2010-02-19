@@ -27,7 +27,7 @@ namespace FluentNHibernate.Automapping
                 Name = property.Name,
             };
 
-            version.SetDefaultValue("Type", GetDefaultType(property));
+            version.SetDefaultValue(Attr.Type, GetDefaultType(property));
             version.AddDefaultColumn(new ColumnMapping { Name = property.Name });
 
             if (IsSqlTimestamp(property))

@@ -7,8 +7,6 @@ namespace FluentNHibernate.MappingModel.Collections
 {
     public class SetMapping : CollectionMappingBase
     {
-        private readonly AttributeStore<SetMapping> attributes;
-
         public SetMapping()
             : this(new AttributeStore())
         {}
@@ -16,7 +14,7 @@ namespace FluentNHibernate.MappingModel.Collections
         public SetMapping(AttributeStore underlyingStore)
             : base(underlyingStore)
         {
-            attributes = new AttributeStore<SetMapping>(underlyingStore);
+            attributes = underlyingStore.Clone();
         }
 
         public override void AcceptVisitor(IMappingModelVisitor visitor)
@@ -27,29 +25,24 @@ namespace FluentNHibernate.MappingModel.Collections
 
         public override string OrderBy
         {
-            get { return attributes.Get(x => x.OrderBy); }
-            set { attributes.Set(x => x.OrderBy, value); }
+            get { return attributes.Get(Attr.OrderBy); }
+            set { attributes.Set(Attr.OrderBy, value); }
         }
 
         public string Sort
         {
-            get { return attributes.Get(x => x.Sort); }
-            set { attributes.Set(x => x.Sort, value); }
+            get { return attributes.Get(Attr.Sort); }
+            set { attributes.Set(Attr.Sort, value); }
         }
 
-        public new bool IsSpecified(string property)
+        public new bool IsSpecified(Attr property)
         {
-            return attributes.IsSpecified(property);
+            return attributes.HasUserValue(property);
         }
 
-        public bool HasValue<TResult>(Expression<Func<SetMapping, TResult>> property)
+        public new bool HasValue(Attr property)
         {
-            return attributes.HasValue(property);
-        }
-
-        public void SetDefaultValue<TResult>(Expression<Func<SetMapping, TResult>> property, TResult value)
-        {
-            attributes.SetDefault(property, value);
+            return attributes.HasAnyValue(property);
         }
 
         public bool Equals(SetMapping other)

@@ -7,12 +7,10 @@ namespace FluentNHibernate.MappingModel.Collections
 {
     public class ListMapping : CollectionMappingBase, IIndexedCollectionMapping
     {
-        private readonly AttributeStore<ListMapping> attributes;
-
         public IIndexMapping Index
         {
-            get { return attributes.Get(x => x.Index); }
-            set { attributes.Set(x => x.Index, value); }
+            get { return attributes.Get<IIndexMapping>(Attr.Index); }
+            set { attributes.Set(Attr.Index, value); }
         }
 
         public ListMapping()
@@ -22,7 +20,7 @@ namespace FluentNHibernate.MappingModel.Collections
         public ListMapping(AttributeStore underlyingStore)
             : base(underlyingStore)
         {
-            attributes = new AttributeStore<ListMapping>(underlyingStore);
+            attributes = underlyingStore.Clone();
         }
 
         public override void AcceptVisitor(IMappingModelVisitor visitor)
@@ -41,19 +39,9 @@ namespace FluentNHibernate.MappingModel.Collections
 			set { /* no-op */ }
     	}
 
-        public new bool IsSpecified(string property)
+        public new bool IsSpecified(Attr property)
         {
-            return attributes.IsSpecified(property);
-        }
-
-        public bool HasValue<TResult>(Expression<Func<ListMapping, TResult>> property)
-        {
-            return attributes.HasValue(property);
-        }
-
-        public void SetDefaultValue<TResult>(Expression<Func<ListMapping, TResult>> property, TResult value)
-        {
-            attributes.SetDefault(property, value);
+            return attributes.HasUserValue(property);
         }
 
         public bool Equals(ListMapping other)

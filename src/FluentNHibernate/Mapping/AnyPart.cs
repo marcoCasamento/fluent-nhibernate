@@ -16,7 +16,7 @@ namespace FluentNHibernate.Mapping
     /// </summary>
     public class AnyPart<T> : IAnyMappingProvider
     {
-        private readonly AttributeStore<AnyMapping> attributes = new AttributeStore<AnyMapping>();
+        private readonly AttributeStore attributes = new AttributeStore();
         private readonly Type entity;
         private readonly Member property;
         private readonly AccessStrategyBuilder access;
@@ -30,8 +30,8 @@ namespace FluentNHibernate.Mapping
         {
             this.entity = entity;
             this.property = property;
-            access = new AccessStrategyBuilder(value => attributes.Set(x => x.Access, value));
-            cascade = new CascadeBuilder(value => attributes.Set(x => x.Cascade, value));
+            access = new AccessStrategyBuilder(value => attributes.Set(Attr.Access, value));
+            cascade = new CascadeBuilder(value => attributes.Set(Attr.Cascade, value));
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace FluentNHibernate.Mapping
 
         public AnyPart<T> IdentityType(Type type)
         {
-            attributes.Set(x => x.IdType, type.AssemblyQualifiedName);
+            attributes.Set(Attr.IdType, type.AssemblyQualifiedName);
             return this;
         }
 
@@ -91,36 +91,36 @@ namespace FluentNHibernate.Mapping
 
         public AnyPart<T> Insert()
         {
-            attributes.Set(x => x.Insert, nextBool);
+            attributes.Set(Attr.Insert, nextBool);
             nextBool = true;
             return this;
         }
 
         public AnyPart<T> Update()
         {
-            attributes.Set(x => x.Update, nextBool);
+            attributes.Set(Attr.Update, nextBool);
             nextBool = true;
             return this;
         }
 
         public AnyPart<T> ReadOnly()
         {
-            attributes.Set(x => x.Insert, !nextBool);
-            attributes.Set(x => x.Update, !nextBool);
+            attributes.Set(Attr.Insert, !nextBool);
+            attributes.Set(Attr.Update, !nextBool);
             nextBool = true;
             return this;
         }
 
         public AnyPart<T> LazyLoad()
         {
-            attributes.Set(x => x.Lazy, nextBool);
+            attributes.Set(Attr.Lazy, nextBool);
             nextBool = true;
             return this;
         }
 
         public AnyPart<T> OptimisticLock()
         {
-            attributes.Set(x => x.OptimisticLock, nextBool);
+            attributes.Set(Attr.OptimisticLock, nextBool);
             nextBool = true;
             return this;
         }
@@ -137,21 +137,21 @@ namespace FluentNHibernate.Mapping
 
         AnyMapping IAnyMappingProvider.GetAnyMapping()
         {
-            var mapping = new AnyMapping(attributes.CloneInner());
+            var mapping = new AnyMapping(attributes.Clone());
 
             if (typeColumns.Count() == 0)
                 throw new InvalidOperationException("<any> mapping is not valid without specifying an Entity Type Column");
             if (identifierColumns.Count() == 0)
                 throw new InvalidOperationException("<any> mapping is not valid without specifying an Entity Identifier Column");
-            if (!mapping.IsSpecified("IdType"))
+            if (!mapping.IsSpecified(Attr.IdType))
                 throw new InvalidOperationException("<any> mapping is not valid without specifying an IdType");
 
             mapping.ContainingEntityType = entity;
 
-            if (!mapping.IsSpecified("Name"))
+            if (!mapping.IsSpecified(Attr.Name))
                 mapping.Name = property.Name;
 
-            if (!mapping.IsSpecified("MetaType"))
+            if (!mapping.IsSpecified(Attr.MetaType))
             {
                 if (metaValues.Count() > 0)
                 {

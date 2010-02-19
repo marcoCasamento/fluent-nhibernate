@@ -16,10 +16,6 @@ namespace FluentNHibernate.Conventions.Inspections
         public ClassInspector(ClassMapping mapping)
         {
             this.mapping = mapping;
-
-            propertyMappings.Map(x => x.LazyLoad, x => x.Lazy);
-            propertyMappings.Map(x => x.ReadOnly, x => x.Mutable);
-            propertyMappings.Map(x => x.EntityType, x => x.Type);
         }
 
         public Type EntityType
@@ -279,9 +275,9 @@ namespace FluentNHibernate.Conventions.Inspections
             }
         }
 
-        public bool IsSet(Member property)
+        public bool IsSet(Attr property)
         {
-            return mapping.IsSpecified(propertyMappings.Get(property));
+            return mapping.IsSpecified(property);
         }
     }
 }

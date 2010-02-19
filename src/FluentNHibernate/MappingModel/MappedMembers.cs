@@ -206,7 +206,7 @@ namespace FluentNHibernate.MappingModel
                 visitor.Visit(storedProcedure);
         }
 
-        public bool IsSpecified(string property)
+        public bool IsSpecified(Attr property)
         {
             return false;
         }

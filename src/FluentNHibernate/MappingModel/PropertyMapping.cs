@@ -26,56 +26,56 @@ namespace FluentNHibernate.MappingModel
 
         public string Name
         {
-            get { return attributes.Get("Name"); }
-            set { attributes.Set("Name", value); }
+            get { return attributes.Get(Attr.Name); }
+            set { attributes.Set(Attr.Name, value); }
         }
 
         public string Access
         {
-            get { return attributes.Get("Access"); }
-            set { attributes.Set("Access", value); }
+            get { return attributes.Get(Attr.Access); }
+            set { attributes.Set(Attr.Access, value); }
         }
 
         public bool Insert
         {
-            get { return attributes.Get<bool>("Insert"); }
-            set { attributes.Set("Insert", value); }
+            get { return attributes.Get<bool>(Attr.Insert); }
+            set { attributes.Set(Attr.Insert, value); }
         }
 
         public bool Update
         {
-            get { return attributes.Get<bool>("Update"); }
-            set { attributes.Set("Update", value); }
+            get { return attributes.Get<bool>(Attr.Update); }
+            set { attributes.Set(Attr.Update, value); }
         }
 
         public string Formula
         {
-            get { return attributes.Get("Formula"); }
-            set { attributes.Set("Formula", value); }
+            get { return attributes.Get(Attr.Formula); }
+            set { attributes.Set(Attr.Formula, value); }
         }
 
         public bool Lazy
         {
-            get { return attributes.Get<bool>("Lazy"); }
-            set { attributes.Set("Lazy", value); }
+            get { return attributes.Get<bool>(Attr.Lazy); }
+            set { attributes.Set(Attr.Lazy, value); }
         }
 
         public bool OptimisticLock
         {
-            get { return attributes.Get<bool>("OptimisticLock"); }
-            set { attributes.Set("OptimisticLock", value); }
+            get { return attributes.Get<bool>(Attr.OptimisticLock); }
+            set { attributes.Set(Attr.OptimisticLock, value); }
         }
 
         public string Generated
         {
-            get { return attributes.Get("Generated"); }
-            set { attributes.Set("Generated", value); }
+            get { return attributes.Get(Attr.Generated); }
+            set { attributes.Set(Attr.Generated, value); }
         }
 
         public TypeReference Type
         {
-            get { return attributes.Get<TypeReference>("Type"); }
-            set { attributes.Set("Type", value); }
+            get { return attributes.Get<TypeReference>(Attr.Type); }
+            set { attributes.Set(Attr.Type, value); }
         }
 
         public Member Member { get; set; }

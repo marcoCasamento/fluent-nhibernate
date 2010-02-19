@@ -1,6 +1,7 @@
 using System;
 using System.Linq.Expressions;
 using FluentNHibernate.Conventions.Inspections;
+using FluentNHibernate.MappingModel;
 using FluentNHibernate.MappingModel.Collections;
 using FluentNHibernate.Utils.Reflection;
 using FluentNHibernate.Testing.Utils;
@@ -32,14 +33,14 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         public void IndexIsSet()
         {
             mapping.Index = new IndexMapping();
-            inspector.IsSet(Prop(x => x.Index))
+            inspector.IsSet(Attr.Index)
                 .ShouldBeTrue();
         }
 
         [Test]
         public void IndexIsNotSet()
         {
-            inspector.IsSet(Prop(x => x.Index))
+            inspector.IsSet(Attr.Index)
                 .ShouldBeFalse();
         }
 
@@ -54,7 +55,7 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         public void IndexManyToManyIsSet()
         {
             mapping.Index = new IndexManyToManyMapping();
-            inspector.IsSet(Prop(x => x.Index))
+            inspector.IsSet(Attr.Index)
                 .ShouldBeTrue();
         }
 

@@ -10,8 +10,8 @@ namespace FluentNHibernate.Mapping
 {
     public class SubclassMap<T> : ClasslikeMapBase<T>, IIndeterminateSubclassMappingProvider
     {
-        private readonly AttributeStore<SubclassMapping> subclassAttributes = new AttributeStore<SubclassMapping>();
-        private readonly AttributeStore<JoinedSubclassMapping> joinedSubclassAttributes = new AttributeStore<JoinedSubclassMapping>();
+        private readonly AttributeStore subclassAttributes = new AttributeStore();
+        private readonly AttributeStore joinedSubclassAttributes = new AttributeStore();
 
         // this is a bit weird, but we need a way of delaying the generation of the subclass mappings until we know
         // what the parent subclass type is...
@@ -33,25 +33,25 @@ namespace FluentNHibernate.Mapping
         {
             GenerateNestedSubclasses(mapping);
 
-            subclassAttributes.SetDefault(x => x.Type, typeof(T));
-            subclassAttributes.SetDefault(x => x.Name, typeof(T).AssemblyQualifiedName);
-            subclassAttributes.SetDefault(x => x.DiscriminatorValue, typeof(T).Name);
+            subclassAttributes.SetDefault(Attr.Type, typeof(T));
+            subclassAttributes.SetDefault(Attr.Name, typeof(T).AssemblyQualifiedName);
+            subclassAttributes.SetDefault(Attr.DiscriminatorValue, typeof(T).Name);
 
             // TODO: un-hardcode this
             var key = new KeyMapping();
             key.AddDefaultColumn(new ColumnMapping { Name = typeof(T).BaseType.Name + "_id" });
 
-            joinedSubclassAttributes.SetDefault(x => x.Type, typeof(T));
-            joinedSubclassAttributes.SetDefault(x => x.Name, typeof(T).AssemblyQualifiedName);
-            joinedSubclassAttributes.SetDefault(x => x.TableName, GetDefaultTableName());
-            joinedSubclassAttributes.SetDefault(x => x.Key, key);
+            joinedSubclassAttributes.SetDefault(Attr.Type, typeof(T));
+            joinedSubclassAttributes.SetDefault(Attr.Name, typeof(T).AssemblyQualifiedName);
+            joinedSubclassAttributes.SetDefault(Attr.Table, GetDefaultTableName());
+            joinedSubclassAttributes.SetDefault(Attr.Key, key);
 
             // TODO: this is nasty, we should find a better way
             if (mapping is JoinedSubclassMapping)
-                mapping.OverrideAttributes(joinedSubclassAttributes.CloneInner());
+                mapping.OverrideAttributes(joinedSubclassAttributes.Clone());
             else
             {
-                mapping.OverrideAttributes(subclassAttributes.CloneInner());
+                mapping.OverrideAttributes(subclassAttributes.Clone());
 
                 foreach (var join in joins)
                     ((SubclassMapping)mapping).AddJoin(join);
@@ -110,29 +110,29 @@ namespace FluentNHibernate.Mapping
 
         public void Abstract()
         {
-            subclassAttributes.Set(x => x.Abstract, nextBool);
-            joinedSubclassAttributes.Set(x => x.Abstract, nextBool);
+            subclassAttributes.Set(Attr.Abstract, nextBool);
+            joinedSubclassAttributes.Set(Attr.Abstract, nextBool);
             nextBool = true;
         }
 
         public void DynamicInsert()
         {
-            subclassAttributes.Set(x => x.DynamicInsert, nextBool);
-            joinedSubclassAttributes.Set(x => x.DynamicInsert, nextBool);
+            subclassAttributes.Set(Attr.DynamicInsert, nextBool);
+            joinedSubclassAttributes.Set(Attr.DynamicInsert, nextBool);
             nextBool = true;
         }
 
         public void DynamicUpdate()
         {
-            subclassAttributes.Set(x => x.DynamicUpdate, nextBool);
-            joinedSubclassAttributes.Set(x => x.DynamicUpdate, nextBool);
+            subclassAttributes.Set(Attr.DynamicUpdate, nextBool);
+            joinedSubclassAttributes.Set(Attr.DynamicUpdate, nextBool);
             nextBool = true;
         }
 
         public void LazyLoad()
         {
-            subclassAttributes.Set(x => x.Lazy, nextBool);
-            joinedSubclassAttributes.Set(x => x.Lazy, nextBool);
+            subclassAttributes.Set(Attr.Lazy, nextBool);
+            joinedSubclassAttributes.Set(Attr.Lazy, nextBool);
             nextBool = true;
         }
 
@@ -143,14 +143,14 @@ namespace FluentNHibernate.Mapping
 
         public void Proxy(Type proxyType)
         {
-            subclassAttributes.Set(x => x.Proxy, proxyType.AssemblyQualifiedName);
-            joinedSubclassAttributes.Set(x => x.Proxy, proxyType.AssemblyQualifiedName);
+            subclassAttributes.Set(Attr.Proxy, proxyType.AssemblyQualifiedName);
+            joinedSubclassAttributes.Set(Attr.Proxy, proxyType.AssemblyQualifiedName);
         }
 
         public void SelectBeforeUpdate()
         {
-            subclassAttributes.Set(x => x.SelectBeforeUpdate, nextBool);
-            joinedSubclassAttributes.Set(x => x.SelectBeforeUpdate, nextBool);
+            subclassAttributes.Set(Attr.SelectBeforeUpdate, nextBool);
+            joinedSubclassAttributes.Set(Attr.SelectBeforeUpdate, nextBool);
             nextBool = true;
         }
 
@@ -165,67 +165,67 @@ namespace FluentNHibernate.Mapping
 
         public void DiscriminatorValue(object discriminatorValue)
         {
-            subclassAttributes.Set(x => x.DiscriminatorValue, discriminatorValue);
+            subclassAttributes.Set(Attr.DiscriminatorValue, discriminatorValue);
         }
 
         public void Table(string table)
         {
-            joinedSubclassAttributes.Set(x => x.TableName, table);
+            joinedSubclassAttributes.Set(Attr.Table, table);
         }
 
         public void Schema(string schema)
         {
-            joinedSubclassAttributes.Set(x => x.Schema, schema);
+            joinedSubclassAttributes.Set(Attr.Schema, schema);
         }
 
         public void Check(string constraint)
         {
-            joinedSubclassAttributes.Set(x => x.Check, constraint);
+            joinedSubclassAttributes.Set(Attr.Check, constraint);
         }
 
         public void KeyColumn(string column)
         {
             KeyMapping key;
 
-            if (joinedSubclassAttributes.IsSpecified(x => x.Key))
-                key = joinedSubclassAttributes.Get(x => x.Key);
+            if (joinedSubclassAttributes.HasUserValue(Attr.Key))
+                key = joinedSubclassAttributes.Get<KeyMapping>(Attr.Key);
             else
                 key = new KeyMapping();
 
             key.AddColumn(new ColumnMapping { Name = column });
 
-            joinedSubclassAttributes.Set(x => x.Key, key);
+            joinedSubclassAttributes.Set(Attr.Key, key);
         }
 
         public void Subselect(string subselect)
         {
-            joinedSubclassAttributes.Set(x => x.Subselect, subselect);
+            joinedSubclassAttributes.Set(Attr.Subselect, subselect);
         }
 
         public void Persister<TPersister>()
         {
-            joinedSubclassAttributes.Set(x => x.Persister, new TypeReference(typeof(TPersister)));
+            joinedSubclassAttributes.Set(Attr.Persister, new TypeReference(typeof(TPersister)));
         }
 
         public void Persister(Type type)
         {
-            joinedSubclassAttributes.Set(x => x.Persister, new TypeReference(type));
+            joinedSubclassAttributes.Set(Attr.Persister, new TypeReference(type));
         }
 
         public void Persister(string type)
         {
-            joinedSubclassAttributes.Set(x => x.Persister, new TypeReference(type));
+            joinedSubclassAttributes.Set(Attr.Persister, new TypeReference(type));
         }
 
         public void BatchSize(int batchSize)
         {
-            joinedSubclassAttributes.Set(x => x.BatchSize, batchSize);
+            joinedSubclassAttributes.Set(Attr.BatchSize, batchSize);
         }
 
         public void EntityName(string entityname)
         {
-            joinedSubclassAttributes.Set(x => x.EntityName, entityname);
-            subclassAttributes.Set(x => x.EntityName, entityname);
+            joinedSubclassAttributes.Set(Attr.EntityName, entityname);
+            subclassAttributes.Set(Attr.EntityName, entityname);
         }
 
         /// <summary>

@@ -1,71 +1,168 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Linq.Expressions;
-using FluentNHibernate.Utils;
+using System.Linq;
 
 namespace FluentNHibernate.MappingModel
 {
-    public class AttributeStore
+    public enum Attr
     {
-        private readonly IDictionary<string, object> attributes;
-        private readonly IDictionary<string, object> defaults;
+        Name,
+        Lazy,
+        Access,
+        Cascade,
+        IdType,
+        Insert,
+        Update,
+        OptimisticLock,
+        Usage,
+        Region,
+        Include,
+        Polymorphism,
+        SchemaAction,
+        DiscriminatorValue,
+        Schema,
+        Table,
+        Mutable,
+        DynamicUpdate,
+        DynamicInsert,
+        BatchSize,
+        Check,
+        Persister,
+        Proxy,
+        SelectBeforeUpdate,
+        Where,
+        Subselect,
+        EntityName,
+        Parent,
+        Unique,
+        Mapped,
+        UnsavedValue,
+        Force,
+        Formula,
+        Precision,
+        Length,
+        Scale,
+        NotNull,
+        UniqueKey,
+        Index,
+        Default,
+        Type,
+        DefaultCascade,
+        DefaultAccess,
+        AutoImport,
+        DefaultLazy,
+        Catalog,
+        Namespace,
+        Assembly,
+        Generator,
+        SqlType,
+        Rename,
+        Class,
+        Abstract,
+        Optional,
+        Inverse,
+        Key,
+        Fetch,
+        ForeignKey,
+        NotFound,
+        OrderBy,
+        PropertyRef,
+        MetaType,
+        Version,
+        EntityType,
+        Id,
+        Discriminator,
+        Cache,
+        ChildType,
+        CollectionType,
+        CompositeElement,
+        Element,
+        Generic,
+        Relationship,
+        Nullable,
+        Extends,
+        OnDelete,
+        ParentType,
+        Sort,
+        Value,
+        Constrained,
+        Generated,
+        Tuplizer,
+        Condition,
+        SPType,
+        Query,
+        Mode
+    }
+    public class AttributeStore : IDefaultableEnumerable<KeyValuePair<Attr, object>>
+    {
+        private readonly IDictionary<Attr, object> userDefined;
+        private readonly IDictionary<Attr, object> defaults;
 
         public AttributeStore()
         {
-            attributes = new Dictionary<string, object>();
-            defaults = new Dictionary<string, object>();
+            userDefined = new Dictionary<Attr, object>();
+            defaults = new Dictionary<Attr, object>();
         }
 
-        public object this[string key]
+        public object this[Attr key]
         {
             get
             {
-                if (attributes.ContainsKey(key))
-                    return attributes[key];
+                if (userDefined.ContainsKey(key))
+                    return userDefined[key];
                 
                 if (defaults.ContainsKey(key))
                     return defaults[key];
 
                 return null;
             }
-            set { attributes[key] = value; }
+            set { userDefined[key] = value; }
         }
 
-        public string Get(string property)
+        public string Get(Attr property)
         {
             return Get<string>(property);
         }
 
-        public TResult Get<TResult>(string property)
+        public TResult Get<TResult>(Attr property)
         {
             return (TResult)(this[property] ?? default(TResult));
         }
 
-        public void Set<TResult>(string property, TResult value)
+        public void Set<TResult>(Attr property, TResult value)
         {
             this[property] = value;
         }
 
-        public bool IsSpecified(string key)
+        /// <summary>
+        /// Gets whether an attribute has a value specified by the user.
+        /// </summary>
+        /// <param name="key">Attribute</param>
+        public bool HasUserValue(Attr key)
         {
-            return attributes.ContainsKey(key);
+            return userDefined.ContainsKey(key);
         }
 
-        public bool HasValue(string key)
+        /// <summary>
+        /// Gets whether an attribute has any value at all, user specified or default.
+        /// </summary>
+        /// <param name="key">Attribute</param>
+        public bool HasAnyValue(Attr key)
         {
-            return attributes.ContainsKey(key) || defaults.ContainsKey(key);
+            return userDefined.ContainsKey(key) || defaults.ContainsKey(key);
         }
 
         public void CopyTo(AttributeStore store)
         {
-            foreach (var pair in attributes)
-                store.attributes[pair.Key] = pair.Value;
+            foreach (var pair in userDefined)
+                store.userDefined[pair.Key] = pair.Value;
 
             foreach (var pair in defaults)
                 store.defaults[pair.Key] = pair.Value;
         }
 
-        public void SetDefault(string key, object value)
+        public void SetDefault(Attr key, object value)
         {
             defaults[key] = value;
         }
@@ -75,8 +172,8 @@ namespace FluentNHibernate.MappingModel
             foreach (var key in otherStore.defaults.Keys)
                 defaults[key] = otherStore.defaults[key];
 
-            foreach (var key in otherStore.attributes.Keys)
-                attributes[key] = otherStore.attributes[key];
+            foreach (var key in otherStore.userDefined.Keys)
+                userDefined[key] = otherStore.userDefined[key];
         }
 
         public AttributeStore Clone()
@@ -90,7 +187,12 @@ namespace FluentNHibernate.MappingModel
 
         public bool Equals(AttributeStore other)
         {
-            return other.attributes.ContentEquals(attributes) && other.defaults.ContentEquals(defaults);
+            return other.userDefined.ContentEquals(userDefined) && other.defaults.ContentEquals(defaults);
+        }
+
+        public IEnumerator<KeyValuePair<Attr, object>> GetEnumerator()
+        {
+            return Defaults.Concat(UserDefined).ToList().GetEnumerator();
         }
 
         public override bool Equals(object obj)
@@ -103,122 +205,137 @@ namespace FluentNHibernate.MappingModel
         {
             unchecked
             {
-                return ((attributes != null ? attributes.GetHashCode() : 0) * 397) ^
+                return ((userDefined != null ? userDefined.GetHashCode() : 0) * 397) ^
                     (defaults != null ? defaults.GetHashCode() : 0);
             }
         }
-    }
 
-    public class AttributeStore<T>
-    {
-        private readonly AttributeStore store;
-
-        public AttributeStore()
-            : this(new AttributeStore())
+        IEnumerator IEnumerable.GetEnumerator()
         {
-
+            return GetEnumerator();
         }
 
-        public AttributeStore(AttributeStore store)
+        public IEnumerable<KeyValuePair<Attr, object>> Defaults
         {
-            this.store = store;
+            get { return defaults.ToArray(); }
         }
 
-        public TResult Get<TResult>(Expression<Func<T, TResult>> exp)
+        public IEnumerable<KeyValuePair<Attr, object>> UserDefined
         {
-            return (TResult)(store[GetKey(exp)] ?? default(TResult));
-        }
-
-        public void Set<TResult>(Expression<Func<T, TResult>> exp, TResult value)
-        {
-            store[GetKey(exp)] = value;
-        }
-
-        public void SetDefault<TResult>(Expression<Func<T, TResult>> exp, TResult value)
-        {
-            store.SetDefault(GetKey(exp), value);
-        }
-
-        /// <summary>
-        /// Returns whether the user has set a value for a property.
-        /// </summary>
-        public bool IsSpecified<TResult>(Expression<Func<T, TResult>> exp)
-        {
-            return store.IsSpecified(GetKey(exp));
-        }
-
-        /// <summary>
-        /// Returns whether the user has set a value for a property.
-        /// </summary>
-        public bool IsSpecified(string property)
-        {
-            return store.IsSpecified(property);
-        }
-
-        /// <summary>
-        /// Returns whether a property has any value, default or user specified.
-        /// </summary>
-        /// <typeparam name="TResult"></typeparam>
-        /// <param name="exp"></param>
-        /// <returns></returns>
-        public bool HasValue<TResult>(Expression<Func<T, TResult>> exp)
-        {
-            return store.HasValue(GetKey(exp));
-        }
-
-        public bool HasValue(string property)
-        {
-            return store.HasValue(property);
-        }
-
-        public void CopyTo(AttributeStore<T> target)
-        {
-            store.CopyTo(target.store);
-        }
-
-        private static string GetKey<TResult>(Expression<Func<T, TResult>> expression)
-        {
-            var member = expression.ToMember();
-            return member.Name;
-        }
-
-        public AttributeStore<T> Clone()
-        {
-            var clonedStore = new AttributeStore<T>();
-
-            store.CopyTo(clonedStore.store);
-
-            return clonedStore;
-        }
-
-        public AttributeStore CloneInner()
-        {
-            var clonedStore = new AttributeStore();
-
-            store.CopyTo(clonedStore);
-
-            return clonedStore;
-        }
-
-        public void Merge(AttributeStore<T> otherStore)
-        {
-            store.Merge(otherStore.store);
-        }
-
-        public bool Equals(AttributeStore<T> other)
-        {
-            return Equals(other.store, store);
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (obj.GetType() != typeof(AttributeStore<T>)) return false;
-            return Equals((AttributeStore<T>)obj);
-        }
-
-        public override int GetHashCode()
-        {
-            return (store != null ? store.GetHashCode() : 0);
+            get { return userDefined.ToArray(); }
         }
     }
+
+    //public class AttributeStore<T>
+    //{
+    //    private readonly AttributeStore store;
+
+    //    public AttributeStore()
+    //        : this(new AttributeStore())
+    //    {
+
+    //    }
+
+    //    public AttributeStore(AttributeStore store)
+    //    {
+    //        this.store = store;
+    //    }
+
+    //    public TResult Get<TResult>(Expression<Func<T, TResult>> exp)
+    //    {
+    //        return (TResult)(store[GetKey(exp)] ?? default(TResult));
+    //    }
+
+    //    public void Set<TResult>(Expression<Func<T, TResult>> exp, TResult value)
+    //    {
+    //        store[GetKey(exp)] = value;
+    //    }
+
+    //    public void SetDefault<TResult>(Expression<Func<T, TResult>> exp, TResult value)
+    //    {
+    //        store.SetDefault(GetKey(exp), value);
+    //    }
+
+    //    /// <summary>
+    //    /// Returns whether the user has set a value for a property.
+    //    /// </summary>
+    //    public bool HasUserValue<TResult>(Expression<Func<T, TResult>> exp)
+    //    {
+    //        return store.HasUserValue(GetKey(exp));
+    //    }
+
+    //    /// <summary>
+    //    /// Returns whether the user has set a value for a property.
+    //    /// </summary>
+    //    public bool HasUserValue(string property)
+    //    {
+    //        return store.HasUserValue(property);
+    //    }
+
+    //    /// <summary>
+    //    /// Returns whether a property has any value, default or user specified.
+    //    /// </summary>
+    //    /// <typeparam name="TResult"></typeparam>
+    //    /// <param name="exp"></param>
+    //    /// <returns></returns>
+    //    public bool HasAnyValue<TResult>(Expression<Func<T, TResult>> exp)
+    //    {
+    //        return store.HasAnyValue(GetKey(exp));
+    //    }
+
+    //    public bool HasAnyValue(string property)
+    //    {
+    //        return store.HasAnyValue(property);
+    //    }
+
+    //    public void CopyTo(AttributeStore<T> target)
+    //    {
+    //        store.CopyTo(target.store);
+    //    }
+
+    //    private static string GetKey<TResult>(Expression<Func<T, TResult>> expression)
+    //    {
+    //        var member = expression.ToMember();
+    //        return member.Name.ToLower();
+    //    }
+
+    //    public AttributeStore<T> Clone()
+    //    {
+    //        var clonedStore = new AttributeStore<T>();
+
+    //        store.CopyTo(clonedStore.store);
+
+    //        return clonedStore;
+    //    }
+
+    //    public AttributeStore CloneInner()
+    //    {
+    //        var clonedStore = new AttributeStore();
+
+    //        store.CopyTo(clonedStore);
+
+    //        return clonedStore;
+    //    }
+
+    //    public void Merge(AttributeStore<T> otherStore)
+    //    {
+    //        store.Merge(otherStore.store);
+    //    }
+
+    //    public bool Equals(AttributeStore<T> other)
+    //    {
+    //        return Equals(other.store, store);
+    //    }
+
+    //    public override bool Equals(object obj)
+    //    {
+    //        if (obj.GetType() != typeof(AttributeStore<T>)) return false;
+    //        return Equals((AttributeStore<T>)obj);
+    //    }
+
+    //    public override int GetHashCode()
+    //    {
+    //        return (store != null ? store.GetHashCode() : 0);
+    //    }
+    //}
 }

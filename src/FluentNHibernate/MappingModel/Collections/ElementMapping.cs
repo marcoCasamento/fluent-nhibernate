@@ -10,7 +10,7 @@ namespace FluentNHibernate.MappingModel.Collections
     public class ElementMapping : MappingBase
     {
         private readonly IDefaultableList<ColumnMapping> columns = new DefaultableList<ColumnMapping>();
-        private readonly AttributeStore<ElementMapping> attributes;
+        private readonly AttributeStore attributes;
 
         public ElementMapping()
             : this(new AttributeStore())
@@ -18,7 +18,7 @@ namespace FluentNHibernate.MappingModel.Collections
 
         public ElementMapping(AttributeStore underlyingStore)
         {
-            attributes = new AttributeStore<ElementMapping>(underlyingStore);
+            attributes = underlyingStore.Clone();
         }
 
         public override void AcceptVisitor(IMappingModelVisitor visitor)
@@ -31,20 +31,20 @@ namespace FluentNHibernate.MappingModel.Collections
 
         public TypeReference Type
         {
-            get { return attributes.Get(x => x.Type); }
-            set { attributes.Set(x => x.Type, value); }
+            get { return attributes.Get<TypeReference>(Attr.Type); }
+            set { attributes.Set(Attr.Type, value); }
         }
 
         public string Formula
         {
-            get { return attributes.Get(x => x.Formula); }
-            set { attributes.Set(x => x.Formula, value); }
+            get { return attributes.Get(Attr.Formula); }
+            set { attributes.Set(Attr.Formula, value); }
         }
 
         public int Length
         {
-            get { return attributes.Get(x => x.Length); }
-            set { attributes.Set(x => x.Length, value); }
+            get { return attributes.Get<int>(Attr.Length); }
+            set { attributes.Set(Attr.Length, value); }
         }
 
         public void AddColumn(ColumnMapping mapping)
@@ -64,17 +64,17 @@ namespace FluentNHibernate.MappingModel.Collections
 
         public Type ContainingEntityType { get; set; }
 
-        public override bool IsSpecified(string property)
+        public override bool IsSpecified(Attr property)
         {
-            return attributes.IsSpecified(property);
+            return attributes.HasUserValue(property);
         }
 
-        public bool HasValue<TResult>(Expression<Func<ElementMapping, TResult>> property)
+        public bool HasValue(Attr property)
         {
-            return attributes.HasValue(property);
+            return attributes.HasAnyValue(property);
         }
 
-        public void SetDefaultValue<TResult>(Expression<Func<ElementMapping, TResult>> property, TResult value)
+        public void SetDefaultValue<TResult>(Attr property, TResult value)
         {
             attributes.SetDefault(property, value);
         }

@@ -1,22 +1,19 @@
 using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Reflection;
-using FluentNHibernate.Mapping;
 using FluentNHibernate.Visitors;
 
 namespace FluentNHibernate.MappingModel.ClassBased
 {
     public class JoinedSubclassMapping : ClassMappingBase, ISubclassMapping
     {
-        private AttributeStore<JoinedSubclassMapping> attributes;
+        private AttributeStore attributes;
 
         public JoinedSubclassMapping() : this(new AttributeStore())
         {}
 
         public JoinedSubclassMapping(AttributeStore store)
         {
-            attributes = new AttributeStore<JoinedSubclassMapping>(store);
+            attributes = store.Clone();
         }
 
         public override void AcceptVisitor(IMappingModelVisitor visitor)
@@ -29,131 +26,117 @@ namespace FluentNHibernate.MappingModel.ClassBased
             base.AcceptVisitor(visitor);
         }
 
-        public override void MergeAttributes(AttributeStore store)
-        {
-            attributes.Merge(new AttributeStore<JoinedSubclassMapping>(store));
-        }
-
-        public override string Name
-        {
-            get { return attributes.Get(x => x.Name); }
-            set { attributes.Set(x => x.Name, value); }
-        }
-
-        public override Type Type
-        {
-            get { return attributes.Get(x => x.Type); }
-            set { attributes.Set(x => x.Type, value); }
-        }
-
         public KeyMapping Key
         {
-            get { return attributes.Get(x => x.Key); }
-            set { attributes.Set(x => x.Key, value); }
+            get { return attributes.Get<KeyMapping>(Attr.Key); }
+            set { attributes.Set(Attr.Key, value); }
         }
 
         public string TableName
         {
-            get { return attributes.Get(x => x.TableName); }
-            set { attributes.Set(x => x.TableName, value); }
+            get { return attributes.Get(Attr.Table); }
+            set { attributes.Set(Attr.Table, value); }
         }
 
         public string Schema
         {
-            get { return attributes.Get(x => x.Schema); }
-            set { attributes.Set(x => x.Schema, value); }
+            get { return attributes.Get(Attr.Schema); }
+            set { attributes.Set(Attr.Schema, value); }
         }
 
         public string Extends
         {
-            get { return attributes.Get(x => x.Extends); }
-            set { attributes.Set(x => x.Extends, value); }
+            get { return attributes.Get(Attr.Extends); }
+            set { attributes.Set(Attr.Extends, value); }
         }
 
         public string Check
         {
-            get { return attributes.Get(x => x.Check); }
-            set { attributes.Set(x => x.Check, value); }
+            get { return attributes.Get(Attr.Check); }
+            set { attributes.Set(Attr.Check, value); }
         }
 
         public string Proxy
         {
-            get { return attributes.Get(x => x.Proxy); }
-            set { attributes.Set(x => x.Proxy, value); }
+            get { return attributes.Get(Attr.Proxy); }
+            set { attributes.Set(Attr.Proxy, value); }
         }
 
         public bool Lazy
         {
-            get { return attributes.Get(x => x.Lazy); }
-            set { attributes.Set(x => x.Lazy, value); }
+            get { return attributes.Get<bool>(Attr.Lazy); }
+            set { attributes.Set(Attr.Lazy, value); }
         }
 
         public bool DynamicUpdate
         {
-            get { return attributes.Get(x => x.DynamicUpdate); }
-            set { attributes.Set(x => x.DynamicUpdate, value); }
+            get { return attributes.Get<bool>(Attr.DynamicUpdate); }
+            set { attributes.Set(Attr.DynamicUpdate, value); }
         }
 
         public bool DynamicInsert
         {
-            get { return attributes.Get(x => x.DynamicInsert); }
-            set { attributes.Set(x => x.DynamicInsert, value); }
+            get { return attributes.Get<bool>(Attr.DynamicInsert); }
+            set { attributes.Set(Attr.DynamicInsert, value); }
         }
 
         public bool SelectBeforeUpdate
         {
-            get { return attributes.Get(x => x.SelectBeforeUpdate); }
-            set { attributes.Set(x => x.SelectBeforeUpdate, value); }
+            get { return attributes.Get<bool>(Attr.SelectBeforeUpdate); }
+            set { attributes.Set(Attr.SelectBeforeUpdate, value); }
         }
 
         public bool Abstract
         {
-            get { return attributes.Get(x => x.Abstract); }
-            set { attributes.Set(x => x.Abstract, value); }
+            get { return attributes.Get<bool>(Attr.Abstract); }
+            set { attributes.Set(Attr.Abstract, value); }
         }
 
         public string Subselect
         {
-            get { return attributes.Get(x => x.Subselect); }
-            set { attributes.Set(x => x.Subselect, value); }
+            get { return attributes.Get(Attr.Subselect); }
+            set { attributes.Set(Attr.Subselect, value); }
         }
 
         public TypeReference Persister
         {
-            get { return attributes.Get(x => x.Persister); }
-            set { attributes.Set(x => x.Persister, value); }
+            get { return attributes.Get<TypeReference>(Attr.Persister); }
+            set { attributes.Set(Attr.Persister, value); }
         }
 
         public int BatchSize
         {
-            get { return attributes.Get(x => x.BatchSize); }
-            set { attributes.Set(x => x.BatchSize, value); }
+            get { return attributes.Get<int>(Attr.BatchSize); }
+            set { attributes.Set(Attr.BatchSize, value); }
         }
 
         public string EntityName
         {
-            get { return attributes.Get(x => x.EntityName); }
-            set { attributes.Set(x => x.EntityName, value); }
+            get { return attributes.Get(Attr.EntityName); }
+            set { attributes.Set(Attr.EntityName, value); }
+<<<<<<< Updated upstream
         }
 
-        public override bool IsSpecified(string property)
+        public override bool IsSpecified(Attr property)
         {
-            return attributes.IsSpecified(property);
+            return attributes.HasUserValue(property);
         }
 
-        public bool HasValue<TResult>(Expression<Func<JoinedSubclassMapping, TResult>> property)
+        public bool HasValue(Attr property)
         {
-            return attributes.HasValue(property);
+            return attributes.HasAnyValue(property);
         }
 
-        public void SetDefaultValue<TResult>(Expression<Func<JoinedSubclassMapping, TResult>> property, TResult value)
+        public void SetDefaultValue<TResult>(Attr property, TResult value)
         {
             attributes.SetDefault(property, value);
+=======
+>>>>>>> Stashed changes
         }
 
         public void OverrideAttributes(AttributeStore store)
         {
-            attributes = new AttributeStore<JoinedSubclassMapping>(store);
+            attributes = store.Clone();
         }
 
         public bool Equals(JoinedSubclassMapping other)

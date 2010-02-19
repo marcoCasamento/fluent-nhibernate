@@ -6,7 +6,7 @@ namespace FluentNHibernate.MappingModel
 {
     public class MetaValueMapping : MappingBase
     {
-        private readonly AttributeStore<MetaValueMapping> attributes;
+        private readonly AttributeStore attributes;
 
         public MetaValueMapping()
             : this(new AttributeStore())
@@ -14,7 +14,7 @@ namespace FluentNHibernate.MappingModel
 
         protected MetaValueMapping(AttributeStore underlyingStore)
         {
-            attributes = new AttributeStore<MetaValueMapping>(underlyingStore);
+            attributes = underlyingStore.Clone();
         }
 
         public override void AcceptVisitor(IMappingModelVisitor visitor)
@@ -24,31 +24,26 @@ namespace FluentNHibernate.MappingModel
 
         public string Value
         {
-            get { return attributes.Get(x => x.Value); }
-            set { attributes.Set(x => x.Value, value); }
+            get { return attributes.Get(Attr.Value); }
+            set { attributes.Set(Attr.Value, value); }
         }
 
         public TypeReference Class
         {
-            get { return attributes.Get(x => x.Class); }
-            set { attributes.Set(x => x.Class, value); }
+            get { return attributes.Get<TypeReference>(Attr.Class); }
+            set { attributes.Set(Attr.Class, value); }
         }
 
         public Type ContainingEntityType { get; set; }
 
-        public override bool IsSpecified(string property)
+        public override bool IsSpecified(Attr property)
         {
-            return attributes.IsSpecified(property);
+            return attributes.HasUserValue(property);
         }
 
-        public bool HasValue<TResult>(Expression<Func<MetaValueMapping, TResult>> property)
+        public bool HasValue(Attr property)
         {
-            return attributes.HasValue(property);
-        }
-
-        public void SetDefaultValue<TResult>(Expression<Func<MetaValueMapping, TResult>> property, TResult value)
-        {
-            attributes.SetDefault(property, value);
+            return attributes.HasAnyValue(property);
         }
 
         public bool Equals(MetaValueMapping other)

@@ -25,9 +25,9 @@ namespace FluentNHibernate.Mapping
         protected ICompositeElementMappingProvider componentMapping;
         protected bool nextBool = true;
 
-        protected readonly AttributeStore<ICollectionMapping> collectionAttributes = new AttributeStore<ICollectionMapping>();
+        protected readonly AttributeStore collectionAttributes = new AttributeStore();
         protected readonly KeyMapping keyMapping = new KeyMapping();
-        protected readonly AttributeStore<TRelationshipAttributes> relationshipAttributes = new AttributeStore<TRelationshipAttributes>();
+        protected readonly AttributeStore relationshipAttributes = new AttributeStore();
         private readonly IList<FilterPart> filters = new List<FilterPart>();
         private Func<AttributeStore, ICollectionMapping> collectionBuilder;
         private IndexMapping indexMapping;
@@ -39,17 +39,17 @@ namespace FluentNHibernate.Mapping
             this.entity = entity;
             this.member = member;
             AsBag();
-            access = new AccessStrategyBuilder(value => collectionAttributes.Set(x => x.Access, value));
-            fetch = new FetchBuilder(value => collectionAttributes.Set(x => x.Fetch, value));
-            optimisticLock = new OptimisticLockBuilder(value => collectionAttributes.Set(x => x.OptimisticLock, value));
-            cascade = new CascadeBuilder(value => collectionAttributes.Set(x => x.Cascade, value));
+            access = new AccessStrategyBuilder(value => collectionAttributes.Set(Attr.Access, value));
+            fetch = new FetchBuilder(value => collectionAttributes.Set(Attr.Fetch, value));
+            optimisticLock = new OptimisticLockBuilder(value => collectionAttributes.Set(Attr.OptimisticLock, value));
+            cascade = new CascadeBuilder(value => collectionAttributes.Set(Attr.Cascade, value));
 
             SetDefaultCollectionType(type);
             SetCustomCollectionType(type);
             Cache = new CachePart(entity);
 
-            collectionAttributes.SetDefault(x => x.Name, member.Name);
-            relationshipAttributes.SetDefault(x => x.Class, new TypeReference(typeof(TChild)));
+            collectionAttributes.SetDefault(Attr.Name, member.Name);
+            relationshipAttributes.SetDefault(Attr.Class, new TypeReference(typeof(TChild)));
         }
 
         private void SetDefaultCollectionType(Type type)
@@ -63,15 +63,15 @@ namespace FluentNHibernate.Mapping
             if (type.Namespace.StartsWith("Iesi") || type.Namespace.StartsWith("System") || type.IsArray)
                 return;
 
-            collectionAttributes.Set(x => x.CollectionType, new TypeReference(type));
+            collectionAttributes.Set(Attr.CollectionType, new TypeReference(type));
         }
 
         public virtual ICollectionMapping GetCollectionMapping()
         {
-            var mapping = collectionBuilder(collectionAttributes.CloneInner());
+            var mapping = collectionBuilder(collectionAttributes.Clone());
 
-            if (!mapping.IsSpecified("Name"))
-                mapping.SetDefaultValue(x => x.Name, GetDefaultName());
+            if (!mapping.IsSpecified(Attr.Name))
+                mapping.SetDefaultValue(Attr.Name, GetDefaultName());
 
             mapping.ContainingEntityType = entity;
             mapping.ChildType = typeof(TChild);
@@ -133,14 +133,14 @@ namespace FluentNHibernate.Mapping
 
         public T LazyLoad()
         {
-            collectionAttributes.Set(x => x.Lazy, nextBool);
+            collectionAttributes.Set(Attr.Lazy, nextBool);
             nextBool = true;
             return (T)this;
         }
 
         public T Inverse()
         {
-            collectionAttributes.Set(x => x.Inverse, nextBool);
+            collectionAttributes.Set(Attr.Inverse, nextBool);
             nextBool = true;
             return (T)this;
         }
@@ -285,8 +285,8 @@ namespace FluentNHibernate.Mapping
         {
             CreateIndexMapping(customIndexMapping);
 
-            if (!indexMapping.IsSpecified("Type"))
-                indexMapping.SetDefaultValue(x => x.Type, new TypeReference(typeof(TIndex)));
+            if (!indexMapping.IsSpecified(Attr.Type))
+                indexMapping.SetDefaultValue(Attr.Type, new TypeReference(typeof(TIndex)));
 
             if (indexMapping.Columns.IsEmpty())
                 indexMapping.AddDefaultColumn(new ColumnMapping { Name = indexColumn });
@@ -347,7 +347,7 @@ namespace FluentNHibernate.Mapping
         /// <param name="name">Table name</param>
         public T Table(string name)
         {
-            collectionAttributes.Set(x => x.TableName, name);
+            collectionAttributes.Set(Attr.Table, name);
             return (T)this;
         }
 
@@ -383,25 +383,25 @@ namespace FluentNHibernate.Mapping
 
         public T Persister(Type type)
         {
-            collectionAttributes.Set(x => x.Persister, new TypeReference(type));
+            collectionAttributes.Set(Attr.Persister, new TypeReference(type));
             return (T)this;
         }
 
         public T Persister(string type)
         {
-            collectionAttributes.Set(x => x.Persister, new TypeReference(type));
+            collectionAttributes.Set(Attr.Persister, new TypeReference(type));
             return (T)this;
         }
 
         public T Check(string checkSql)
         {
-            collectionAttributes.Set(x => x.Check, checkSql);
+            collectionAttributes.Set(Attr.Check, checkSql);
             return (T)this;
         }
 
         public T Generic()
         {
-            collectionAttributes.Set(x => x.Generic, nextBool);
+            collectionAttributes.Set(Attr.Generic, nextBool);
             nextBool = true;
             return (T)this;
         }
@@ -422,13 +422,13 @@ namespace FluentNHibernate.Mapping
         /// </summary>
         public T Where(string where)
         {
-            collectionAttributes.Set(x => x.Where, where);
+            collectionAttributes.Set(Attr.Where, where);
             return (T)this;
         }
 
         public T BatchSize(int size)
         {
-            collectionAttributes.Set(x => x.BatchSize, size);
+            collectionAttributes.Set(Attr.BatchSize, size);
             return (T)this;
         }
 
@@ -474,13 +474,13 @@ namespace FluentNHibernate.Mapping
         /// </summary>
         public T CollectionType(TypeReference type)
         {
-            collectionAttributes.Set(x => x.CollectionType, type);
+            collectionAttributes.Set(Attr.CollectionType, type);
             return (T)this;
         }
 
         public T Schema(string schema)
         {
-            collectionAttributes.Set(x => x.Schema, schema);
+            collectionAttributes.Set(Attr.Schema, schema);
             return (T)this;
         }
 

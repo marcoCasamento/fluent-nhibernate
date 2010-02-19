@@ -12,7 +12,7 @@ namespace FluentNHibernate.Mapping
     {
         private readonly Type entity;
         private readonly AccessStrategyBuilder access;
-        private readonly AttributeStore<ComponentMapping> attributes;
+        private readonly AttributeStore attributes;
 
         public ComponentPart(Type entity, Member property)
             : this(entity, property.Name, new AttributeStore())
@@ -21,8 +21,8 @@ namespace FluentNHibernate.Mapping
         private ComponentPart(Type entity, string propertyName, AttributeStore underlyingStore)
             : base(underlyingStore, propertyName)
         {
-            attributes = new AttributeStore<ComponentMapping>(underlyingStore);
-            access = new AccessStrategyBuilder(value => attributes.Set(x => x.Access, value));
+            attributes = underlyingStore.Clone();
+            access = new AccessStrategyBuilder(value => attributes.Set(Attr.Access, value));
             this.entity = entity;
 
             Insert();
@@ -82,7 +82,7 @@ namespace FluentNHibernate.Mapping
 
         public ComponentPart<T> LazyLoad()
         {
-            attributes.Set(x => x.Lazy, nextBool);
+            attributes.Set(Attr.Lazy, nextBool);
             nextBool = true;
             return this;
         }

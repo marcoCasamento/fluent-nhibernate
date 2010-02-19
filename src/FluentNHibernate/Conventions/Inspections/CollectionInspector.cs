@@ -13,7 +13,6 @@ namespace FluentNHibernate.Conventions.Inspections
         public CollectionInspector(ICollectionMapping mapping)
         {
             this.mapping = mapping;
-            propertyMappings.Map(x => x.LazyLoad, x => x.Lazy);
         }
 
         public Type EntityType
@@ -33,9 +32,9 @@ namespace FluentNHibernate.Conventions.Inspections
         /// e.g. for a ColumnMapping the StringIdentifierForModel would be the Name attribute,
         /// this allows the user to find any columns with the matching name.
         /// </summary>
-        public bool IsSet(Member property)
+        public bool IsSet(Attr property)
         {
-            return mapping.IsSpecified(propertyMappings.Get(property));
+            return mapping.IsSpecified(property);
         }
 
         public IKeyInspector Key

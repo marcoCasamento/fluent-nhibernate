@@ -15,7 +15,6 @@ namespace FluentNHibernate.Conventions.Inspections
         public KeyManyToOneInspector(KeyManyToOneMapping mapping)
         {
             this.mapping = mapping;
-            mappedProperties.Map(x => x.LazyLoad, x => x.Lazy);
         }
 
         public Type EntityType
@@ -28,9 +27,9 @@ namespace FluentNHibernate.Conventions.Inspections
             get { return mapping.Name; }
         }
 
-        public bool IsSet(Member property)
+        public bool IsSet(Attr property)
         {
-            return mapping.IsSpecified(mappedProperties.Get(property));
+            return mapping.IsSpecified(property);
         }
 
         public Access Access

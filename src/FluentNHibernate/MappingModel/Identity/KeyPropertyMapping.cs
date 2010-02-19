@@ -8,7 +8,7 @@ namespace FluentNHibernate.MappingModel.Identity
 {
     public class KeyPropertyMapping : MappingBase
     {
-        private readonly AttributeStore<KeyPropertyMapping> attributes = new AttributeStore<KeyPropertyMapping>();
+        private readonly AttributeStore attributes = new AttributeStore();
         private readonly IList<ColumnMapping> columns = new List<ColumnMapping>();
 
         public override void AcceptVisitor(IMappingModelVisitor visitor)
@@ -21,20 +21,20 @@ namespace FluentNHibernate.MappingModel.Identity
 
         public string Name
         {
-            get { return attributes.Get(x => x.Name); }
-            set { attributes.Set(x => x.Name, value); }
+            get { return attributes.Get(Attr.Name); }
+            set { attributes.Set(Attr.Name, value); }
         }
 
         public string Access
         {
-            get { return attributes.Get(x => x.Access); }
-            set { attributes.Set(x => x.Access, value); }
+            get { return attributes.Get(Attr.Access); }
+            set { attributes.Set(Attr.Access, value); }
         }
 
         public TypeReference Type
         {
-            get { return attributes.Get(x => x.Type); }
-            set { attributes.Set(x => x.Type, value); }
+            get { return attributes.Get<TypeReference>(Attr.Type); }
+            set { attributes.Set(Attr.Type, value); }
         }
 
         public IEnumerable<ColumnMapping> Columns
@@ -49,19 +49,14 @@ namespace FluentNHibernate.MappingModel.Identity
             columns.Add(mapping);
         }
 
-        public override bool IsSpecified(string property)
+        public override bool IsSpecified(Attr property)
         {
-            return attributes.IsSpecified(property);
+            return attributes.HasUserValue(property);
         }
 
-        public bool HasValue<TResult>(Expression<Func<KeyPropertyMapping, TResult>> property)
+        public bool HasValue(Attr property)
         {
-            return attributes.HasValue(property);
-        }
-
-        public void SetDefaultValue<TResult>(Expression<Func<KeyPropertyMapping, TResult>> property, TResult value)
-        {
-            attributes.SetDefault(property, value);
+            return attributes.HasAnyValue(property);
         }
 
         public bool Equals(KeyPropertyMapping other)

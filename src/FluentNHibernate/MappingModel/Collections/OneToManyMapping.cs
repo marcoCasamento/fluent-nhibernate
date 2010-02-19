@@ -6,7 +6,7 @@ namespace FluentNHibernate.MappingModel.Collections
 {
     public class OneToManyMapping : MappingBase, ICollectionRelationshipMapping
     {
-        private readonly AttributeStore<OneToManyMapping> attributes;
+        private readonly AttributeStore attributes;
 
         public OneToManyMapping()
             : this(new AttributeStore())
@@ -14,7 +14,7 @@ namespace FluentNHibernate.MappingModel.Collections
 
         public OneToManyMapping(AttributeStore underlyingStore)
         {
-            attributes = new AttributeStore<OneToManyMapping>(underlyingStore);
+            attributes = underlyingStore.Clone();
         }
 
         public override void AcceptVisitor(IMappingModelVisitor visitor)
@@ -24,43 +24,38 @@ namespace FluentNHibernate.MappingModel.Collections
 
         public Type ChildType
         {
-            get { return attributes.Get(x => x.ChildType); }
-            set { attributes.Set(x => x.ChildType, value); }
+            get { return attributes.Get<Type>(Attr.ChildType); }
+            set { attributes.Set(Attr.ChildType, value); }
         }
 
         public TypeReference Class
         {
-            get { return attributes.Get(x => x.Class); }
-            set { attributes.Set(x => x.Class, value); }
+            get { return attributes.Get<TypeReference>(Attr.Class); }
+            set { attributes.Set(Attr.Class, value); }
         }
 
         public string NotFound
         {
-            get { return attributes.Get(x => x.NotFound); }
-            set { attributes.Set(x => x.NotFound, value); }
+            get { return attributes.Get(Attr.NotFound); }
+            set { attributes.Set(Attr.NotFound, value); }
         }
 
         public string EntityName
         {
-            get { return attributes.Get(x => x.EntityName); }
-            set { attributes.Set(x => x.EntityName, value); }
+            get { return attributes.Get(Attr.EntityName); }
+            set { attributes.Set(Attr.EntityName, value); }
         }
 
         public Type ContainingEntityType { get; set; }
 
-        public override bool IsSpecified(string property)
+        public override bool IsSpecified(Attr property)
         {
-            return attributes.IsSpecified(property);
+            return attributes.HasUserValue(property);
         }
 
-        public bool HasValue<TResult>(Expression<Func<OneToManyMapping, TResult>> property)
+        public bool HasValue(Attr property)
         {
-            return attributes.HasValue(property);
-        }
-
-        public void SetDefaultValue<TResult>(Expression<Func<OneToManyMapping, TResult>> property, TResult value)
-        {
-            attributes.SetDefault(property, value);
+            return attributes.HasAnyValue(property);
         }
 
         public bool Equals(OneToManyMapping other)

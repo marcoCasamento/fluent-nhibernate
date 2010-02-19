@@ -36,14 +36,14 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         public void ClassIsSet()
         {
             mapping.Class = new TypeReference(typeof(ExampleClass));
-            inspector.IsSet(Prop(x => x.Class))
+            inspector.IsSet(Attr.Class)
                 .ShouldBeTrue();
         }
 
         [Test]
         public void ClassIsNotSet()
         {
-            inspector.IsSet(Prop(x => x.Class))
+            inspector.IsSet(Attr.Class)
                 .ShouldBeFalse();
         }
 
@@ -60,14 +60,14 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         {
             mapping.Parent = new ParentMapping();
             mapping.Parent.Name = "test";
-            inspector.IsSet(Prop(x => x.Parent))
+            inspector.IsSet(Attr.Parent)
                 .ShouldBeTrue();
         }
 
         [Test]
         public void ParentIsNotSet()
         {
-            inspector.IsSet(Prop(x => x.Parent))
+            inspector.IsSet(Attr.Parent)
                 .ShouldBeFalse();
         }
 
