@@ -70,12 +70,9 @@ namespace FluentNHibernate.Mapping
         {
             var mapping = collectionBuilder(collectionAttributes.Clone());
 
-            if (!mapping.IsSpecified(Attr.Name))
-                mapping.SetDefaultValue(Attr.Name, GetDefaultName());
-
             mapping.ContainingEntityType = entity;
             mapping.ChildType = typeof(TChild);
-            mapping.Member = member;
+            mapping.SetMember(member);
             mapping.Key = keyMapping;
             mapping.Key.ContainingEntityType = entity;
             mapping.Relationship = GetRelationship();
@@ -103,25 +100,6 @@ namespace FluentNHibernate.Mapping
                 mapping.Filters.Add(filterPart.GetFilterMapping());
 
             return mapping;
-        }
-
-        private string GetDefaultName()
-        {
-            if (member.IsMethod)
-            {
-                // try to guess the backing field name (GetSomething -> something)
-                if (member.Name.StartsWith("Get"))
-                {
-                    var name = member.Name.Substring(3);
-
-                    if (char.IsUpper(name[0]))
-                        name = char.ToLower(name[0]) + name.Substring(1);
-
-                    return name;
-                }
-            }
-
-            return member.Name;
         }
 
         protected abstract ICollectionRelationshipMapping GetRelationship();
@@ -177,10 +155,7 @@ namespace FluentNHibernate.Mapping
         public T AsList()
         {
             collectionBuilder = attrs => new ListMapping(attrs);
-            CreateIndexMapping(null);
-
-            if (indexMapping.Columns.IsEmpty())
-                indexMapping.AddDefaultColumn(new ColumnMapping { Name = "Index" });
+            CreateIndexMapping(null, "Index", typeof(int));
 
             return (T)this;
         }
@@ -188,10 +163,7 @@ namespace FluentNHibernate.Mapping
         public T AsList(Action<IndexPart> customIndexMapping)
         {
             collectionBuilder = attrs => new ListMapping(attrs);
-            CreateIndexMapping(customIndexMapping);
-
-            if (indexMapping.Columns.IsEmpty())
-                indexMapping.AddDefaultColumn(new ColumnMapping { Name = "Index" });
+            CreateIndexMapping(customIndexMapping, "Index", typeof(int));
 
             return (T)this;
         }
@@ -283,20 +255,14 @@ namespace FluentNHibernate.Mapping
 
         public T AsIndexedCollection<TIndex>(string indexColumn, Action<IndexPart> customIndexMapping)
         {
-            CreateIndexMapping(customIndexMapping);
-
-            if (!indexMapping.IsSpecified(Attr.Type))
-                indexMapping.SetDefaultValue(Attr.Type, new TypeReference(typeof(TIndex)));
-
-            if (indexMapping.Columns.IsEmpty())
-                indexMapping.AddDefaultColumn(new ColumnMapping { Name = indexColumn });
+            CreateIndexMapping(customIndexMapping, indexColumn, typeof(TIndex));
 
             return (T)this;
         }
 
-        private void CreateIndexMapping(Action<IndexPart> customIndex)
+        private void CreateIndexMapping(Action<IndexPart> customIndex, string indexColumn, Type indexType)
         {
-            var indexPart = new IndexPart(typeof(T));
+            var indexPart = new IndexPart(typeof(T), indexColumn, indexType);
 
             if (customIndex != null)
                 customIndex(indexPart);

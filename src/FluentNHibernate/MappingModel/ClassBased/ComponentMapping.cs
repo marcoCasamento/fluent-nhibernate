@@ -8,14 +8,12 @@ namespace FluentNHibernate.MappingModel.ClassBased
     public class ComponentMapping : ComponentMappingBase
     {
         public ComponentMapping()
-            : this(new AttributeStore())
+            : this(null)
         {}
 
         public ComponentMapping(AttributeStore store)
             : base(store)
-        {
-            attributes = store.Clone();
-        }
+        {}
 
         public override void AcceptVisitor(IMappingModelVisitor visitor)
         {
@@ -26,39 +24,14 @@ namespace FluentNHibernate.MappingModel.ClassBased
 
         public TypeReference Class
         {
-            get { return attributes.Get<TypeReference>(Attr.Class); }
-            set { attributes.Set(Attr.Class, value); }
+            get { return (TypeReference)GetAttribute(Attr.Class); }
+            set { SetAttribute(Attr.Class, value); }
         }
 
         public bool Lazy
         {
-            get { return attributes.Get<bool>(Attr.Lazy); }
-            set { attributes.Set(Attr.Lazy, value); }
-        }
-
-        public bool Equals(ComponentMapping other)
-        {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-            return base.Equals(other) &&
-                Equals(other.attributes, attributes);
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            return Equals(obj as ComponentMapping);
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                {
-                    return (base.GetHashCode() * 397) ^ (attributes != null ? attributes.GetHashCode() : 0);
-                }
-            }
+            get { return GetAttribute<bool>(Attr.Lazy); }
+            set { SetAttribute(Attr.Lazy, value); }
         }
     }
 }

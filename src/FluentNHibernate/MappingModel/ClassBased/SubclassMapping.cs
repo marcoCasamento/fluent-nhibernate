@@ -26,26 +26,6 @@ namespace FluentNHibernate.MappingModel.ClassBased
             base.AcceptVisitor(visitor);
         }
 
-<<<<<<< Updated upstream
-        public override void MergeAttributes(AttributeStore store)
-        {
-            attributes.Merge(store.Clone());
-        }
-
-        public override string Name
-        {
-            get { return attributes.Get(Attr.Name); }
-            set { attributes.Set(Attr.Name, value); }
-        }
-
-        public override Type Type
-        {
-            get { return attributes.Get<Type>(Attr.Type); }
-            set { attributes.Set(Attr.Type, value); }
-        }
-
-=======
->>>>>>> Stashed changes
         public object DiscriminatorValue
         {
             get { return attributes.Get(Attr.DiscriminatorValue); }
@@ -98,19 +78,6 @@ namespace FluentNHibernate.MappingModel.ClassBased
         {
             get { return attributes.Get(Attr.EntityName); }
             set { attributes.Set(Attr.EntityName, value); }
-<<<<<<< Updated upstream
-        }
-
-        public override bool IsSpecified(Attr property)
-        {
-            return attributes.HasUserValue(property);
-        }
-
-        public bool HasValue(Attr property)
-        {
-            return attributes.HasAnyValue(property);
-=======
->>>>>>> Stashed changes
         }
 
         public void SetDefaultValue<TResult>(Attr property, TResult value)

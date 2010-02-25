@@ -31,9 +31,7 @@ namespace FluentNHibernate.Mapping
             var mapping = new VersionMapping(attributes.Clone());
 
             mapping.ContainingEntityType = entity;
-
-            mapping.SetDefaultValue(Attr.Name, property.Name);
-            mapping.SetDefaultValue(Attr.Name, property.PropertyType == typeof(DateTime) ? new TypeReference("timestamp") : new TypeReference(property.PropertyType));
+            mapping.SetMember(property);
             mapping.AddDefaultColumn(new ColumnMapping(columnAttributes.Clone()) { Name = property.Name });
 
             columns.ForEach(column => mapping.AddColumn(new ColumnMapping(columnAttributes.Clone()) { Name = column }));

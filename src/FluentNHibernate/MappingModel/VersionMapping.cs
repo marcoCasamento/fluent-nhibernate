@@ -1,5 +1,6 @@
 using System;
 using System.Linq.Expressions;
+using FluentNHibernate.MappingModel.Collections;
 using FluentNHibernate.Utils;
 using FluentNHibernate.Visitors;
 
@@ -7,6 +8,9 @@ namespace FluentNHibernate.MappingModel
 {
     public class VersionMapping : ColumnBasedMappingBase
     {
+        private readonly MemberNameFormatter memberNameFormatter = new MemberNameFormatter();
+        private readonly MemberTypeSelector memberTypeSelector = new MemberTypeSelector();
+
         public VersionMapping()
             : this(new AttributeStore())
         {}
@@ -24,32 +28,32 @@ namespace FluentNHibernate.MappingModel
 
         public string Name
         {
-            get { return attributes.Get(Attr.Name); }
-            set { attributes.Set(Attr.Name, value); }
+            get { return (string)GetAttribute(Attr.Name); }
+            set { SetAttribute(Attr.Name, value); }
         }
 
         public string Access
         {
-            get { return attributes.Get(Attr.Access); }
-            set { attributes.Set(Attr.Access, value); }
+            get { return (string)GetAttribute(Attr.Access); }
+            set { SetAttribute(Attr.Access, value); }
         }
 
         public TypeReference Type
         {
-            get { return attributes.Get<TypeReference>(Attr.Type); }
-            set { attributes.Set(Attr.Type, value); }
+            get { return (TypeReference)GetAttribute(Attr.Type); }
+            set { SetAttribute(Attr.Type, value); }
         }
 
         public string UnsavedValue
         {
-            get { return attributes.Get(Attr.UnsavedValue); }
-            set { attributes.Set(Attr.UnsavedValue, value); }
+            get { return (string)GetAttribute(Attr.UnsavedValue); }
+            set { SetAttribute(Attr.UnsavedValue, value); }
         }
 
         public string Generated
         {
-            get { return attributes.Get(Attr.Generated); }
-            set { attributes.Set(Attr.Generated, value); }
+            get { return (string)GetAttribute(Attr.Generated); }
+            set { SetAttribute(Attr.Generated, value); }
         }
 
         public Type ContainingEntityType { get; set; }
@@ -77,5 +81,34 @@ namespace FluentNHibernate.MappingModel
                 }
             }
         }
+
+        public void SetMember(Member member)
+        {
+            Member = member;
+            SetDefaultAttribute(Attr.Name, memberNameFormatter.Format(member));
+            SetDefaultAttribute(Attr.Type, GetMemberType(member));
+        }
+
+        private bool IsSqlTimestamp(Member property)
+        {
+            return property.PropertyType == typeof(byte[]);
+        }
+
+        private bool IsTimestamp(Member member)
+        {
+            return member.PropertyType == typeof(DateTime);
+        }
+
+        private TypeReference GetMemberType(Member member)
+        {
+            if (IsSqlTimestamp(member))
+                return new TypeReference("BinaryBlob");
+            if (IsTimestamp(member))
+                return new TypeReference("timestamp");
+
+            return memberTypeSelector.GetType(member);
+        }
+
+        public Member Member { get; private set; }
     }
 }

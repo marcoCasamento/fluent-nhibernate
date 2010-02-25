@@ -1,23 +1,23 @@
 using System;
-using System.Linq.Expressions;
-using System.Reflection;
-using FluentNHibernate.Utils;
+using FluentNHibernate.MappingModel.Collections;
 using FluentNHibernate.Visitors;
 
 namespace FluentNHibernate.MappingModel
 {
     public class ManyToOneMapping : MappingBase, IHasColumnMappings
     {
-        private readonly AttributeStore attributes;
+        private readonly MemberNameFormatter memberNameFormatter = new MemberNameFormatter();
+        private readonly MemberTypeSelector memberTypeSelector = new MemberTypeSelector();
         private readonly IDefaultableList<ColumnMapping> columns = new DefaultableList<ColumnMapping>();
 
         public ManyToOneMapping()
-            : this(new AttributeStore())
+            : this(null)
         {}
 
         public ManyToOneMapping(AttributeStore underlyingStore)
         {
-            attributes = underlyingStore.Clone();
+            if (underlyingStore != null)
+                ReplaceAttributes(underlyingStore);
         }
 
         public override void AcceptVisitor(IMappingModelVisitor visitor)
@@ -29,78 +29,78 @@ namespace FluentNHibernate.MappingModel
         }
 
         public Type ContainingEntityType { get; set; }
-        public Member Member { get; set; }
+        public Member Member { get; private set; }
 
         public string Name
         {
-            get { return attributes.Get(Attr.Name); }
-            set { attributes.Set(Attr.Name, value); }
+            get { return (string)GetAttribute(Attr.Name); }
+            set { SetAttribute(Attr.Name, value); }
         }
 
         public string Access
         {
-            get { return attributes.Get(Attr.Access); }
-            set { attributes.Set(Attr.Access, value); }
+            get { return (string)GetAttribute(Attr.Access); }
+            set { SetAttribute(Attr.Access, value); }
         }
 
         public TypeReference Class
         {
-            get { return attributes.Get<TypeReference>(Attr.Class); }
-            set { attributes.Set(Attr.Class, value); }
+            get { return (TypeReference)GetAttribute(Attr.Class); }
+            set { SetAttribute(Attr.Class, value); }
         }
 
         public string Cascade
         {
-            get { return attributes.Get(Attr.Cascade); }
-            set { attributes.Set(Attr.Cascade, value); }
+            get { return (string)GetAttribute(Attr.Cascade); }
+            set { SetAttribute(Attr.Cascade, value); }
         }
 
         public string Fetch
         {
-            get { return attributes.Get(Attr.Fetch); }
-            set { attributes.Set(Attr.Fetch, value); }
+            get { return (string)GetAttribute(Attr.Fetch); }
+            set { SetAttribute(Attr.Fetch, value); }
         }
 
         public bool Update
         {
-            get { return attributes.Get<bool>(Attr.Update); }
-            set { attributes.Set(Attr.Update, value); }
+            get { return (bool)GetAttribute(Attr.Update); }
+            set { SetAttribute(Attr.Update, value); }
         }
 
         public bool Insert
         {
-            get { return attributes.Get<bool>(Attr.Insert); }
-            set { attributes.Set(Attr.Insert, value); }
+            get { return (bool)GetAttribute(Attr.Insert); }
+            set { SetAttribute(Attr.Insert, value); }
         }
 
         public string ForeignKey
         {
-            get { return attributes.Get(Attr.ForeignKey); }
-            set { attributes.Set(Attr.ForeignKey, value); }
+            get { return (string)GetAttribute(Attr.ForeignKey); }
+            set { SetAttribute(Attr.ForeignKey, value); }
         }
 
         public string PropertyRef
         {
-            get { return attributes.Get(Attr.PropertyRef); }
-            set { attributes.Set(Attr.PropertyRef, value); }
+            get { return (string)GetAttribute(Attr.PropertyRef); }
+            set { SetAttribute(Attr.PropertyRef, value); }
         }
 
         public string NotFound
         {
-            get { return attributes.Get(Attr.NotFound); }
-            set { attributes.Set(Attr.NotFound, value); }
+            get { return (string)GetAttribute(Attr.NotFound); }
+            set { SetAttribute(Attr.NotFound, value); }
         }
 
         public bool Lazy
         {
-            get { return attributes.Get<bool>(Attr.Lazy); }
-            set { attributes.Set(Attr.Lazy, value); }
+            get { return (bool)GetAttribute(Attr.Lazy); }
+            set { SetAttribute(Attr.Lazy, value); }
         }
 
         public string EntityName
         {
-            get { return attributes.Get(Attr.EntityName); }
-            set { attributes.Set(Attr.EntityName, value); }
+            get { return (string)GetAttribute(Attr.EntityName); }
+            set { SetAttribute(Attr.EntityName, value); }
         }
 
         public IDefaultableEnumerable<ColumnMapping> Columns
@@ -123,26 +123,11 @@ namespace FluentNHibernate.MappingModel
             columns.Clear();
         }
 
-        public override bool IsSpecified(Attr property)
-        {
-            return attributes.HasUserValue(property);
-        }
-
-        public bool HasValue(Attr property)
-        {
-            return attributes.HasAnyValue(property);
-        }
-
-        public void SetDefaultValue<TResult>(Attr property, TResult value)
-        {
-            attributes.SetDefault(property, value);
-        }
-
         public bool Equals(ManyToOneMapping other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return Equals(other.attributes, attributes) &&
+            return base.Equals(other) &&
                 other.columns.ContentEquals(columns) &&
                 Equals(other.ContainingEntityType, ContainingEntityType) &&
                 Equals(other.Member, Member);
@@ -160,12 +145,19 @@ namespace FluentNHibernate.MappingModel
         {
             unchecked
             {
-                int result = (attributes != null ? attributes.GetHashCode() : 0);
+                int result = base.GetHashCode();
                 result = (result * 397) ^ (columns != null ? columns.GetHashCode() : 0);
                 result = (result * 397) ^ (ContainingEntityType != null ? ContainingEntityType.GetHashCode() : 0);
                 result = (result * 397) ^ (Member != null ? Member.GetHashCode() : 0);
                 return result;
             }
+        }
+
+        public void SetMember(Member member)
+        {
+            Member = member;
+            SetDefaultAttribute(Attr.Name, memberNameFormatter.Format(member));
+            SetDefaultAttribute(Attr.Class, memberTypeSelector.GetType(member));
         }
     }
 }

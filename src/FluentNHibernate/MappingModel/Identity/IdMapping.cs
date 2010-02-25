@@ -1,26 +1,28 @@
 using System;
-using System.Reflection;
-using FluentNHibernate.Mapping;
+using FluentNHibernate.MappingModel.Collections;
 using FluentNHibernate.Visitors;
 
 namespace FluentNHibernate.MappingModel.Identity
 {
     public class IdMapping : ColumnBasedMappingBase, IIdentityMapping
     {
+        private readonly MemberNameFormatter memberNameFormatter = new MemberNameFormatter();
+        private readonly MemberTypeSelector memberTypeSelector = new MemberTypeSelector();
+
         public IdMapping()
-            : this(new AttributeStore())
+            : this(null)
         {}
 
         public IdMapping(AttributeStore underlyingStore)
             : base(underlyingStore)
         {}
 
-        public Member Member { get; set; }
+        public Member Member { get; private set; }
 
         public GeneratorMapping Generator
         {
-            get { return attributes.Get<GeneratorMapping>(Attr.Generator); }
-            set { attributes.Set(Attr.Generator, value); }
+            get { return (GeneratorMapping)GetAttribute(Attr.Generator); }
+            set { SetAttribute(Attr.Generator, value); }
         }
 
         public override void AcceptVisitor(IMappingModelVisitor visitor)
@@ -36,26 +38,26 @@ namespace FluentNHibernate.MappingModel.Identity
 
         public string Name
         {
-            get { return attributes.Get(Attr.Name); }
-            set { attributes.Set(Attr.Name, value); }
+            get { return (string)GetAttribute(Attr.Name); }
+            set { SetAttribute(Attr.Name, value); }
         }
 
         public string Access
         {
-            get { return attributes.Get(Attr.Access); }
-            set { attributes.Set(Attr.Access, value); }
+            get { return (string)GetAttribute(Attr.Access); }
+            set { SetAttribute(Attr.Access, value); }
         }
 
         public TypeReference Type
         {
-            get { return attributes.Get<TypeReference>(Attr.Type); }
-            set { attributes.Set(Attr.Type, value); }
+            get { return (TypeReference)GetAttribute(Attr.Type); }
+            set { SetAttribute(Attr.Type, value); }
         }
 
         public string UnsavedValue
         {
-            get { return attributes.Get(Attr.UnsavedValue); }
-            set { attributes.Set(Attr.UnsavedValue, value); }
+            get { return (string)GetAttribute(Attr.UnsavedValue); }
+            set { SetAttribute(Attr.UnsavedValue, value); }
         }
 
         public Type ContainingEntityType { get; set; }
@@ -83,6 +85,13 @@ namespace FluentNHibernate.MappingModel.Identity
                 result = (result * 397) ^ (ContainingEntityType != null ? ContainingEntityType.GetHashCode() : 0);
                 return result;
             }
+        }
+
+        public void SetMember(Member member)
+        {
+            Member = member;
+            SetDefaultAttribute(Attr.Name, memberNameFormatter.Format(member));
+            SetDefaultAttribute(Attr.Type, Type ?? memberTypeSelector.GetType(member));
         }
     }
 }

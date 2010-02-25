@@ -13,7 +13,7 @@ namespace FluentNHibernate.Mapping
         private readonly AttributeStore attributes = new AttributeStore();
 
         private readonly IList<string> columns = new List<string>();
-        private readonly Member property;
+        private readonly Member member;
         private readonly Type entityType;
         private readonly AccessStrategyBuilder access;
         private readonly Type identityType;
@@ -21,12 +21,12 @@ namespace FluentNHibernate.Mapping
         private readonly string columnName;
 
         public IdentityPart(Type entity, Member property)
-            : this(entity, property.PropertyType, property.Name)
+            : this(entity, property, property.PropertyType, property.Name)
         {}
 
-        public IdentityPart(Type entity, Type identityType, string columnName)
+        public IdentityPart(Type entity, Member member, Type identityType, string columnName)
         {
-            this.property = null;
+            this.member = member;
             this.entityType = entity;
             this.identityType = identityType;
             this.columnName = columnName;
@@ -67,11 +67,11 @@ namespace FluentNHibernate.Mapping
             else
                 mapping.AddDefaultColumn(new ColumnMapping(columnAttributes.Clone()) { Name = columnName });
 
-            if (property != null)
-            {
-                mapping.Name = columnName;
-            }
-            mapping.SetDefaultValue(Attr.Type, new TypeReference(identityType));
+            if (member != null)
+                mapping.SetMember(member);
+
+            if (identityType != null)
+                mapping.Type = new TypeReference(identityType);
 
             if (GeneratedBy.IsDirty)
                 mapping.Generator = GeneratedBy.GetGeneratorMapping();

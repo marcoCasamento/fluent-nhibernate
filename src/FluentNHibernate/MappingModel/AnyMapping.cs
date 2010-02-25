@@ -41,13 +41,13 @@ namespace FluentNHibernate.MappingModel
 
         public string Name
         {
-            get { return (string)GetAttribute(Attr.Name); }
+            get { return GetAttribute<string>(Attr.Name); }
             set { SetAttribute(Attr.Name, value); }
         }
 
         public string IdType
         {
-            get { return (string)GetAttribute(Attr.IdType); }
+            get { return GetAttribute<string>(Attr.IdType); }
             set { SetAttribute(Attr.IdType, value); }
         }
 

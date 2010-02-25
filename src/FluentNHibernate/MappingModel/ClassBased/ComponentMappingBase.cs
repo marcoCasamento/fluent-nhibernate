@@ -7,11 +7,7 @@ namespace FluentNHibernate.MappingModel.ClassBased
 {
     public abstract class ComponentMappingBase : ClassMappingBase, IComponentMapping
     {
-        protected AttributeStore attributes;
-
-        protected ComponentMappingBase()
-            : this(new AttributeStore())
-        {}
+        private AttributeStore attributes;
 
         protected ComponentMappingBase(AttributeStore store)
         {

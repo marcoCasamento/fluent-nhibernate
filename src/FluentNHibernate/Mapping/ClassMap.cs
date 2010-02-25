@@ -44,10 +44,7 @@ namespace FluentNHibernate.Mapping
 
         ClassMapping IMappingProvider.GetClassMapping()
         {
-		    var mapping = new ClassMapping(attributes.Clone());
-
-            mapping.Type = typeof(T);
-            mapping.Name = typeof(T).AssemblyQualifiedName;
+		    var mapping = new ClassMapping(attributes.Clone(), typeof(T));
 
             foreach (var property in properties)
                 mapping.AddProperty(property.GetPropertyMapping());
@@ -196,7 +193,7 @@ namespace FluentNHibernate.Mapping
 
         public virtual IdentityPart Id<TColumn>(string column)
         {
-            var part = new IdentityPart(typeof(T), typeof(TColumn), column);
+            var part = new IdentityPart(typeof(T), null, typeof(TColumn), column);
             
             if (column != null)
                 part.Column(column);

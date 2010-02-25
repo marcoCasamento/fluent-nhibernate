@@ -8,7 +8,6 @@ namespace FluentNHibernate.MappingModel.Identity
 {
     public class KeyPropertyMapping : MappingBase
     {
-        private readonly AttributeStore attributes = new AttributeStore();
         private readonly IList<ColumnMapping> columns = new List<ColumnMapping>();
 
         public override void AcceptVisitor(IMappingModelVisitor visitor)
@@ -21,20 +20,20 @@ namespace FluentNHibernate.MappingModel.Identity
 
         public string Name
         {
-            get { return attributes.Get(Attr.Name); }
-            set { attributes.Set(Attr.Name, value); }
+            get { return (string)GetAttribute(Attr.Name); }
+            set { SetAttribute(Attr.Name, value); }
         }
 
         public string Access
         {
-            get { return attributes.Get(Attr.Access); }
-            set { attributes.Set(Attr.Access, value); }
+            get { return (string)GetAttribute(Attr.Access); }
+            set { SetAttribute(Attr.Access, value); }
         }
 
         public TypeReference Type
         {
-            get { return attributes.Get<TypeReference>(Attr.Type); }
-            set { attributes.Set(Attr.Type, value); }
+            get { return (TypeReference)GetAttribute(Attr.Type); }
+            set { SetAttribute(Attr.Type, value); }
         }
 
         public IEnumerable<ColumnMapping> Columns
@@ -49,21 +48,11 @@ namespace FluentNHibernate.MappingModel.Identity
             columns.Add(mapping);
         }
 
-        public override bool IsSpecified(Attr property)
-        {
-            return attributes.HasUserValue(property);
-        }
-
-        public bool HasValue(Attr property)
-        {
-            return attributes.HasAnyValue(property);
-        }
-
         public bool Equals(KeyPropertyMapping other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return Equals(other.attributes, attributes) &&
+            return base.Equals(other) &&
                 other.columns.ContentEquals(columns) &&
                 Equals(other.ContainingEntityType, ContainingEntityType);
         }
@@ -80,7 +69,7 @@ namespace FluentNHibernate.MappingModel.Identity
         {
             unchecked
             {
-                int result = (attributes != null ? attributes.GetHashCode() : 0);
+                int result = base.GetHashCode();
                 result = (result * 397) ^ (columns != null ? columns.GetHashCode() : 0);
                 result = (result * 397) ^ (ContainingEntityType != null ? ContainingEntityType.GetHashCode() : 0);
                 return result;

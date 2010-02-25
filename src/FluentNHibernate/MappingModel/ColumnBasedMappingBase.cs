@@ -7,11 +7,11 @@ namespace FluentNHibernate.MappingModel
     {
         private readonly Attr[] columnAttributes = new[] { Attr.Length, Attr.Precision, Attr.Scale, Attr.NotNull, Attr.Unique, Attr.UniqueKey, Attr.SqlType, Attr.Index, Attr.Check, Attr.Default };
         protected readonly IDefaultableList<ColumnMapping> columns = new DefaultableList<ColumnMapping>();
-        protected readonly AttributeStore attributes;
 
         protected ColumnBasedMappingBase(AttributeStore underlyingStore)
         {
-            attributes = underlyingStore.Clone();
+            if (underlyingStore != null)
+                ReplaceAttributes(underlyingStore);
         }
 
         public override bool IsSpecified(Attr property)
@@ -19,17 +19,7 @@ namespace FluentNHibernate.MappingModel
             if (columnAttributes.Contains(property))
                 return columns.Any(x => x.IsSpecified(property));
 
-            return attributes.HasUserValue(property);
-        }
-
-        public bool HasValue(Attr property)
-        {
-            return attributes.HasAnyValue(property);
-        }
-
-        public void SetDefaultValue<TResult>(Attr property, TResult value)
-        {
-            attributes.SetDefault(property, value);
+            return base.IsSpecified(property);
         }
 
         public IDefaultableEnumerable<ColumnMapping> Columns
@@ -57,7 +47,7 @@ namespace FluentNHibernate.MappingModel
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
             return other.columns.ContentEquals(columns) &&
-                Equals(other.attributes, attributes);
+                base.Equals(other);
         }
 
         public override bool Equals(object obj)
@@ -72,7 +62,7 @@ namespace FluentNHibernate.MappingModel
         {
             unchecked
             {
-                return ((columns != null ? columns.GetHashCode() : 0) * 397) ^ (attributes != null ? attributes.GetHashCode() : 0);
+                return ((columns != null ? columns.GetHashCode() : 0) * 397) ^ base.GetHashCode();
             }
         }
     }

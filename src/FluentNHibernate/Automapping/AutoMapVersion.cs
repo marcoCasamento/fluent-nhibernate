@@ -22,38 +22,22 @@ namespace FluentNHibernate.Automapping
         {
             if (!(classMap is ClassMapping)) return;
 
-            var version = new VersionMapping
-            {
-                Name = property.Name,
-            };
-
-            version.SetDefaultValue(Attr.Type, GetDefaultType(property));
+            var version = new VersionMapping();
+            
+            version.SetMember(property);
             version.AddDefaultColumn(new ColumnMapping { Name = property.Name });
 
-            if (IsSqlTimestamp(property))
-            {
-                version.Columns.Each(x =>
-                {
-                    x.SqlType = "timestamp";
-                    x.NotNull = true;
-                });
-                version.UnsavedValue = null;
-            }
+            //if (IsSqlTimestamp(property))
+            //{
+            //    version.Columns.Each(x =>
+            //    {
+            //        x.SqlType = "timestamp";
+            //        x.NotNull = true;
+            //    });
+            //    version.UnsavedValue = null;
+            //}
 
             ((ClassMapping)classMap).Version = version;
-        }
-
-        private bool IsSqlTimestamp(Member property)
-        {
-            return property.PropertyType == typeof(byte[]);
-        }
-
-        private TypeReference GetDefaultType(Member property)
-        {
-            if (IsSqlTimestamp(property))
-                return new TypeReference("BinaryBlob");
-
-            return new TypeReference(property.PropertyType);
         }
     }
 }

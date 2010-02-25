@@ -8,8 +8,6 @@ namespace FluentNHibernate.MappingModel.Identity
 {
     public class GeneratorMapping : MappingBase
     {
-        private readonly AttributeStore attributes = new AttributeStore();
-
         public GeneratorMapping()
         {
             Params = new Dictionary<string, string>();
@@ -22,28 +20,18 @@ namespace FluentNHibernate.MappingModel.Identity
 
         public string Class
         {
-            get { return attributes.Get(Attr.Class); }
-            set { attributes.Set(Attr.Class, value); }
+            get { return (string)GetAttribute(Attr.Class); }
+            set { SetAttribute(Attr.Class, value); }
         }
 
         public IDictionary<string, string> Params { get; private set; }
         public Type ContainingEntityType { get; set; }
 
-        public override bool IsSpecified(Attr property)
-        {
-            return attributes.HasUserValue(property);
-        }
-
-        public bool HasValue(Attr property)
-        {
-            return attributes.HasAnyValue(property);
-        }
-
         public bool Equals(GeneratorMapping other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return Equals(other.attributes, attributes) &&
+            return base.Equals(other) &&
                 other.Params.ContentEquals(Params) &&
                 Equals(other.ContainingEntityType, ContainingEntityType);
         }
@@ -60,7 +48,7 @@ namespace FluentNHibernate.MappingModel.Identity
         {
             unchecked
             {
-                int result = (attributes != null ? attributes.GetHashCode() : 0);
+                int result = base.GetHashCode();
                 result = (result * 397) ^ (Params != null ? Params.GetHashCode() : 0);
                 result = (result * 397) ^ (ContainingEntityType != null ? ContainingEntityType.GetHashCode() : 0);
                 return result;

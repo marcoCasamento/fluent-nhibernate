@@ -26,12 +26,10 @@ namespace FluentNHibernate.Mapping
 
         DiscriminatorMapping IDiscriminatorMappingProvider.GetDiscriminatorMapping()
         {
-            var mapping = new DiscriminatorMapping(attributes.Clone())
+            var mapping = new DiscriminatorMapping(attributes.Clone(), discriminatorValueType)
             {
                 ContainingEntityType = entity,
             };
-
-            mapping.SetDefaultValue(Attr.Type, discriminatorValueType);
 
             mapping.AddColumn(new ColumnMapping(columnAttributes.Clone()) { Name = columnName });
 

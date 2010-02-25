@@ -25,11 +25,13 @@ namespace FluentNHibernate.Testing.ConventionsTests.AcceptanceCriteria
             acceptance.Expect(x =>
                 x.Type.Name == typeof(Record).Name);
 
-            acceptance.Matches(new PropertyInspector(new PropertyMapping
+            var property = new PropertyMapping
             {
-                Member = ReflectionHelper.GetMember<Record>(x => x.Age),
                 Type = new TypeReference(typeof(Record))
-            }))
+            };
+            property.SetMember(ReflectionHelper.GetMember<Record>(x => x.Age));
+
+            acceptance.Matches(new PropertyInspector(property))
                 .ShouldBeTrue();
         }
     }

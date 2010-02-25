@@ -47,7 +47,7 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         [Test]
         public void ShouldWriteColumns()
         {
-            var mapping = new DiscriminatorMapping();
+            var mapping = new DiscriminatorMapping(typeof(object).ToReference());
 
             mapping.AddColumn(new ColumnMapping { Name = "Column1" });
 

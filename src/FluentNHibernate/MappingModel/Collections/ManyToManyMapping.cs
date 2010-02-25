@@ -104,16 +104,6 @@ namespace FluentNHibernate.MappingModel.Collections
             columns.Clear();
         }
 
-        public override bool IsSpecified(Attr property)
-        {
-            return attributes.HasUserValue(property);
-        }
-
-        public bool HasValue(Attr property)
-        {
-            return attributes.HasAnyValue(property);
-        }
-
         public bool Equals(ManyToManyMapping other)
         {
             if (ReferenceEquals(null, other)) return false;

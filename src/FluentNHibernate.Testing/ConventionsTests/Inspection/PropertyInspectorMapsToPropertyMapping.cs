@@ -208,7 +208,7 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         [Test]
         public void PropertyMapped()
         {
-            mapping.Member = Prop(x => x.Name);
+            mapping.SetMember(Prop(x => x.Name));
             inspector.Property.ShouldEqual(mapping.Member);
         }
 

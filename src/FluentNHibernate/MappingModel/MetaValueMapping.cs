@@ -1,20 +1,18 @@
 using System;
-using System.Linq.Expressions;
 using FluentNHibernate.Visitors;
 
 namespace FluentNHibernate.MappingModel
 {
     public class MetaValueMapping : MappingBase
     {
-        private readonly AttributeStore attributes;
-
         public MetaValueMapping()
-            : this(new AttributeStore())
+            : this(null)
         {}
 
         protected MetaValueMapping(AttributeStore underlyingStore)
         {
-            attributes = underlyingStore.Clone();
+            if (underlyingStore != null)
+                ReplaceAttributes(underlyingStore);
         }
 
         public override void AcceptVisitor(IMappingModelVisitor visitor)
@@ -24,31 +22,21 @@ namespace FluentNHibernate.MappingModel
 
         public string Value
         {
-            get { return attributes.Get(Attr.Value); }
-            set { attributes.Set(Attr.Value, value); }
+            get { return (string)GetAttribute(Attr.Value); }
+            set { SetAttribute(Attr.Value, value); }
         }
 
         public TypeReference Class
         {
-            get { return attributes.Get<TypeReference>(Attr.Class); }
-            set { attributes.Set(Attr.Class, value); }
+            get { return (TypeReference)GetAttribute(Attr.Class); }
+            set { SetAttribute(Attr.Class, value); }
         }
 
         public Type ContainingEntityType { get; set; }
 
-        public override bool IsSpecified(Attr property)
-        {
-            return attributes.HasUserValue(property);
-        }
-
-        public bool HasValue(Attr property)
-        {
-            return attributes.HasAnyValue(property);
-        }
-
         public bool Equals(MetaValueMapping other)
         {
-            return Equals(other.attributes, attributes) && Equals(other.ContainingEntityType, ContainingEntityType);
+            return base.Equals(other) && Equals(other.ContainingEntityType, ContainingEntityType);
         }
 
         public override bool Equals(object obj)
@@ -61,7 +49,7 @@ namespace FluentNHibernate.MappingModel
         {
             unchecked
             {
-                return ((attributes != null ? attributes.GetHashCode() : 0) * 397) ^
+                return (base.GetHashCode() * 397) ^
                     (ContainingEntityType != null ? ContainingEntityType.GetHashCode() : 0);
             }
         }

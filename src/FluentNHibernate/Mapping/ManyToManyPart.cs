@@ -163,9 +163,7 @@ namespace FluentNHibernate.Mapping
             var indexType = typeof(TChild).GetGenericArguments()[0];
             var valueType = typeof(TChild).GetGenericArguments()[1];
 
-            index = new IndexPart(indexType);
-            index.Column(indexColumn);
-            index.Type(indexType);
+            index = new IndexPart(indexType, indexColumn, indexType);
 
             ChildKeyColumn(valueColumn);
             this.valueType = valueType;

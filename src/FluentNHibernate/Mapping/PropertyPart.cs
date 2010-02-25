@@ -40,8 +40,8 @@ namespace FluentNHibernate.Mapping
             var mapping = new PropertyMapping(attributes.Clone())
             {
                 ContainingEntityType = parentType,
-                Member = property
             };
+            mapping.SetMember(property);
        
             if (columns.Count() == 0 && !mapping.IsSpecified(Attr.Formula))
                 mapping.AddDefaultColumn(new ColumnMapping(columnAttributes.Clone()) { Name = property.Name });
@@ -51,32 +51,13 @@ namespace FluentNHibernate.Mapping
 
             foreach(var column in mapping.Columns)
             {                
-                if (!column.IsSpecified(Attr.NotNull) && property.PropertyType.IsNullable() && property.PropertyType.IsEnum())
-                    column.SetDefaultValue(Attr.NotNull, false);
+                //if (!column.IsSpecified(Attr.NotNull) && property.PropertyType.IsNullable() && property.PropertyType.IsEnum())
+                //    column.SetDefaultValue(Attr.NotNull, false);
 
                 column.MergeAttributes(columnAttributes);
             }
 
-            if (!mapping.IsSpecified(Attr.Name))
-                mapping.Name = mapping.Member.Name;
-
-            if (!mapping.IsSpecified(Attr.Type))
-                mapping.SetDefaultValue(Attr.Type, GetDefaultType());
-
             return mapping;
-        }
-
-        private TypeReference GetDefaultType()
-        {
-            var type = new TypeReference(property.PropertyType);
-
-            if (property.PropertyType.IsEnum())
-                type = new TypeReference(typeof(GenericEnumMapper<>).MakeGenericType(property.PropertyType));
-
-            if (property.PropertyType.IsNullable() && property.PropertyType.IsEnum())
-                type = new TypeReference(typeof(GenericEnumMapper<>).MakeGenericType(property.PropertyType.GetGenericArguments()[0]));
-
-            return type;
         }
 
         public PropertyPart Column(string columnName)

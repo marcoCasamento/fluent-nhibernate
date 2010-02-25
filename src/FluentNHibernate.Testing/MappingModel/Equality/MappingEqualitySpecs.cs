@@ -57,11 +57,12 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
                 ChildType = typeof(Target), CollectionType = new TypeReference(typeof(Target)), CompositeElement = new CompositeElementMapping(),
                 Element = new ElementMapping(), Fetch = "fetch", Generic = true,
                 Index = new IndexMapping(), Inverse = true, Key = new KeyMapping(),
-                Member = new DummyPropertyInfo("name", typeof(Target)).ToMember(), Mutable = true, OrderBy = "order-by",
+                Mutable = true, OrderBy = "order-by",
                 OtherSide = new ArrayMapping(), Persister = new TypeReference(typeof(Target)), Relationship = new ManyToManyMapping(),
                 Schema = "schema", Subselect = "subselect", TableName = "table", Where = "where"
             };
 
+            mapping.SetMember(new DummyPropertyInfo("name", typeof(Target)).ToMember());
             mapping.Filters.Add(new FilterMapping());
 
             return mapping;
@@ -87,11 +88,12 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
                 ChildType = typeof(Target), CollectionType = new TypeReference(typeof(Target)), CompositeElement = new CompositeElementMapping(),
                 Element = new ElementMapping(), Fetch = "fetch", Generic = true,
                 Inverse = true, Key = new KeyMapping(),
-                Member = new DummyPropertyInfo("name", typeof(Target)).ToMember(), Mutable = true, OrderBy = "order-by",
+                Mutable = true, OrderBy = "order-by",
                 OtherSide = new ArrayMapping(), Persister = new TypeReference(typeof(Target)), Relationship = new ManyToManyMapping(),
                 Schema = "schema", Subselect = "subselect", TableName = "table", Where = "where"
             };
 
+            mapping.SetMember(new DummyPropertyInfo("name", typeof(Target)).ToMember());
             mapping.Filters.Add(new FilterMapping());
 
             return mapping;
@@ -130,10 +132,12 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
     {
         public override ClassMapping create_mapping()
         {
-            var mapping = new ClassMapping
+            var mapping = new ClassMapping(typeof(Target))
             {
                 Abstract = true, BatchSize = 10, Cache = new CacheMapping(),
-                Check = "check", Discriminator = new DiscriminatorMapping(), DiscriminatorValue = "value",
+                Check = "check",
+                Discriminator = new DiscriminatorMapping(typeof(object).ToReference()),
+                DiscriminatorValue = "value",
                 DynamicInsert = true, DynamicUpdate = true, EntityName = "entity-name",
                 Id = new IdMapping(), Lazy = true, Mutable = true,
                 Name = "name", OptimisticLock = "lock", Persister = "persister",
@@ -293,7 +297,7 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
     {
         public override DiscriminatorMapping create_mapping()
         {
-            var mapping = new DiscriminatorMapping
+            var mapping = new DiscriminatorMapping(typeof(object).ToReference())
             {
                 ContainingEntityType = typeof(Target),
                 Force = true,
@@ -505,7 +509,7 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
                 Schema = "schema"
             };
 
-            mapping.AddClass(new ClassMapping());
+            mapping.AddClass(new ClassMapping(typeof(Target)));
             mapping.AddFilter(new FilterDefinitionMapping());
             mapping.AddImport(new ImportMapping());
 
@@ -526,7 +530,6 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
         {
             var mapping = new IdMapping
             {
-                Member = new DummyPropertyInfo("prop", typeof(Target)).ToMember(),
                 Name = "name",
                 Access = "access",
                 ContainingEntityType = typeof(Target),
@@ -535,6 +538,7 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
                 UnsavedValue = "unsaved"
             };
 
+            mapping.SetMember(new DummyPropertyInfo("prop", typeof(Target)).ToMember());
             mapping.AddDefaultColumn(new ColumnMapping { Name = "default" });
             mapping.AddColumn(new ColumnMapping { Name = "col" });
 
@@ -791,11 +795,12 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
                 ChildType = typeof(Target), CollectionType = new TypeReference(typeof(Target)), CompositeElement = new CompositeElementMapping(),
                 Element = new ElementMapping(), Fetch = "fetch", Generic = true,
                 Index = new IndexMapping(), Inverse = true, Key = new KeyMapping(),
-                Member = new DummyPropertyInfo("name", typeof(Target)).ToMember(), Mutable = true, OrderBy = "order-by",
+                Mutable = true, OrderBy = "order-by",
                 OtherSide = new ArrayMapping(), Persister = new TypeReference(typeof(Target)), Relationship = new ManyToManyMapping(),
                 Schema = "schema", Subselect = "subselect", TableName = "table", Where = "where"
             };
 
+            mapping.SetMember(new DummyPropertyInfo("name", typeof(Target)).ToMember());
             mapping.Filters.Add(new FilterMapping());
 
             return mapping;
@@ -823,13 +828,13 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
                 ForeignKey = "fk",
                 Insert = true,
                 Lazy = true,
-                Member = new DummyPropertyInfo("prop", typeof(Target)).ToMember(),
                 PropertyRef = "prop",
                 Update = true,
                 Name = "name",
                 NotFound = "not found"
             };
 
+            mapping.SetMember(new DummyPropertyInfo("prop", typeof(Target)).ToMember());
             mapping.AddDefaultColumn(new ColumnMapping { Name = "default" });
             mapping.AddColumn(new ColumnMapping { Name = "col" });
 
@@ -887,12 +892,13 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
                 ChildType = typeof(Target), CollectionType = new TypeReference(typeof(Target)), CompositeElement = new CompositeElementMapping(),
                 Element = new ElementMapping(), Fetch = "fetch", Generic = true,
                 Index = new IndexMapping(), Inverse = true, Key = new KeyMapping(),
-                Member = new DummyPropertyInfo("name", typeof(Target)).ToMember(), Mutable = true, OrderBy = "order-by",
+                Mutable = true, OrderBy = "order-by",
                 OtherSide = new ArrayMapping(), Persister = new TypeReference(typeof(Target)), Relationship = new ManyToManyMapping(),
                 Schema = "schema", Subselect = "subselect", TableName = "table", Where = "where",
                 Sort = "sort"
             };
 
+            mapping.SetMember(new DummyPropertyInfo("name", typeof(Target)).ToMember());
             mapping.Filters.Add(new FilterMapping());
 
             return mapping;
@@ -1005,13 +1011,13 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
                 Generated = "generated",
                 Insert = true,
                 Lazy = true,
-                Member = new DummyPropertyInfo("prop", typeof(Target)).ToMember(),
                 Name = "name",
                 OptimisticLock = true,
                 Type = new TypeReference(typeof(Target)),
                 Update = true
             };
 
+            mapping.SetMember(new DummyPropertyInfo("prop", typeof(Target)).ToMember());
             mapping.AddDefaultColumn(new ColumnMapping { Name = "default" });
             mapping.AddColumn(new ColumnMapping { Name = "col" });
 
@@ -1070,12 +1076,13 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
                 ChildType = typeof(Target), CollectionType = new TypeReference(typeof(Target)), CompositeElement = new CompositeElementMapping(),
                 Element = new ElementMapping(), Fetch = "fetch", Generic = true,
                 Inverse = true, Key = new KeyMapping(),
-                Member = new DummyPropertyInfo("name", typeof(Target)).ToMember(), Mutable = true, OrderBy = "order-by",
+                Mutable = true, OrderBy = "order-by",
                 OtherSide = new ArrayMapping(), Persister = new TypeReference(typeof(Target)), Relationship = new ManyToManyMapping(),
                 Schema = "schema", Subselect = "subselect", TableName = "table", Where = "where",
                 Sort = "sort"
             };
 
+            mapping.SetMember(new DummyPropertyInfo("name", typeof(Target)).ToMember());
             mapping.Filters.Add(new FilterMapping());
 
             return mapping;

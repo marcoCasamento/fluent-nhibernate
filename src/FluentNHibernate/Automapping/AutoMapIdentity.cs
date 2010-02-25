@@ -27,10 +27,8 @@ namespace FluentNHibernate.Automapping
 
             var idMapping = new IdMapping { ContainingEntityType = classMap.Type };
             idMapping.AddDefaultColumn(new ColumnMapping() { Name = property.Name });
-            idMapping.Name = property.Name;
-            idMapping.Type = new TypeReference(property.PropertyType);
-            idMapping.Member = property;
-            idMapping.SetDefaultValue(Attr.Generator, GetDefaultGenerator(property));
+            idMapping.Generator = GetDefaultGenerator(property);
+            idMapping.SetMember(property);
             ((ClassMapping)classMap).Id = idMapping;        
         }
 

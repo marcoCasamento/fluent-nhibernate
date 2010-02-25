@@ -36,13 +36,8 @@ namespace FluentNHibernate.Mapping
             var mapping = new ManyToOneMapping(attributes.Clone());
 
             mapping.ContainingEntityType = entity;
-            mapping.Member = property;
-
-            if (!mapping.IsSpecified(Attr.Name))
-                mapping.Name = property.Name;
-
-            if (!mapping.IsSpecified(Attr.Class))
-                mapping.SetDefaultValue(Attr.Class, new TypeReference(typeof(TOther)));
+            mapping.SetMember(property);
+            mapping.Class = typeof(TOther).ToReference();
 
             if (columns.Count == 0)
                 mapping.AddDefaultColumn(CreateColumn(property.Name + "_id"));

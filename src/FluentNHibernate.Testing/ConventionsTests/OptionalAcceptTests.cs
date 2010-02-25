@@ -4,6 +4,7 @@ using FluentNHibernate.Conventions.Inspections;
 using FluentNHibernate.Conventions.Instances;
 using FluentNHibernate.MappingModel;
 using FluentNHibernate.MappingModel.ClassBased;
+using FluentNHibernate.Testing.AutoMapping.Apm.Conventions;
 using FluentNHibernate.Testing.Utils;
 using FluentNHibernate.Visitors;
 using NUnit.Framework;
@@ -29,7 +30,7 @@ namespace FluentNHibernate.Testing.ConventionsTests
         {
             conventions.Add<ConventionWithFailingAccept>();
 
-            var mapping = new ClassMapping();
+            var mapping = new ClassMapping(typeof(Target));
             
             visitor.ProcessClass(mapping);
 
@@ -41,7 +42,7 @@ namespace FluentNHibernate.Testing.ConventionsTests
         {
             conventions.Add<ConventionWithSuccessfulAccept>();
 
-            var mapping = new ClassMapping();
+            var mapping = new ClassMapping(typeof(Target));
 
             visitor.ProcessClass(mapping);
 
@@ -53,7 +54,7 @@ namespace FluentNHibernate.Testing.ConventionsTests
         {
             conventions.Add<ConventionWithNoAccept>();
 
-            var mapping = new ClassMapping();
+            var mapping = new ClassMapping(typeof(Target));
 
             visitor.ProcessClass(mapping);
 

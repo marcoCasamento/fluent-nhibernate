@@ -1,4 +1,5 @@
 using FluentNHibernate.MappingModel.Collections;
+using FluentNHibernate.Testing.AutoMapping.Apm.Conventions;
 using FluentNHibernate.Testing.Utils;
 using NUnit.Framework;
 using FluentNHibernate.MappingModel.ClassBased;
@@ -10,7 +11,7 @@ namespace FluentNHibernate.Testing.MappingModel.Defaults
         [Test]
         public void MutableShouldBeTrueByDefaultOnClassMapping()
         {
-            var mapping = new ClassMapping();
+            var mapping = new ClassMapping(typeof(Target));
             mapping.Mutable.ShouldBeTrue();
         }
 

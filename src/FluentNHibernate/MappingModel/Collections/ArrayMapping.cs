@@ -10,18 +10,19 @@ namespace FluentNHibernate.MappingModel.Collections
     {
         public IIndexMapping Index
         {
-            get { return attributes.Get<IIndexMapping>(Attr.Index); }
-            set { attributes.Set(Attr.Index, value); }
+            get { return (IIndexMapping)GetAttribute(Attr.Index); }
+            set { SetAttribute(Attr.Index, value); }
         }
 
         public ArrayMapping()
-            : this(new AttributeStore())
+            : this(null)
         {}
 
         public ArrayMapping(AttributeStore underlyingStore)
             : base(underlyingStore)
         {
-            attributes = underlyingStore.Clone();
+            if (underlyingStore != null)
+                ReplaceAttributes(underlyingStore);
         }
 
         public override void AcceptVisitor(IMappingModelVisitor visitor)
@@ -39,29 +40,5 @@ namespace FluentNHibernate.MappingModel.Collections
 			get { return null; }
     		set { /* no-op */  }
     	}
-
-        public bool Equals(ArrayMapping other)
-        {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-            return base.Equals(other) && Equals(other.attributes, attributes);
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            return Equals(obj as ArrayMapping);
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                {
-                    return (base.GetHashCode() * 397) ^ (attributes != null ? attributes.GetHashCode() : 0);
-                }
-            }
-        }
     }
 }

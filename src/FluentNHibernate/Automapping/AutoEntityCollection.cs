@@ -7,13 +7,11 @@ namespace FluentNHibernate.Automapping
 {
     public class AutoEntityCollection : IAutoMapper
     {
-        readonly AutoMappingExpressions expressions;
         readonly AutoKeyMapper keys;
-        AutoCollectionCreator collections;
+        readonly AutoCollectionCreator collections;
 
         public AutoEntityCollection(AutoMappingExpressions expressions)
         {
-            this.expressions = expressions;
             keys = new AutoKeyMapper(expressions);
             collections = new AutoCollectionCreator();
         }
@@ -32,8 +30,7 @@ namespace FluentNHibernate.Automapping
             var mapping = collections.CreateCollectionMapping(property.PropertyType);
 
             mapping.ContainingEntityType = classMap.Type;
-            mapping.Member = property;
-            mapping.SetDefaultValue(Attr.Name, property.Name);
+            mapping.SetMember(property);
 
             SetRelationship(property, classMap, mapping);
             keys.SetKey(property, classMap, mapping);
@@ -43,13 +40,11 @@ namespace FluentNHibernate.Automapping
 
         private void SetRelationship(Member property, ClassMappingBase classMap, ICollectionMapping mapping)
         {
-            var relationship = new OneToManyMapping
+            mapping.Relationship = new OneToManyMapping
             {
                 Class = new TypeReference(property.PropertyType.GetGenericArguments()[0]),
                 ContainingEntityType = classMap.Type
             };
-
-            mapping.SetDefaultValue(Attr.Relationship, relationship);
         }
     }
 }

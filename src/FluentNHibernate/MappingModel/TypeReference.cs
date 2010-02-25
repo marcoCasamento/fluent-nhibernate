@@ -174,4 +174,12 @@ namespace FluentNHibernate.MappingModel
             return !(original == other);
         }
     }
+
+    public static class TypeReferenceExtensions
+    {
+        public static TypeReference ToReference(this Type type)
+        {
+            return new TypeReference(type);
+        }
+    }
 }

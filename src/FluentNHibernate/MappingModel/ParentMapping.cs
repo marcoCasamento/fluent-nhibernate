@@ -6,15 +6,14 @@ namespace FluentNHibernate.MappingModel
 {
     public class ParentMapping : MappingBase
     {
-        private readonly AttributeStore attributes;
-
         public ParentMapping()
-            : this(new AttributeStore())
+            : this(null)
         {}
 
         protected ParentMapping(AttributeStore underlyingStore)
         {
-            attributes = underlyingStore.Clone();
+            if (underlyingStore != null)
+                ReplaceAttributes(underlyingStore);
         }
 
         public override void AcceptVisitor(IMappingModelVisitor visitor)
@@ -24,21 +23,11 @@ namespace FluentNHibernate.MappingModel
 
         public string Name
         {
-            get { return attributes.Get(Attr.Name); }
-            set { attributes.Set(Attr.Name, value); }
+            get { return (string)GetAttribute(Attr.Name); }
+            set { SetAttribute(Attr.Name, value); }
         }
 
         public Type ContainingEntityType { get; set; }
-
-        public override bool IsSpecified(Attr property)
-        {
-            return attributes.HasUserValue(property);
-        }
-
-        public bool HasValue(Attr property)
-        {
-            return attributes.HasAnyValue(property);
-        }
 
         public override bool Equals(object obj)
         {
@@ -49,14 +38,14 @@ namespace FluentNHibernate.MappingModel
 
         public bool Equals(ParentMapping other)
         {
-            return Equals(other.attributes, attributes) && Equals(other.ContainingEntityType, ContainingEntityType);
+            return base.Equals(other) && Equals(other.ContainingEntityType, ContainingEntityType);
         }
 
         public override int GetHashCode()
         {
             unchecked
             {
-                return ((attributes != null ? attributes.GetHashCode() : 0) * 397) ^
+                return (base.GetHashCode() * 397) ^
                     (ContainingEntityType != null ? ContainingEntityType.GetHashCode() : 0);
             }
         }

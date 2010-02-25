@@ -48,16 +48,6 @@ namespace FluentNHibernate.MappingModel.Collections
 
         public Type ContainingEntityType { get; set; }
 
-        public override bool IsSpecified(Attr property)
-        {
-            return attributes.HasUserValue(property);
-        }
-
-        public bool HasValue(Attr property)
-        {
-            return attributes.HasAnyValue(property);
-        }
-
         public bool Equals(OneToManyMapping other)
         {
             if (ReferenceEquals(null, other)) return false;

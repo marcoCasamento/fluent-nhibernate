@@ -1,4 +1,6 @@
 using System;
+using FluentNHibernate.Mapping;
+using FluentNHibernate.MappingModel.Collections;
 using FluentNHibernate.Utils;
 using FluentNHibernate.Visitors;
 
@@ -6,6 +8,9 @@ namespace FluentNHibernate.MappingModel
 {
     public class PropertyMapping : ColumnBasedMappingBase
     {
+        private readonly MemberTypeSelector memberTypeSelector = new MemberTypeSelector();
+        private readonly MemberNameFormatter memberNameFormatter = new MemberNameFormatter();
+
         public PropertyMapping()
             : this(new AttributeStore())
         {}
@@ -26,59 +31,66 @@ namespace FluentNHibernate.MappingModel
 
         public string Name
         {
-            get { return attributes.Get(Attr.Name); }
-            set { attributes.Set(Attr.Name, value); }
+            get { return (string)GetAttribute(Attr.Name); }
+            set { SetAttribute(Attr.Name, value); }
         }
 
         public string Access
         {
-            get { return attributes.Get(Attr.Access); }
-            set { attributes.Set(Attr.Access, value); }
+            get { return (string)GetAttribute(Attr.Access); }
+            set { SetAttribute(Attr.Access, value); }
         }
 
         public bool Insert
         {
-            get { return attributes.Get<bool>(Attr.Insert); }
-            set { attributes.Set(Attr.Insert, value); }
+            get { return (bool)GetAttribute(Attr.Insert); }
+            set { SetAttribute(Attr.Insert, value); }
         }
 
         public bool Update
         {
-            get { return attributes.Get<bool>(Attr.Update); }
-            set { attributes.Set(Attr.Update, value); }
+            get { return (bool)GetAttribute(Attr.Update); }
+            set { SetAttribute(Attr.Update, value); }
         }
 
         public string Formula
         {
-            get { return attributes.Get(Attr.Formula); }
-            set { attributes.Set(Attr.Formula, value); }
+            get { return (string)GetAttribute(Attr.Formula); }
+            set { SetAttribute(Attr.Formula, value); }
         }
 
         public bool Lazy
         {
-            get { return attributes.Get<bool>(Attr.Lazy); }
-            set { attributes.Set(Attr.Lazy, value); }
+            get { return (bool)GetAttribute(Attr.Lazy); }
+            set { SetAttribute(Attr.Lazy, value); }
         }
 
         public bool OptimisticLock
         {
-            get { return attributes.Get<bool>(Attr.OptimisticLock); }
-            set { attributes.Set(Attr.OptimisticLock, value); }
+            get { return (bool)GetAttribute(Attr.OptimisticLock); }
+            set { SetAttribute(Attr.OptimisticLock, value); }
         }
 
         public string Generated
         {
-            get { return attributes.Get(Attr.Generated); }
-            set { attributes.Set(Attr.Generated, value); }
+            get { return (string)GetAttribute(Attr.Generated); }
+            set { SetAttribute(Attr.Generated, value); }
         }
 
         public TypeReference Type
         {
-            get { return attributes.Get<TypeReference>(Attr.Type); }
-            set { attributes.Set(Attr.Type, value); }
+            get { return (TypeReference)GetAttribute(Attr.Type); }
+            set { SetAttribute(Attr.Type, value); }
         }
 
-        public Member Member { get; set; }
+        public Member Member { get; private set; }
+
+        public void SetMember(Member member)
+        {
+            Member = member;
+            SetDefaultAttribute(Attr.Name, memberNameFormatter.Format(member));
+            SetDefaultAttribute(Attr.Type, memberTypeSelector.GetType(member));
+        }
 
         public bool Equals(PropertyMapping other)
         {

@@ -71,10 +71,9 @@ namespace FluentNHibernate.Automapping
                 if (isDiscriminated && !discriminatorSet && mapping is ClassMapping)
                 {
                     var discriminatorColumn = expressions.DiscriminatorColumn(classType);
-                    var discriminator = new DiscriminatorMapping
+                    var discriminator = new DiscriminatorMapping(typeof(string).ToReference())
                     {
                         ContainingEntityType = classType,
-                        Type = new TypeReference(typeof(string))
                     };
                     discriminator.AddDefaultColumn(new ColumnMapping { Name = discriminatorColumn });
 
@@ -152,7 +151,7 @@ namespace FluentNHibernate.Automapping
 
         public ClassMapping Map(Type classType, List<AutoMapType> types)
         {
-            var classMap = new ClassMapping { Type = classType };
+            var classMap = new ClassMapping(classType);
 
             mappingTypes = types;
             return (ClassMapping)MergeMap(classType, classMap, new List<string>());

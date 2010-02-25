@@ -6,6 +6,7 @@ using FluentNHibernate.MappingModel;
 using FluentNHibernate.MappingModel.ClassBased;
 using FluentNHibernate.MappingModel.Collections;
 using FluentNHibernate.MappingModel.Identity;
+using FluentNHibernate.Testing.AutoMapping.Apm.Conventions;
 using FluentNHibernate.Testing.Utils;
 using NUnit.Framework;
 
@@ -20,7 +21,7 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         [SetUp]
         public void CreateDsl()
         {
-            mapping = new ClassMapping();
+            mapping = new ClassMapping(typeof(Target));
             inspector = new ClassInspector(mapping);
         }
 
@@ -177,7 +178,7 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         [Test]
         public void DiscriminatorMapped()
         {
-            mapping.Discriminator = new DiscriminatorMapping();
+            mapping.Discriminator = new DiscriminatorMapping(typeof(object).ToReference());
             mapping.Discriminator.Insert = true;
             inspector.Discriminator.Insert.ShouldBeTrue();
         }
@@ -185,7 +186,7 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         [Test]
         public void DiscriminatorIsSet()
         {
-            mapping.Discriminator = new DiscriminatorMapping();
+            mapping.Discriminator = new DiscriminatorMapping(typeof(object).ToReference());
             mapping.Discriminator.Insert = true;
             inspector.IsSet(Attr.Discriminator)
                 .ShouldBeTrue();

@@ -8,13 +8,15 @@ namespace FluentNHibernate.MappingModel
 {
     public class DiscriminatorMapping : ColumnBasedMappingBase
     {
-        public DiscriminatorMapping()
-            : this(new AttributeStore())
+        public DiscriminatorMapping(TypeReference discriminatorType)
+            : this(null, discriminatorType)
         {}
 
-        public DiscriminatorMapping(AttributeStore underlyingStore)
+        public DiscriminatorMapping(AttributeStore underlyingStore, TypeReference discriminatorType)
             : base(underlyingStore)
-        {}
+        {
+            SetDefaultAttribute(Attr.Type, discriminatorType);
+        }
 
         public override void AcceptVisitor(IMappingModelVisitor visitor)
         {
@@ -25,26 +27,26 @@ namespace FluentNHibernate.MappingModel
 
         public bool Force
         {
-            get { return attributes.Get<bool>(Attr.Force); }
-            set { attributes.Set(Attr.Force, value); }
+            get { return (bool)GetAttribute(Attr.Force); }
+            set { SetAttribute(Attr.Force, value); }
         }
 
         public bool Insert
         {
-            get { return attributes.Get<bool>(Attr.Insert); }
-            set { attributes.Set(Attr.Insert, value); }
+            get { return (bool)GetAttribute(Attr.Insert); }
+            set { SetAttribute(Attr.Insert, value); }
         }
 
         public string Formula
         {
-            get { return attributes.Get(Attr.Formula); }
-            set { attributes.Set(Attr.Formula, value); }
+            get { return (string)GetAttribute(Attr.Formula); }
+            set { SetAttribute(Attr.Formula, value); }
         }
 
         public TypeReference Type
         {
-            get { return attributes.Get<TypeReference>(Attr.Type); }
-            set { attributes.Set(Attr.Type, value); }
+            get { return (TypeReference)GetAttribute(Attr.Type); }
+            set { SetAttribute(Attr.Type, value); }
         }
 
         public Type ContainingEntityType { get; set; }
@@ -55,7 +57,7 @@ namespace FluentNHibernate.MappingModel
             if (ReferenceEquals(this, other)) return true;
             return Equals(other.ContainingEntityType, ContainingEntityType) &&
                 other.columns.ContentEquals(columns) &&
-                Equals(other.attributes, attributes);
+                base.Equals(other);
         }
 
         public override bool Equals(object obj)
@@ -70,7 +72,7 @@ namespace FluentNHibernate.MappingModel
         {
             unchecked
             {
-                return ((ContainingEntityType != null ? ContainingEntityType.GetHashCode() : 0) * 397) ^ ((columns != null ? columns.GetHashCode() : 0) * 397) ^ (attributes != null ? attributes.GetHashCode() : 0);
+                return ((ContainingEntityType != null ? ContainingEntityType.GetHashCode() : 0) * 397) ^ ((columns != null ? columns.GetHashCode() : 0) * 397) ^ base.GetHashCode();
             }
         }
     }

@@ -28,12 +28,16 @@ namespace FluentNHibernate.MappingModel.Collections
         bool Generic { get; set; }
         KeyMapping Key { get; set; }
         ICollectionRelationshipMapping Relationship { get; set; }
-        Member Member { get; set;  }
+        Member Member { get; }
         ElementMapping Element { get; set; }
         CompositeElementMapping CompositeElement { get; set; }
         Type ContainingEntityType { get; set; }
         Type ChildType { get; set; }
         ICollectionMapping OtherSide { get; set; }
         IList<FilterMapping> Filters { get; }
+
+        void SetTable(string table, SetMode mode);
+        void SetMember(Member member);
+        bool HasValue(Attr attribute);
     }
 }

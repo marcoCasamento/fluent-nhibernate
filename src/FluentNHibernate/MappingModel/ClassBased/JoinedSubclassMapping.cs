@@ -114,24 +114,6 @@ namespace FluentNHibernate.MappingModel.ClassBased
         {
             get { return attributes.Get(Attr.EntityName); }
             set { attributes.Set(Attr.EntityName, value); }
-<<<<<<< Updated upstream
-        }
-
-        public override bool IsSpecified(Attr property)
-        {
-            return attributes.HasUserValue(property);
-        }
-
-        public bool HasValue(Attr property)
-        {
-            return attributes.HasAnyValue(property);
-        }
-
-        public void SetDefaultValue<TResult>(Attr property, TResult value)
-        {
-            attributes.SetDefault(property, value);
-=======
->>>>>>> Stashed changes
         }
 
         public void OverrideAttributes(AttributeStore store)

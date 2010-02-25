@@ -31,12 +31,8 @@ namespace FluentNHibernate.Mapping
             var mapping = new OneToOneMapping(attributes.Clone());
 
             mapping.ContainingEntityType = entity;
-
-            if (!mapping.IsSpecified(Attr.Class))
-                mapping.SetDefaultValue(Attr.Class, new TypeReference(typeof(TOther)));
-
-            if (!mapping.IsSpecified(Attr.Name))
-                mapping.SetDefaultValue(Attr.Name, property.Name);
+            mapping.SetMember(property);
+            mapping.Class = new TypeReference(typeof(TOther));
 
             return mapping;
         }

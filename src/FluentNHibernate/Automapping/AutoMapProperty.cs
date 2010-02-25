@@ -54,11 +54,13 @@ namespace FluentNHibernate.Automapping
                     if (acceptance != null)
                         acceptance.Accept(criteria);
 
-                    return criteria.Matches(new PropertyInspector(new PropertyMapping
+                    var mapping = new PropertyMapping
                     {
                         Type = new TypeReference(property.PropertyType),
-                        Member = property
-                    }));
+                    };
+                    mapping.SetMember(property);
+
+                    return criteria.Matches(new PropertyInspector(mapping));
                 });
 
             return conventions.FirstOrDefault() != null;
@@ -81,8 +83,8 @@ namespace FluentNHibernate.Automapping
             var mapping = new PropertyMapping
             {
                 ContainingEntityType = type,
-                Member = property
             };
+            mapping.SetMember(property);
 
             var columnName = property.Name;
             
@@ -91,27 +93,7 @@ namespace FluentNHibernate.Automapping
 
             mapping.AddDefaultColumn(new ColumnMapping { Name = columnName });
 
-            if (!mapping.IsSpecified(Attr.Name))
-                mapping.Name = mapping.Member.Name;
-
-            if (!mapping.IsSpecified(Attr.Type))
-                mapping.SetDefaultValue(Attr.Type, GetDefaultType(property));
-
             return mapping;
         }
-
-        private TypeReference GetDefaultType(Member property)
-        {
-            var type = new TypeReference(property.PropertyType);
-
-            if (property.PropertyType.IsEnum())
-                type = new TypeReference(typeof(GenericEnumMapper<>).MakeGenericType(property.PropertyType));
-
-            if (property.PropertyType.IsNullable() && property.PropertyType.IsEnum())
-                type = new TypeReference(typeof(GenericEnumMapper<>).MakeGenericType(property.PropertyType.GetGenericArguments()[0]));
-
-            return type;
-        }
-
     }
 }

@@ -8,19 +8,20 @@ namespace FluentNHibernate.MappingModel.Identity
 {
     public class CompositeIdMapping : MappingBase, IIdentityMapping
     {
-        private readonly AttributeStore attributes;
         private readonly IList<KeyPropertyMapping> keyProperties = new List<KeyPropertyMapping>();
         private readonly IList<KeyManyToOneMapping> keyManyToOnes = new List<KeyManyToOneMapping>();
 
         public CompositeIdMapping()
-            : this(new AttributeStore())
+            : this(null)
         {}
 
         public CompositeIdMapping(AttributeStore underlyingStore)
         {
-            attributes = underlyingStore.Clone();
-            attributes.SetDefault(Attr.Mapped, false);
-            attributes.SetDefault(Attr.UnsavedValue, "undefined");
+            if (underlyingStore != null)
+                ReplaceAttributes(underlyingStore);
+
+            SetDefaultAttribute(Attr.Mapped, false);
+            SetDefaultAttribute(Attr.UnsavedValue, "undefined");
         }
 
         public override void AcceptVisitor(IMappingModelVisitor visitor)
@@ -36,32 +37,32 @@ namespace FluentNHibernate.MappingModel.Identity
 
         public string Name
         {
-            get { return attributes.Get(Attr.Name); }
-            set { attributes.Set(Attr.Name, value); }
+            get { return (string)GetAttribute(Attr.Name); }
+            set { SetAttribute(Attr.Name, value); }
         }
 
         public string Access
         {
-            get { return attributes.Get(Attr.Access); }
-            set { attributes.Set(Attr.Access, value); }
+            get { return (string)GetAttribute(Attr.Access); }
+            set { SetAttribute(Attr.Access, value); }
         }
 
         public bool Mapped
         {
-            get { return attributes.Get<bool>(Attr.Mapped); }
-            set { attributes.Set(Attr.Mapped, value); }
+            get { return (bool)GetAttribute(Attr.Mapped); }
+            set { SetAttribute(Attr.Mapped, value); }
         }
 
         public TypeReference Class
         {
-            get { return attributes.Get<TypeReference>(Attr.Class); }
-            set { attributes.Set(Attr.Class, value); }
+            get { return (TypeReference)GetAttribute(Attr.Class); }
+            set { SetAttribute(Attr.Class, value); }
         }
 
         public string UnsavedValue
         {
-            get { return attributes.Get(Attr.UnsavedValue); }
-            set { attributes.Set(Attr.UnsavedValue, value); }
+            get { return (string)GetAttribute(Attr.UnsavedValue); }
+            set { SetAttribute(Attr.UnsavedValue, value); }
         }
 
         public IEnumerable<KeyPropertyMapping> KeyProperties
@@ -86,21 +87,11 @@ namespace FluentNHibernate.MappingModel.Identity
             keyManyToOnes.Add(mapping);
         }
 
-        public override bool IsSpecified(Attr property)
-        {
-            return attributes.HasUserValue(property);
-        }
-
-        public bool HasValue(Attr property)
-        {
-            return attributes.HasAnyValue(property);
-        }
-
         public bool Equals(CompositeIdMapping other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return Equals(other.attributes, attributes) &&
+            return base.Equals(other) &&
                 other.keyProperties.ContentEquals(keyProperties) &&
                 other.keyManyToOnes.ContentEquals(keyManyToOnes) &&
                 Equals(other.ContainingEntityType, ContainingEntityType);
@@ -118,7 +109,7 @@ namespace FluentNHibernate.MappingModel.Identity
         {
             unchecked
             {
-                int result = (attributes != null ? attributes.GetHashCode() : 0);
+                int result = base.GetHashCode();
                 result = (result * 397) ^ (keyProperties != null ? keyProperties.GetHashCode() : 0);
                 result = (result * 397) ^ (keyManyToOnes != null ? keyManyToOnes.GetHashCode() : 0);
                 result = (result * 397) ^ (ContainingEntityType != null ? ContainingEntityType.GetHashCode() : 0);

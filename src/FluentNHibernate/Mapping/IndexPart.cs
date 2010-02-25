@@ -10,12 +10,15 @@ namespace FluentNHibernate.Mapping
     public class IndexPart
     {
         private readonly Type entity;
-        private readonly List<string> columns = new List<string>();
+        private readonly DefaultableList<string> columns = new DefaultableList<string>();
         private readonly AttributeStore attributes = new AttributeStore();
 
-        public IndexPart(Type entity)
+        public IndexPart(Type entity, string defaultColumnName, Type defaultIndexType)
         {
             this.entity = entity;
+
+            attributes.SetDefault(Attr.Type, new TypeReference(defaultIndexType));
+            columns.AddDefault(defaultColumnName);
         }
 
         public IndexPart Column(string indexColumnName)
@@ -30,11 +33,11 @@ namespace FluentNHibernate.Mapping
             return this;
         }
 
-	public IndexPart Type(Type type)
-	{
+        public IndexPart Type(Type type)
+        {
             attributes.Set(Attr.Type, new TypeReference(type));
             return this;
-	}
+        }
 
         public IndexMapping GetIndexMapping()
         {
@@ -42,7 +45,8 @@ namespace FluentNHibernate.Mapping
 
             mapping.ContainingEntityType = entity;
 
-            columns.Each(x => mapping.AddColumn(new ColumnMapping { Name = x }));
+            columns.Defaults.Each(x => mapping.AddDefaultColumn(new ColumnMapping { Name = x }));
+            columns.UserDefined.Each(x => mapping.AddColumn(new ColumnMapping { Name = x }));
 
             return mapping;
         }

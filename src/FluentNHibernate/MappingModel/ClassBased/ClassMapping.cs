@@ -7,15 +7,16 @@ namespace FluentNHibernate.MappingModel.ClassBased
 {
     public class ClassMapping : ClassMappingBase
     {
-        public ClassMapping()
-            : this(new AttributeStore())
+        public ClassMapping(Type entityType)
+            : this(null, entityType)
         {}
 
-        public ClassMapping(AttributeStore store)
+        public ClassMapping(AttributeStore store, Type entityType)
         {
             if (store != null)
                 ReplaceAttributes(store);
-            
+
+            Type = entityType;
             SetDefaultAttribute(Attr.Mutable, true);
             SetDefaultAttribute(Attr.Name, Type.AssemblyQualifiedName);
             SetDefaultAttribute(Attr.Table, GetDefaultTableName(Type));

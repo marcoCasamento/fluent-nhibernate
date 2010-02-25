@@ -9,7 +9,7 @@ namespace FluentNHibernate.MappingModel
 
         public abstract void AcceptVisitor(IMappingModelVisitor visitor);
         
-        public bool IsSpecified(Attr property)
+        public virtual bool IsSpecified(Attr property)
         {
             return attributes.HasUserValue(property);
         }
@@ -22,6 +22,11 @@ namespace FluentNHibernate.MappingModel
         protected object GetAttribute(Attr attribute)
         {
             return attributes.Get<object>(attribute);
+        }
+
+        protected TReturn GetAttribute<TReturn>(Attr attribute)
+        {
+            return attributes.Get<TReturn>(attribute);
         }
 
         protected void SetAttribute<T>(Attr attribute, T value)
