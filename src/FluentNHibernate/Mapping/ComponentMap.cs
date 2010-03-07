@@ -24,9 +24,14 @@ namespace FluentNHibernate.Mapping
             return new ExternalComponentMapping(ComponentType.Component, attributes.CloneInner());
         }
 
-        ExternalComponentMapping IExternalComponentMappingProvider.GetComponentMapping()
+        IUserDefinedMapping IMappingProvider.GetUserDefinedMappings()
         {
-            return (ExternalComponentMapping)CreateComponentMapping();
+            return new FluentMapUserDefinedMappings(typeof(T), CreateComponentMapping());
+        }
+
+        public HibernateMapping GetHibernateMapping()
+        {
+            throw new NotImplementedException();
         }
 
         Type IExternalComponentMappingProvider.Type

@@ -28,8 +28,10 @@ namespace FluentNHibernate.Mapping
             }
         }
 
-        SubclassMapping IIndeterminateSubclassMappingProvider.GetSubclassMapping(SubclassMapping mapping)
+        IUserDefinedMapping IMappingProvider.GetUserDefinedMappings()
         {
+            var mapping = new SubclassMapping(SubclassType.Unknown);
+
             GenerateNestedSubclasses(mapping);
 
             attributes.SetDefault(x => x.Type, typeof(T));
@@ -67,15 +69,21 @@ namespace FluentNHibernate.Mapping
             foreach (var any in anys)
                 mapping.AddAny(any.GetAnyMapping());
 
-            return mapping;
+            return new FluentMapUserDefinedMappings(typeof(T), mapping);
+        }
+
+        public HibernateMapping GetHibernateMapping()
+        {
+            throw new NotImplementedException();
         }
 
         private void GenerateNestedSubclasses(SubclassMapping mapping)
         {
             foreach (var subclassType in indetermineateSubclasses.Keys)
             {
-                var emptySubclassMapping = new SubclassMapping(mapping.SubclassType);
-                var subclassMapping = indetermineateSubclasses[subclassType].GetSubclassMapping(emptySubclassMapping);
+                var userMappings = indetermineateSubclasses[subclassType].GetUserDefinedMappings();
+                var subclassMapping = (SubclassMapping)userMappings.Mapping;
+                subclassMapping.SubclassType = mapping.SubclassType;
 
                 mapping.AddSubclass(subclassMapping);
             }

@@ -24,11 +24,6 @@ namespace FluentNHibernate.Automapping
             DiscriminateSubClassesOnColumn(column);
         }
 
-        IEnumerable<string> IMappingProvider.GetIgnoredProperties()
-        {
-            return mappedProperties;
-        }
-
         void IAutoClasslike.AlterModel(ClassMappingBase mapping)
         {
             mapping.MergeAttributes(attributes.CloneInner());

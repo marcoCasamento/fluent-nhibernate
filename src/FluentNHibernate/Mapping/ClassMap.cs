@@ -42,7 +42,7 @@ namespace FluentNHibernate.Mapping
             Cache = new CachePart(typeof(T));
         }
 
-        ClassMapping IMappingProvider.GetClassMapping()
+        IUserDefinedMapping IMappingProvider.GetUserDefinedMappings()
         {
 		    var mapping = new ClassMapping(attributes.CloneInner());
 
@@ -102,7 +102,7 @@ namespace FluentNHibernate.Mapping
 
             mapping.Tuplizer = tuplizerMapping;
 
-            return mapping;
+            return new FluentMapUserDefinedMappings(typeof(T), mapping);
         }
 
         private string GetDefaultTableName()
@@ -132,11 +132,6 @@ namespace FluentNHibernate.Mapping
                 hibernateMapping.AddImport(import.GetImportMapping());
 
             return hibernateMapping;
-        }
-
-        IEnumerable<string> IMappingProvider.GetIgnoredProperties()
-        {
-            return new string[0];
         }
 
         public HibernateMappingPart HibernateMapping

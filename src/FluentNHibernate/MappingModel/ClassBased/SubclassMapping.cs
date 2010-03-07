@@ -6,7 +6,7 @@ namespace FluentNHibernate.MappingModel.ClassBased
 {
     public class SubclassMapping : ClassMappingBase
     {
-        public SubclassType SubclassType { get; private set; }
+        public SubclassType SubclassType { get; set; }
         private AttributeStore<SubclassMapping> attributes;
 
         public SubclassMapping(SubclassType subclassType)
@@ -184,6 +184,11 @@ namespace FluentNHibernate.MappingModel.ClassBased
                     return (base.GetHashCode() * 397) ^ (attributes != null ? attributes.GetHashCode() : 0);
                 }
             }
+        }
+
+        public override string ToString()
+        {
+            return string.Format("SubclassMapping({0})", Type.Name);
         }
     }
 }

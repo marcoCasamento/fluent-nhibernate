@@ -115,7 +115,7 @@ namespace FluentNHibernate.Automapping
             return (IAutoClasslike)subclass;
         }
 
-        public ClassMapping GetClassMapping()
+        public IUserDefinedMapping GetUserDefinedMappings()
         {
             throw new NotImplementedException();
         }
