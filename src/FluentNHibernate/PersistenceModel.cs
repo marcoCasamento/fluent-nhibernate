@@ -158,6 +158,8 @@ namespace FluentNHibernate
                     var hbm = classMap.GetHibernateMapping();
                     var model = userMappings.CreateEmptyModel(factory);
 
+                    userMappings.ApplyCustomisations();
+
                     hbm.AddClass((ClassMapping)model);
 
                     add(hbm);
@@ -329,6 +331,11 @@ namespace FluentNHibernate
             public IMapping CreateEmptyModel(IMappingFactory factory)
             {
                 return classMapping;
+            }
+
+            public void ApplyCustomisations()
+            {
+                
             }
         }
     }

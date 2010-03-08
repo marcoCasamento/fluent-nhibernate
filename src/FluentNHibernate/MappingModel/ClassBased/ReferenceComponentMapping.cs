@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using FluentNHibernate.Mapping;
 using FluentNHibernate.MappingModel.Collections;
 using FluentNHibernate.Visitors;
 
@@ -242,6 +243,11 @@ namespace FluentNHibernate.MappingModel.ClassBased
         }
 
         public void AddChild(IMapping child)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UpdateValues(IEnumerable<KeyValuePair<Attr, object>> values)
         {
             throw new NotImplementedException();
         }

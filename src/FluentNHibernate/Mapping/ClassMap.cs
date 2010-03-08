@@ -110,6 +110,7 @@ namespace FluentNHibernate.Mapping
         void SetValue(Attr key, object value);
         void RemoveChildrenMatching(Predicate<IMappingStructure> predicate);
         IMapping CreateMappingNode(IMappingFactory factory);
+        void ApplyCustomisations();
     }
 
     public interface IMappingStructure<T> : IMappingStructure
@@ -122,10 +123,16 @@ namespace FluentNHibernate.Mapping
     {
         readonly Dictionary<Attr, object> values = new Dictionary<Attr, object>();
         readonly List<IMappingStructure> children = new List<IMappingStructure>();
+        T node;
 
         IMapping IMappingStructure.CreateMappingNode(IMappingFactory factory)
         {
-            return CreateMappingNode(factory);
+            return node = CreateMappingNode(factory);
+        }
+
+        public void ApplyCustomisations()
+        {
+            node.UpdateValues(Values);
         }
 
         public abstract T CreateMappingNode(IMappingFactory factory);
@@ -140,7 +147,7 @@ namespace FluentNHibernate.Mapping
             children.RemoveAll(predicate);
         }
 
-        public IEnumerable<KeyValuePair<Attr, object>> Values
+        public virtual IEnumerable<KeyValuePair<Attr, object>> Values
         {
             get { return values; }
         }
@@ -231,6 +238,14 @@ namespace FluentNHibernate.Mapping
         public override ColumnMapping CreateMappingNode(IMappingFactory factory)
         {
             return factory.CreateMapping<ColumnMapping>();
+        }
+
+        public override IEnumerable<KeyValuePair<Attr, object>> Values
+        {
+            get
+            {
+                return Merge(base.Values, parent.Values);
+            }
         }
 
         /// <summary>

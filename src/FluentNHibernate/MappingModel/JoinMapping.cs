@@ -171,5 +171,10 @@ namespace FluentNHibernate.MappingModel
         {
             throw new NotImplementedException();
         }
+
+        public void UpdateValues(IEnumerable<KeyValuePair<Attr, object>> values)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

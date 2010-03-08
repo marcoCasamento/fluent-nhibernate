@@ -1,8 +1,12 @@
+using System.Collections.Generic;
+using FluentNHibernate.Mapping;
+
 namespace FluentNHibernate.MappingModel
 {
     public interface IMapping
     {
         void AddChild(IMapping child);
+        void UpdateValues(IEnumerable<KeyValuePair<Attr, object>> values);
     }
 
     /// <summary>

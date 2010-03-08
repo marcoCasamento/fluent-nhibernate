@@ -19,6 +19,7 @@ namespace FluentNHibernate
         IMappingStructure Structure { get; }
         Type Type { get; }
         IMapping CreateEmptyModel(IMappingFactory factory);
+        void ApplyCustomisations();
     }
 
     public class FluentMapUserDefinedMappings : IUserDefinedMapping
@@ -35,6 +36,11 @@ namespace FluentNHibernate
         public IMapping CreateEmptyModel(IMappingFactory factory)
         {
             return Structure.CreateMappingNode(factory);
+        }
+
+        public void ApplyCustomisations()
+        {
+            Structure.ApplyCustomisations();
         }
 
         public object CreateModelShape()

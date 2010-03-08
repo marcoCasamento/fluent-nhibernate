@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
+using FluentNHibernate.Mapping;
 using FluentNHibernate.MappingModel.Identity;
 using FluentNHibernate.Visitors;
 
@@ -253,6 +255,11 @@ namespace FluentNHibernate.MappingModel.ClassBased
         {
             if (child is CacheMapping)
                 Cache = (CacheMapping)child;
+        }
+
+        public void UpdateValues(IEnumerable<KeyValuePair<Attr, object>> values)
+        {
+            throw new NotImplementedException();
         }
     }
 }
