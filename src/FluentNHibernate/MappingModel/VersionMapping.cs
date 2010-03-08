@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using FluentNHibernate.Mapping;
 using FluentNHibernate.Utils;
 using FluentNHibernate.Visitors;
 

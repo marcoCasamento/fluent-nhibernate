@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Linq.Expressions;
+using FluentNHibernate.MappingModel;
 using FluentNHibernate.MappingModel.Identity;
 using FluentNHibernate.Utils;
 

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
-using FluentNHibernate.Mapping;
 using FluentNHibernate.Utils;
 using FluentNHibernate.Visitors;
 

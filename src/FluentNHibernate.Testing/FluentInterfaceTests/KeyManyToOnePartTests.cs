@@ -1,4 +1,5 @@
 using FluentNHibernate.Mapping;
+using FluentNHibernate.MappingModel;
 using FluentNHibernate.MappingModel.Identity;
 using NUnit.Framework;
 

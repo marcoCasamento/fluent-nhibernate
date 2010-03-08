@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using FluentNHibernate.MappingModel;
 
 namespace FluentNHibernate.Mapping
 {

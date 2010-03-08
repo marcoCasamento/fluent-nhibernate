@@ -1,4 +1,5 @@
 using System;
+using FluentNHibernate.MappingModel;
 using FluentNHibernate.MappingModel.Identity;
 using NHibernate.Id;
 

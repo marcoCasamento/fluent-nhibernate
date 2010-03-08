@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using FluentNHibernate.MappingModel;
 using FluentNHibernate.MappingModel.ClassBased;
 
 namespace FluentNHibernate.Mapping

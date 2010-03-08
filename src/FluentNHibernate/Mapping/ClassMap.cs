@@ -12,96 +12,6 @@ using NHibernate.Persister.Entity;
 
 namespace FluentNHibernate.Mapping
 {
-    public enum Attr
-    {
-        Name,
-        Lazy,
-        Access,
-        Cascade,
-        IdType,
-        Insert,
-        Update,
-        OptimisticLock,
-        Usage,
-        Region,
-        Include,
-        Polymorphism,
-        SchemaAction,
-        DiscriminatorValue,
-        Schema,
-        Table,
-        Mutable,
-        DynamicUpdate,
-        DynamicInsert,
-        BatchSize,
-        Check,
-        Persister,
-        Proxy,
-        SelectBeforeUpdate,
-        Where,
-        Subselect,
-        EntityName,
-        Parent,
-        Unique,
-        Mapped,
-        UnsavedValue,
-        Force,
-        Formula,
-        Precision,
-        Length,
-        Scale,
-        NotNull,
-        UniqueKey,
-        Index,
-        Default,
-        Type,
-        DefaultCascade,
-        DefaultAccess,
-        AutoImport,
-        DefaultLazy,
-        Catalog,
-        Namespace,
-        Assembly,
-        Generator,
-        SqlType,
-        Rename,
-        Class,
-        Abstract,
-        Optional,
-        Inverse,
-        Key,
-        Fetch,
-        ForeignKey,
-        NotFound,
-        OrderBy,
-        PropertyRef,
-        MetaType,
-        Version,
-        EntityType,
-        Id,
-        Discriminator,
-        Cache,
-        ChildType,
-        CollectionType,
-        CompositeElement,
-        Element,
-        Generic,
-        Relationship,
-        Nullable,
-        Extends,
-        OnDelete,
-        ParentType,
-        Sort,
-        Value,
-        Constrained,
-        Generated,
-        Tuplizer,
-        Condition,
-        SPType,
-        Query,
-        Mode
-    }
-
     public interface IMappingStructure
     {
         IEnumerable<KeyValuePair<Attr, object>> Values { get; }
@@ -133,6 +43,8 @@ namespace FluentNHibernate.Mapping
         public void ApplyCustomisations()
         {
             node.UpdateValues(Values);
+
+            Children.Each(x => x.ApplyCustomisations());
         }
 
         public abstract T CreateMappingNode(IMappingFactory factory);

@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using FluentNHibernate.MappingModel;
+using NUnit.Framework;
 using FluentNHibernate.Mapping;
 using FluentNHibernate.MappingModel.Collections;
 

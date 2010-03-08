@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
-using FluentNHibernate.Mapping;
 using FluentNHibernate.Visitors;
 
 namespace FluentNHibernate.MappingModel.ClassBased
@@ -109,12 +108,10 @@ namespace FluentNHibernate.MappingModel.ClassBased
 
         public void AddChild(IMapping child)
         {
-            throw new NotImplementedException();
         }
 
         public void UpdateValues(IEnumerable<KeyValuePair<Attr, object>> values)
         {
-            throw new NotImplementedException();
         }
     }
 }

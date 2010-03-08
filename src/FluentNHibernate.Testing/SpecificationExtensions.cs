@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using FluentNHibernate.Mapping;
+using FluentNHibernate.MappingModel;
 using NUnit.Framework;
 
 namespace FluentNHibernate.Testing
