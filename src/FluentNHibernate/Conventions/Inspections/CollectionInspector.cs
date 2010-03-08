@@ -141,7 +141,7 @@ namespace FluentNHibernate.Conventions.Inspections
             get
             {
                 if (mapping.CompositeElement == null)
-                    return new CompositeElementInspector(new CompositeElementMapping());
+                    return new CompositeElementInspector(new CompositeElementMapping(ChildType));
 
                 return new CompositeElementInspector(mapping.CompositeElement);
             }

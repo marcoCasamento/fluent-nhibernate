@@ -75,7 +75,7 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         [Test]
         public void ShouldWriteProxyLazyAttribute()
         {
-            var mapping = new ManyToOneMapping();
+            var mapping = new ManyToOneMapping(null);
 
             mapping.Lazy = true;
 
@@ -122,7 +122,7 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         [Test]
         public void ShouldWriteColumns()
         {
-            var mapping = new ManyToOneMapping();
+            var mapping = new ManyToOneMapping(null);
 
             mapping.AddColumn(new ColumnMapping());
 

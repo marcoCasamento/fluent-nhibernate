@@ -1,3 +1,4 @@
+using FluentNHibernate.Automapping.TestFixtures;
 using FluentNHibernate.Mapping;
 using FluentNHibernate.MappingModel;
 using FluentNHibernate.MappingModel.ClassBased;
@@ -22,7 +23,7 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         [Test]
         public void ShouldWriteSqlUpdate()
         {
-            var mapping = new ClassMapping();
+            var mapping = new ClassMapping(typeof(ExampleClass));
 
             mapping.AddStoredProcedure(new StoredProcedureMapping("sql-update", "update ABC"));
 

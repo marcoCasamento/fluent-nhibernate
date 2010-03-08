@@ -6,11 +6,15 @@ namespace FluentNHibernate.MappingModel
 {
     public class PropertyMapping : ColumnBasedMappingBase, IMapping, IMemberMapping
     {
-        public PropertyMapping()
-            : this(new AttributeStore())
-        {}
+        readonly Member member;
 
-        public PropertyMapping(AttributeStore underlyingStore)
+        public PropertyMapping(Member member)
+            : this(new AttributeStore())
+        {
+            this.member = member;
+        }
+
+        PropertyMapping(AttributeStore underlyingStore)
             : base(underlyingStore)
         {}
 

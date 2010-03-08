@@ -8,14 +8,17 @@ namespace FluentNHibernate.MappingModel
 {
     public class ManyToOneMapping : MappingBase, IHasColumnMappings, IMapping, IMemberMapping
     {
+        readonly Member member;
         private readonly AttributeStore<ManyToOneMapping> attributes;
         private readonly IDefaultableList<ColumnMapping> columns = new DefaultableList<ColumnMapping>();
 
-        public ManyToOneMapping()
+        public ManyToOneMapping(Member member)
             : this(new AttributeStore())
-        {}
+        {
+            this.member = member;
+        }
 
-        public ManyToOneMapping(AttributeStore underlyingStore)
+        ManyToOneMapping(AttributeStore underlyingStore)
         {
             attributes = new AttributeStore<ManyToOneMapping>(underlyingStore);
         }

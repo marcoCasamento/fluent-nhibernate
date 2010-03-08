@@ -7,8 +7,14 @@ namespace FluentNHibernate.MappingModel.Identity
 {
     public class KeyManyToOneMapping : MappingBase, IMapping, IMemberMapping
     {
+        readonly Member member;
         private readonly AttributeStore<KeyManyToOneMapping> attributes = new AttributeStore<KeyManyToOneMapping>();
         private readonly IList<ColumnMapping> columns = new List<ColumnMapping>();
+
+        public KeyManyToOneMapping(Member member)
+        {
+            this.member = member;
+        }
 
         public override void AcceptVisitor(IMappingModelVisitor visitor)
         {

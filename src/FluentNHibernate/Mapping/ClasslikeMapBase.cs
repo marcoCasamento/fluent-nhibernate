@@ -118,7 +118,7 @@ namespace FluentNHibernate.Mapping
 
         protected DynamicComponentPart<IDictionary> DynamicComponent(Member property, Action<DynamicComponentPart<IDictionary>> action)
         {
-            var componentStructure = new MemberStructure<ComponentMapping>(property);
+            var componentStructure = new TypeStructure<ComponentMapping>(typeof(IDictionary));
             var part = new DynamicComponentPart<IDictionary>(componentStructure);
             
             action(part);
@@ -170,7 +170,7 @@ namespace FluentNHibernate.Mapping
         
         protected virtual ComponentPart<TComponent> Component<TComponent>(Member property, Action<ComponentPart<TComponent>> action)
         {
-            var componentStructure = new MemberStructure<ComponentMapping>(property);
+            var componentStructure = new TypeStructure<ComponentMapping>(typeof(TComponent));
             var part = new ComponentPart<TComponent>(componentStructure);
 
             action(part);

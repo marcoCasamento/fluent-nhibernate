@@ -7,16 +7,19 @@ namespace FluentNHibernate.MappingModel
 {
     public class AnyMapping : MappingBase, IMapping, IMemberMapping
     {
+        readonly Member member;
         private readonly AttributeStore<AnyMapping> attributes;
         private readonly IDefaultableList<ColumnMapping> typeColumns = new DefaultableList<ColumnMapping>();
         private readonly IDefaultableList<ColumnMapping> identifierColumns = new DefaultableList<ColumnMapping>();
         private readonly IList<MetaValueMapping> metaValues = new List<MetaValueMapping>();
 
-        public AnyMapping()
+        public AnyMapping(Member member)
             : this(new AttributeStore())
-        {}
+        {
+            this.member = member;
+        }
 
-        public AnyMapping(AttributeStore underlyingStore)
+        AnyMapping(AttributeStore underlyingStore)
         {
             attributes = new AttributeStore<AnyMapping>(underlyingStore);
 

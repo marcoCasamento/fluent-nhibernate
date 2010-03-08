@@ -239,10 +239,9 @@ namespace FluentNHibernate.Specs.Visitors
         {
             var member = expression.ToMember();
 
-            return new BagMapping
+            return new BagMapping(member)
             {
                 ContainingEntityType = typeof(T),
-                Member = member,
                 Relationship = new ManyToManyMapping(),
                 ChildType = member.PropertyType.GetGenericArguments()[0]
             };

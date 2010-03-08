@@ -25,7 +25,7 @@ namespace FluentNHibernate.Testing.ConventionsTests.AcceptanceCriteria
             acceptance.Expect(x =>
                 x.Type.Name == typeof(Record).Name);
 
-            acceptance.Matches(new PropertyInspector(new PropertyMapping
+            acceptance.Matches(new PropertyInspector(new PropertyMapping(null)
             {
                 Member = ReflectionHelper.GetMember<Record>(x => x.Age),
                 Type = new TypeReference(typeof(Record))

@@ -101,7 +101,7 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         [Test]
         public void ShouldWriteColumns()
         {
-            var mapping = new PropertyMapping();
+            var mapping = new PropertyMapping(null);
 
             mapping.AddColumn(new ColumnMapping { Name = "Column1" });
 

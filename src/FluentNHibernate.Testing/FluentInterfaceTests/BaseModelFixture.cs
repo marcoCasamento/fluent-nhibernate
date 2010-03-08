@@ -73,7 +73,7 @@ namespace FluentNHibernate.Testing.FluentInterfaceTests
 
         protected static ModelTester<ComponentPart<T>, ComponentMapping> Component<T>()
         {
-            var structure = new MemberStructure<ComponentMapping>(ReflectionHelper.GetMember<VersionTarget>(x => x.VersionNumber));
+            var structure = new TypeStructure<ComponentMapping>(typeof(T));
             return new ModelTester<ComponentPart<T>, ComponentMapping>(
                 () => new ComponentPart<T>(structure),
                 structure.CreateMappingNode);
@@ -81,7 +81,7 @@ namespace FluentNHibernate.Testing.FluentInterfaceTests
 
         protected static ModelTester<DynamicComponentPart<T>, ComponentMapping> DynamicComponent<T>()
         {
-            var structure = new MemberStructure<ComponentMapping>(ReflectionHelper.GetMember<VersionTarget>(x => x.VersionNumber));
+            var structure = new TypeStructure<ComponentMapping>(typeof(T));
             return new ModelTester<DynamicComponentPart<T>, ComponentMapping>(
                 () => new DynamicComponentPart<T>(structure),
                 structure.CreateMappingNode);

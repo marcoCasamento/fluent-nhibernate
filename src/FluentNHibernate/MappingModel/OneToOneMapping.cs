@@ -6,13 +6,16 @@ namespace FluentNHibernate.MappingModel
 {
     public class OneToOneMapping : MappingBase, IMapping, IMemberMapping
     {
+        readonly Member member;
         private readonly AttributeStore<OneToOneMapping> attributes;
 
-        public OneToOneMapping()
+        public OneToOneMapping(Member member)
             : this(new AttributeStore())
-        {}
+        {
+            this.member = member;
+        }
 
-        public OneToOneMapping(AttributeStore underlyingStore)
+        OneToOneMapping(AttributeStore underlyingStore)
         {
             attributes = new AttributeStore<OneToOneMapping>(underlyingStore);
         }

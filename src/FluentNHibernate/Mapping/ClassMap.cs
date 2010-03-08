@@ -162,7 +162,7 @@ namespace FluentNHibernate.Mapping
 
         public override T CreateMappingNode(IMappingFactory factory)
         {
-            return factory.CreateTypeMapping<T>(type, Values);
+            return factory.CreateTypeMapping<T>(type);
         }
     }
 
@@ -175,7 +175,7 @@ namespace FluentNHibernate.Mapping
     {
         public override T CreateMappingNode(IMappingFactory factory)
         {
-            return factory.CreateMapping<T>(Values);
+            return factory.CreateMapping<T>();
         }
     }
 
@@ -191,7 +191,7 @@ namespace FluentNHibernate.Mapping
 
         public override T CreateMappingNode(IMappingFactory factory)
         {
-            return factory.CreateMemberMapping<T>(member, Values);
+            return factory.CreateMemberMapping<T>(member);
         }
     }
 
@@ -206,7 +206,7 @@ namespace FluentNHibernate.Mapping
 
         public override ColumnMapping CreateMappingNode(IMappingFactory factory)
         {
-            return factory.CreateColumnMapping(Merge(parent.Values, Values));
+            return factory.CreateMapping<ColumnMapping>();
         }
 
         /// <summary>
@@ -226,22 +226,17 @@ namespace FluentNHibernate.Mapping
 
     public class DefaultMappingFactory : IMappingFactory
     {
-        public T CreateMemberMapping<T>(Member member, IEnumerable<KeyValuePair<Attr, object>> values) where T : IMemberMapping
+        public T CreateMemberMapping<T>(Member member) where T : IMemberMapping
         {
             throw new NotImplementedException();
         }
 
-        public T CreateTypeMapping<T>(Type type, IEnumerable<KeyValuePair<Attr, object>> values) where T : ITypeMapping
+        public T CreateTypeMapping<T>(Type type) where T : ITypeMapping
         {
             throw new NotImplementedException();
         }
 
-        public ColumnMapping CreateColumnMapping(IEnumerable<KeyValuePair<Attr, object>> values)
-        {
-            throw new NotImplementedException();
-        }
-
-        public T CreateMapping<T>(IEnumerable<KeyValuePair<Attr, object>> values) where T : IMapping
+        public T CreateMapping<T>() where T : IMapping
         {
             throw new NotImplementedException();
         }
@@ -249,10 +244,9 @@ namespace FluentNHibernate.Mapping
 
     public interface IMappingFactory
     {
-        T CreateMemberMapping<T>(Member member, IEnumerable<KeyValuePair<Attr, object>> values) where T : IMemberMapping;
-        T CreateTypeMapping<T>(Type type, IEnumerable<KeyValuePair<Attr, object>> values) where T : ITypeMapping;
-        ColumnMapping CreateColumnMapping(IEnumerable<KeyValuePair<Attr, object>> values);
-        T CreateMapping<T>(IEnumerable<KeyValuePair<Attr, object>> values) where T : IMapping;
+        T CreateMemberMapping<T>(Member member) where T : IMemberMapping;
+        T CreateTypeMapping<T>(Type type) where T : ITypeMapping;
+        T CreateMapping<T>() where T : IMapping;
     } 
 
     public class ClassMap<T> : ClasslikeMapBase<T>, IMappingProvider

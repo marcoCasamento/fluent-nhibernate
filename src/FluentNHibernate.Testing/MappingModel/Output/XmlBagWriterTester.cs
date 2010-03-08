@@ -1,3 +1,4 @@
+using FluentNHibernate.Automapping.TestFixtures;
 using FluentNHibernate.MappingModel;
 using FluentNHibernate.MappingModel.Collections;
 using FluentNHibernate.MappingModel.Output;
@@ -66,7 +67,7 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         [Test]
         public void ShouldNotWriteCollectionTypeWhenEmpty()
         {
-            var bagMapping = new BagMapping {CollectionType = TypeReference.Empty};
+            var bagMapping = new BagMapping(null) {CollectionType = TypeReference.Empty};
             writer.VerifyXml(bagMapping)
                 .DoesntHaveAttribute("collection-type");
         }
@@ -173,7 +174,7 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         [Test]
         public void ShouldWriteKey()
         {
-            var mapping = new BagMapping
+            var mapping = new BagMapping(null)
             {
                 Key = new KeyMapping()
             };
@@ -185,7 +186,7 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         [Test]
         public void ShouldWriteRelationshipElement()
         {
-            var mapping = new BagMapping();
+            var mapping = new BagMapping(null);
 
             mapping.Relationship = new OneToManyMapping();
 
@@ -196,7 +197,7 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         [Test]
         public void ShouldWriteCacheElement()
         {
-            var mapping = new BagMapping();
+            var mapping = new BagMapping(null);
 
             mapping.Cache = new CacheMapping();
 
@@ -207,9 +208,9 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         [Test]
         public void ShouldWriteCompositeElement()
         {
-            var mapping = new BagMapping();
+            var mapping = new BagMapping(null);
 
-            mapping.CompositeElement = new CompositeElementMapping();
+            mapping.CompositeElement = new CompositeElementMapping(typeof(ExampleClass));
 
             writer.VerifyXml(mapping)
                 .Element("composite-element").Exists();
@@ -218,7 +219,7 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         [Test]
         public void ShouldWriteElement()
         {
-            var mapping = new BagMapping();
+            var mapping = new BagMapping(null);
 
             mapping.Element = new ElementMapping();
 

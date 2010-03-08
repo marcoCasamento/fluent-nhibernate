@@ -1,3 +1,4 @@
+using FluentNHibernate.Automapping.TestFixtures;
 using FluentNHibernate.MappingModel;
 using FluentNHibernate.MappingModel.ClassBased;
 using FluentNHibernate.MappingModel.Collections;
@@ -41,7 +42,7 @@ namespace FluentNHibernate.Testing.MappingModel.Output
             var property = new DummyPropertyInfo("ComponentProperty", typeof(ComponentTarget)).ToMember();
             var instance = new ReferenceComponentMapping(ComponentType.Component, property, typeof(ComponentTarget), typeof(Target), null);
 
-            instance.AssociateExternalMapping(new ExternalComponentMapping(ComponentType.Component));
+            instance.AssociateExternalMapping(new ExternalComponentMapping(typeof(Target)));
 
             return instance;
         }
@@ -105,7 +106,7 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         {
             var mapping = CreateInstance();
 
-            mapping.AddComponent(new ComponentMapping(ComponentType.Component));
+            mapping.AddComponent(new ComponentMapping(typeof(ExampleClass)));
 
             writer.VerifyXml(mapping)
                 .Element("component").Exists();
@@ -116,7 +117,7 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         {
             var mapping = CreateInstance();
 
-            mapping.AddComponent(new ComponentMapping(ComponentType.DynamicComponent));
+            mapping.AddComponent(new ComponentMapping(typeof(ExampleClass)));
 
             writer.VerifyXml(mapping)
                 .Element("dynamic-component").Exists();
@@ -127,7 +128,7 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         {
             var mapping = CreateInstance();
 
-            mapping.AddProperty(new PropertyMapping());
+            mapping.AddProperty(new PropertyMapping(null));
 
             writer.VerifyXml(mapping)
                 .Element("property").Exists();
@@ -138,7 +139,7 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         {
             var mapping = CreateInstance();
 
-            mapping.AddReference(new ManyToOneMapping());
+            mapping.AddReference(new ManyToOneMapping(null));
 
             writer.VerifyXml(mapping)
                 .Element("many-to-one").Exists();
@@ -149,7 +150,7 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         {
             var mapping = CreateInstance();
 
-            mapping.AddOneToOne(new OneToOneMapping());
+            mapping.AddOneToOne(new OneToOneMapping(null));
 
             writer.VerifyXml(mapping)
                 .Element("one-to-one").Exists();
@@ -160,7 +161,7 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         {
             var mapping = CreateInstance();
 
-            mapping.AddAny(new AnyMapping());
+            mapping.AddAny(new AnyMapping(null));
 
             writer.VerifyXml(mapping)
                 .Element("any").Exists();
@@ -171,7 +172,7 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         {
             var mapping = CreateInstance();
 
-            mapping.AddCollection(new MapMapping());
+            mapping.AddCollection(new MapMapping(null));
 
             writer.VerifyXml(mapping)
                 .Element("map").Exists();
@@ -182,7 +183,7 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         {
             var mapping = CreateInstance();
 
-            mapping.AddCollection(new SetMapping());
+            mapping.AddCollection(new SetMapping(null));
 
             writer.VerifyXml(mapping)
                 .Element("set").Exists();
@@ -193,7 +194,7 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         {
             var mapping = CreateInstance();
 
-            mapping.AddCollection(new BagMapping());
+            mapping.AddCollection(new BagMapping(null));
 
             writer.VerifyXml(mapping)
                 .Element("bag").Exists();

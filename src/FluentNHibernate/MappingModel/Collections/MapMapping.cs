@@ -7,6 +7,7 @@ namespace FluentNHibernate.MappingModel.Collections
 {
     public class MapMapping : CollectionMappingBase, IIndexedCollectionMapping
     {
+        readonly Member member;
         private readonly AttributeStore<MapMapping> attributes;
         public IIndexMapping Index
         {
@@ -14,11 +15,13 @@ namespace FluentNHibernate.MappingModel.Collections
             set { attributes.Set(x => x.Index, value); }
         }
 
-        public MapMapping()
+        public MapMapping(Member member)
             : this(new AttributeStore())
-        {}
+        {
+            this.member = member;
+        }
 
-        public MapMapping(AttributeStore underlyingStore)
+        MapMapping(AttributeStore underlyingStore)
             : base(underlyingStore)
         {
             attributes = new AttributeStore<MapMapping>(underlyingStore);

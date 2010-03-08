@@ -30,7 +30,7 @@ namespace FluentNHibernate.Testing.ConventionsTests.AcceptanceCriteria
                      c => c.Expect(x => x.Insert, Is.Set));
 
             acceptance
-               .Matches(new PropertyInspector(new PropertyMapping { Name="Property1"}))
+               .Matches(new PropertyInspector(new PropertyMapping(null) { Name="Property1"}))
                .ShouldBeTrue();
         }
 
@@ -43,7 +43,7 @@ namespace FluentNHibernate.Testing.ConventionsTests.AcceptanceCriteria
                      c => c.Expect(x => x.Insert, Is.Set));
 
             acceptance
-               .Matches(new PropertyInspector(new PropertyMapping { Name = "Property1", Type= new TypeReference(typeof(string)), Insert = true}))
+               .Matches(new PropertyInspector(new PropertyMapping(null) { Name = "Property1", Type = new TypeReference(typeof(string)), Insert = true }))
                .ShouldBeTrue();
         }
 
@@ -56,7 +56,7 @@ namespace FluentNHibernate.Testing.ConventionsTests.AcceptanceCriteria
                      c => c.Expect(x => x.Insert, Is.Set));
 
             acceptance
-               .Matches(new PropertyInspector(new PropertyMapping()))
+               .Matches(new PropertyInspector(new PropertyMapping(null)))
                .ShouldBeFalse();
         }
 
@@ -72,7 +72,7 @@ namespace FluentNHibernate.Testing.ConventionsTests.AcceptanceCriteria
             acceptance.Any(subCriteria1, subCriteria2);
 
             acceptance
-                .Matches(new PropertyInspector(new PropertyMapping { Name = "Property1"}))
+                .Matches(new PropertyInspector(new PropertyMapping(null) { Name = "Property1" }))
                 .ShouldBeTrue();
         }
 
@@ -84,7 +84,7 @@ namespace FluentNHibernate.Testing.ConventionsTests.AcceptanceCriteria
                         c => c.Expect(x => x.Type, Is.Set));
 
             acceptance
-               .Matches(new PropertyInspector(new PropertyMapping { Name = "Property1" }))
+               .Matches(new PropertyInspector(new PropertyMapping(null) { Name = "Property1" }))
                .ShouldBeTrue();
         }
 
@@ -100,7 +100,7 @@ namespace FluentNHibernate.Testing.ConventionsTests.AcceptanceCriteria
             acceptance.Either(subCriteria1, subCriteria2);
 
             acceptance
-                .Matches(new PropertyInspector(new PropertyMapping { Name = "Property1" }))
+                .Matches(new PropertyInspector(new PropertyMapping(null) { Name = "Property1" }))
                 .ShouldBeTrue();
         }
     }

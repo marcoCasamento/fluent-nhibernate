@@ -6,11 +6,15 @@ namespace FluentNHibernate.MappingModel
 {
     public class VersionMapping : ColumnBasedMappingBase, IMapping, IMemberMapping
     {
-        public VersionMapping()
-            : this(new AttributeStore())
-        {}
+        readonly Member member;
 
-        public VersionMapping(AttributeStore underlyingStore)
+        public VersionMapping(Member member)
+            : this(new AttributeStore())
+        {
+            this.member = member;
+        }
+
+        VersionMapping(AttributeStore underlyingStore)
             : base(underlyingStore)
         {}
 

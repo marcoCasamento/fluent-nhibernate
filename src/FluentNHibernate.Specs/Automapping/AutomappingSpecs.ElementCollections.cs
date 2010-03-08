@@ -159,10 +159,7 @@ namespace FluentNHibernate.Specs.Automapping
         {
             expressions = new AutoMappingExpressions();
             step = new AutoMapOneToMany(expressions);
-            container = new ClassMapping
-            {
-                Type = FakeMembers.Type
-            };
+            container = new ClassMapping(FakeMembers.Type);
         };
 
         protected static AutoMapOneToMany step;

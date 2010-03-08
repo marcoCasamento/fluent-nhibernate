@@ -7,11 +7,15 @@ namespace FluentNHibernate.MappingModel.Identity
 {
     public class IdMapping : ColumnBasedMappingBase, IIdentityMapping, IMapping, IMemberMapping
     {
-        public IdMapping()
-            : this(new AttributeStore())
-        {}
+        readonly Member member;
 
-        public IdMapping(AttributeStore underlyingStore)
+        public IdMapping(Member member)
+            : this(new AttributeStore())
+        {
+            this.member = member;
+        }
+
+        IdMapping(AttributeStore underlyingStore)
             : base(underlyingStore)
         {}
 

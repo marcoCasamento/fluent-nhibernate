@@ -57,7 +57,7 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         [Test]
         public void ShouldWriteTheGenerator()
         {
-            var mapping = new IdMapping
+            var mapping = new IdMapping(null)
             {
                 Generator = new GeneratorMapping { Class = "Class" }
             };
@@ -69,7 +69,7 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         [Test]
         public void ShouldWriteTheColumns()
         {
-            var mapping = new IdMapping();
+            var mapping = new IdMapping(null);
             mapping.AddColumn(new ColumnMapping { Name = "Column1" });
 
             writer.VerifyXml(mapping)

@@ -1,3 +1,4 @@
+using FluentNHibernate.Automapping.TestFixtures;
 using FluentNHibernate.MappingModel;
 using FluentNHibernate.MappingModel.ClassBased;
 using FluentNHibernate.MappingModel.Output;
@@ -99,7 +100,7 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         {
             var mapping = new JoinMapping();
 
-            mapping.AddProperty(new PropertyMapping());
+            mapping.AddProperty(new PropertyMapping(null));
 
             writer.VerifyXml(mapping)
                 .Element("property").Exists();
@@ -110,7 +111,7 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         {
             var mapping = new JoinMapping();
 
-            mapping.AddReference(new ManyToOneMapping());
+            mapping.AddReference(new ManyToOneMapping(null));
 
             writer.VerifyXml(mapping)
                 .Element("many-to-one").Exists();
@@ -121,7 +122,7 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         {
             var mapping = new JoinMapping();
 
-            mapping.AddComponent(new ComponentMapping(ComponentType.Component));
+            mapping.AddComponent(new ComponentMapping(typeof(ExampleClass)));
 
             writer.VerifyXml(mapping)
                 .Element("component").Exists();
@@ -132,7 +133,7 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         {
             var mapping = new JoinMapping();
 
-            mapping.AddComponent(new ComponentMapping(ComponentType.DynamicComponent));
+            mapping.AddComponent(new ComponentMapping(typeof(ExampleClass)));
 
             writer.VerifyXml(mapping)
                 .Element("dynamic-component").Exists();
@@ -142,8 +143,8 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         public void ShouldWriteAny()
         {
             var mapping = new JoinMapping();
-            
-            mapping.AddAny(new AnyMapping());
+
+            mapping.AddAny(new AnyMapping(null));
 
             writer.VerifyXml(mapping)
                 .Element("any").Exists();

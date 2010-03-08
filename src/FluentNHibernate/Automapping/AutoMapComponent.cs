@@ -23,7 +23,7 @@ namespace FluentNHibernate.Automapping
 
         public void Map(ClassMappingBase classMap, Member property)
         {
-            var mapping = new ComponentMapping(ComponentType.Component)
+            var mapping = new ComponentMapping(property.PropertyType)
             {
                 Name = property.Name,
                 Member = property,

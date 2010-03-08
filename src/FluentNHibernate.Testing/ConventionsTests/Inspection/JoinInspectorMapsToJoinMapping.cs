@@ -26,14 +26,14 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         [Test]
         public void AnysCollectionHasSameCountAsMapping()
         {
-            mapping.AddAny(new AnyMapping());
+            mapping.AddAny(new AnyMapping(null));
             inspector.Anys.Count().ShouldEqual(1);
         }
 
         [Test]
         public void AnysCollectionOfInspectors()
         {
-            mapping.AddAny(new AnyMapping());
+            mapping.AddAny(new AnyMapping(null));
             inspector.Anys.First().ShouldBeOfType<IAnyInspector>();
         }
 
@@ -158,14 +158,14 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         [Test]
         public void PropertiesCollectionHasSameCountAsMapping()
         {
-            mapping.AddProperty(new PropertyMapping());
+            mapping.AddProperty(new PropertyMapping(null));
             inspector.Properties.Count().ShouldEqual(1);
         }
 
         [Test]
         public void PropertiesCollectionOfInspectors()
         {
-            mapping.AddProperty(new PropertyMapping());
+            mapping.AddProperty(new PropertyMapping(null));
             inspector.Properties.First().ShouldImplementType<IPropertyInspector>();
         }
 
@@ -178,14 +178,14 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         [Test]
         public void ReferencesCollectionHasSameCountAsMapping()
         {
-            mapping.AddReference(new ManyToOneMapping());
+            mapping.AddReference(new ManyToOneMapping(null));
             inspector.References.Count().ShouldEqual(1);
         }
 
         [Test]
         public void ReferencesCollectionOfInspectors()
         {
-            mapping.AddReference(new ManyToOneMapping());
+            mapping.AddReference(new ManyToOneMapping(null));
             inspector.References.First().ShouldImplementType<IManyToOneInspector>();
         }
 

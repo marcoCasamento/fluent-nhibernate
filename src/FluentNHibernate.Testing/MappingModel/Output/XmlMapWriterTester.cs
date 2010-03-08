@@ -71,7 +71,7 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         [Test]
         public void ShouldNotWriteCollectionTypeWhenEmpty()
         {
-            var bagMapping = new MapMapping { CollectionType = TypeReference.Empty };
+            var bagMapping = new MapMapping(null) { CollectionType = TypeReference.Empty };
             writer.VerifyXml(bagMapping)
                 .DoesntHaveAttribute("collection-type");
         }
@@ -199,7 +199,7 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         [Test]
         public void ShouldWriteKey()
         {
-            var mapping = new MapMapping
+            var mapping = new MapMapping(null)
             {
                 Key = new KeyMapping()
             };
@@ -211,7 +211,7 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         [Test]
         public void ShouldWriteRelationshipElement()
         {
-            var mapping = new MapMapping();
+            var mapping = new MapMapping(null);
 
             mapping.Relationship = new OneToManyMapping();
 
@@ -222,7 +222,7 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         [Test]
         public void ShouldWriteIndexElement()
         {
-            var mapping = new MapMapping();
+            var mapping = new MapMapping(null);
 
             mapping.Index = new IndexMapping();
 
@@ -233,7 +233,7 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         [Test]
         public void ShouldWriteCacheElement()
         {
-            var mapping = new MapMapping();
+            var mapping = new MapMapping(null);
 
             mapping.Cache = new CacheMapping();
 
@@ -244,7 +244,7 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         [Test]
         public void ShouldWriteElement()
         {
-            var mapping = new MapMapping();
+            var mapping = new MapMapping(null);
 
             mapping.Element = new ElementMapping();
 

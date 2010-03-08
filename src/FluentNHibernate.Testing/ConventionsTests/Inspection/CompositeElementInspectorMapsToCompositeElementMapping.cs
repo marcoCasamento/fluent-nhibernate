@@ -21,21 +21,19 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         [SetUp]
         public void CreateDsl()
         {
-            mapping = new CompositeElementMapping();
+            mapping = new CompositeElementMapping(typeof(ExampleClass));
             inspector = new CompositeElementInspector(mapping);
         }
 
         [Test]
         public void ClassMapped()
         {
-            mapping.Class = new TypeReference(typeof(ExampleClass));
             inspector.Class.ShouldEqual(new TypeReference(typeof(ExampleClass)));
         }
 
         [Test]
         public void ClassIsSet()
         {
-            mapping.Class = new TypeReference(typeof(ExampleClass));
             inspector.IsSet(Prop(x => x.Class))
                 .ShouldBeTrue();
         }
@@ -74,14 +72,14 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         [Test]
         public void PropertiesCollectionHasSameCountAsMapping()
         {
-            mapping.AddProperty(new PropertyMapping());
+            mapping.AddProperty(new PropertyMapping(null));
             inspector.Properties.Count().ShouldEqual(1);
         }
 
         [Test]
         public void PropertiesCollectionOfInspectors()
         {
-            mapping.AddProperty(new PropertyMapping());
+            mapping.AddProperty(new PropertyMapping(null));
             inspector.Properties.First().ShouldBeOfType<IPropertyInspector>();
         }
 
@@ -94,14 +92,14 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         [Test]
         public void ReferencesCollectionHasSameCountAsMapping()
         {
-            mapping.AddReference(new ManyToOneMapping());
+            mapping.AddReference(new ManyToOneMapping(null));
             inspector.References.Count().ShouldEqual(1);
         }
 
         [Test]
         public void ReferencesCollectionOfInspectors()
         {
-            mapping.AddReference(new ManyToOneMapping());
+            mapping.AddReference(new ManyToOneMapping(null));
             inspector.References.First().ShouldBeOfType<IManyToOneInspector>();
         }
 

@@ -37,7 +37,7 @@ namespace FluentNHibernate.Automapping
             if (property.DeclaringType != classMap.Type)
                 return;
 
-            var mapping = collections.CreateCollectionMapping(property.PropertyType);
+            var mapping = collections.CreateCollectionMapping(property.PropertyType, property);
 
             mapping.ContainingEntityType = classMap.Type;
             mapping.Member = property;

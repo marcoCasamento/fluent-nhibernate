@@ -25,7 +25,7 @@ namespace FluentNHibernate.Testing.ConventionsTests.AcceptanceCriteria
                 .Expect(x => x.Columns.IsEmpty());
 
             acceptance
-                .Matches(new PropertyInspector(new PropertyMapping()))
+                .Matches(new PropertyInspector(new PropertyMapping(null)))
                 .ShouldBeTrue();
         }
 
@@ -35,7 +35,7 @@ namespace FluentNHibernate.Testing.ConventionsTests.AcceptanceCriteria
             acceptance
                 .Expect(x => x.Columns.IsEmpty());
 
-            var mapping = new PropertyMapping();
+            var mapping = new PropertyMapping(null);
             mapping.AddColumn(new ColumnMapping { Name = "Column1" });
 
             acceptance
@@ -50,7 +50,7 @@ namespace FluentNHibernate.Testing.ConventionsTests.AcceptanceCriteria
                 .Expect(x => x.Columns.IsNotEmpty());
 
             acceptance
-                .Matches(new PropertyInspector(new PropertyMapping()))
+                .Matches(new PropertyInspector(new PropertyMapping(null)))
                 .ShouldBeFalse();
         }
 
@@ -60,7 +60,7 @@ namespace FluentNHibernate.Testing.ConventionsTests.AcceptanceCriteria
             acceptance
                 .Expect(x => x.Columns.IsNotEmpty());
 
-            var mapping = new PropertyMapping();
+            var mapping = new PropertyMapping(null);
             mapping.AddColumn(new ColumnMapping { Name = "Column1" });
 
             acceptance
@@ -74,7 +74,7 @@ namespace FluentNHibernate.Testing.ConventionsTests.AcceptanceCriteria
             acceptance
                 .Expect(x => x.Columns.Contains("boo"));
 
-            var mapping = new PropertyMapping();
+            var mapping = new PropertyMapping(null);
             mapping.AddColumn(new ColumnMapping { Name = "Column1" });
 
             acceptance
@@ -88,7 +88,7 @@ namespace FluentNHibernate.Testing.ConventionsTests.AcceptanceCriteria
             acceptance
                 .Expect(x => x.Columns.Contains("Column1"));
 
-            var mapping = new PropertyMapping();
+            var mapping = new PropertyMapping(null);
             mapping.AddColumn(new ColumnMapping { Name = "Column1" });
 
             acceptance
@@ -102,7 +102,7 @@ namespace FluentNHibernate.Testing.ConventionsTests.AcceptanceCriteria
             acceptance
                 .Expect(x => x.Columns.Contains(c => c.Name == "boo"));
 
-            var mapping = new PropertyMapping();
+            var mapping = new PropertyMapping(null);
             mapping.AddColumn(new ColumnMapping { Name = "Column1" });
 
             acceptance
@@ -116,7 +116,7 @@ namespace FluentNHibernate.Testing.ConventionsTests.AcceptanceCriteria
             acceptance
                 .Expect(x => x.Columns.Contains(c => c.Name == "Column1"));
 
-            var mapping = new PropertyMapping();
+            var mapping = new PropertyMapping(null);
             mapping.AddColumn(new ColumnMapping { Name = "Column1" });
 
             acceptance

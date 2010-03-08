@@ -7,13 +7,16 @@ namespace FluentNHibernate.MappingModel.Collections
 {
     public class SetMapping : CollectionMappingBase
     {
+        readonly Member member;
         private readonly AttributeStore<SetMapping> attributes;
 
-        public SetMapping()
+        public SetMapping(Member member)
             : this(new AttributeStore())
-        {}
-        
-        public SetMapping(AttributeStore underlyingStore)
+        {
+            this.member = member;
+        }
+
+        SetMapping(AttributeStore underlyingStore)
             : base(underlyingStore)
         {
             attributes = new AttributeStore<SetMapping>(underlyingStore);

@@ -19,7 +19,7 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         [SetUp]
         public void CreateDsl()
         {
-            mapping = new MapMapping();
+            mapping = new MapMapping(null);
             inspector = new MapInspector(mapping);
         }
         [Test]

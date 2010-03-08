@@ -1,4 +1,5 @@
-﻿using FluentNHibernate.MappingModel;
+﻿using FluentNHibernate.Automapping.TestFixtures;
+using FluentNHibernate.MappingModel;
 using FluentNHibernate.MappingModel.ClassBased;
 using FluentNHibernate.MappingModel.Collections;
 using FluentNHibernate.MappingModel.Identity;
@@ -221,7 +222,7 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         [Test]
         public void ShouldWriteCache()
         {
-            var mapping = new ClassMapping();
+            var mapping = new ClassMapping(typeof(ExampleClass));
 
             mapping.Cache = new CacheMapping();
 
@@ -232,9 +233,9 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         [Test]
         public void ShouldWriteId()
         {
-            var mapping = new ClassMapping();
+            var mapping = new ClassMapping(typeof(ExampleClass));
 
-            mapping.Id = new IdMapping();
+            mapping.Id = new IdMapping(null);
 
             writer.VerifyXml(mapping)
                 .Element("id").Exists();
@@ -243,7 +244,7 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         [Test]
         public void ShouldWriteNaturalId()
         {
-            var mapping = new ClassMapping();
+            var mapping = new ClassMapping(typeof(ExampleClass));
 
             mapping.NaturalId = new NaturalIdMapping();
 
@@ -254,9 +255,9 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         [Test]
         public void ShouldWriteCompositeId()
         {
-            var mapping = new ClassMapping();
+            var mapping = new ClassMapping(typeof(ExampleClass));
 
-            mapping.Id = new CompositeIdMapping();
+            mapping.Id = new CompositeIdMapping(null);
 
             writer.VerifyXml(mapping)
                 .Element("composite-id").Exists();
@@ -265,9 +266,9 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         [Test]
         public void ShouldWriteVersion()
         {
-            var mapping = new ClassMapping();
+            var mapping = new ClassMapping(typeof(ExampleClass));
 
-            mapping.Version = new VersionMapping();
+            mapping.Version = new VersionMapping(null);
 
             writer.VerifyXml(mapping)
                 .Element("version").Exists();
@@ -276,9 +277,9 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         [Test]
         public void ShouldWriteProperties()
         {
-            var mapping = new ClassMapping();
+            var mapping = new ClassMapping(typeof(ExampleClass));
 
-            mapping.AddProperty(new PropertyMapping());
+            mapping.AddProperty(new PropertyMapping(null));
 
             writer.VerifyXml(mapping)
                 .Element("property").Exists();
@@ -287,9 +288,9 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         [Test]
         public void ShouldWriteManyToOnes()
         {
-            var mapping = new ClassMapping();
+            var mapping = new ClassMapping(typeof(ExampleClass));
 
-            mapping.AddReference(new ManyToOneMapping());
+            mapping.AddReference(new ManyToOneMapping(null));
 
             writer.VerifyXml(mapping)
                 .Element("many-to-one").Exists();
@@ -298,9 +299,9 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         [Test]
         public void ShouldWriteOneToOnes()
         {
-            var mapping = new ClassMapping();
+            var mapping = new ClassMapping(typeof(ExampleClass));
 
-            mapping.AddOneToOne(new OneToOneMapping());
+            mapping.AddOneToOne(new OneToOneMapping(null));
 
             writer.VerifyXml(mapping)
                 .Element("one-to-one").Exists();
@@ -309,9 +310,9 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         [Test]
         public void ShouldWriteComponents()
         {
-            var mapping = new ClassMapping();
+            var mapping = new ClassMapping(typeof(ExampleClass));
 
-            mapping.AddComponent(new ComponentMapping(ComponentType.Component));
+            mapping.AddComponent(new ComponentMapping(typeof(ExampleClass)));
 
             writer.VerifyXml(mapping)
                 .Element("component").Exists();
@@ -320,9 +321,9 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         [Test]
         public void ShouldWriteDynamicComponents()
         {
-            var mapping = new ClassMapping();
+            var mapping = new ClassMapping(typeof(ExampleClass));
 
-            mapping.AddComponent(new ComponentMapping(ComponentType.DynamicComponent));
+            mapping.AddComponent(new ComponentMapping(typeof(ExampleClass)));
 
             writer.VerifyXml(mapping)
                 .Element("dynamic-component").Exists();
@@ -331,9 +332,9 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         [Test]
         public void ShouldWriteAny()
         {
-            var mapping = new ClassMapping();
-            
-            mapping.AddAny(new AnyMapping());
+            var mapping = new ClassMapping(typeof(ExampleClass));
+
+            mapping.AddAny(new AnyMapping(null));
 
             writer.VerifyXml(mapping)
                 .Element("any").Exists();
@@ -342,9 +343,9 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         [Test]
         public void ShouldWriteMap()
         {
-            var mapping = new ClassMapping();
+            var mapping = new ClassMapping(typeof(ExampleClass));
 
-            mapping.AddCollection(new MapMapping());
+            mapping.AddCollection(new MapMapping(null));
 
             writer.VerifyXml(mapping)
                 .Element("map").Exists();
@@ -353,9 +354,9 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         [Test]
         public void ShouldWriteSet()
         {
-            var mapping = new ClassMapping();
+            var mapping = new ClassMapping(typeof(ExampleClass));
 
-            mapping.AddCollection(new SetMapping());
+            mapping.AddCollection(new SetMapping(null));
 
             writer.VerifyXml(mapping)
                 .Element("set").Exists();
@@ -364,7 +365,7 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         [Test]
         public void ShouldWriteList()
         {
-            var mapping = new ClassMapping();
+            var mapping = new ClassMapping(typeof(ExampleClass));
 
             mapping.AddCollection(new ListMapping());
 
@@ -375,9 +376,9 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         [Test]
         public void ShouldWriteBag()
         {
-            var mapping = new ClassMapping();
+            var mapping = new ClassMapping(typeof(ExampleClass));
 
-            mapping.AddCollection(new BagMapping());
+            mapping.AddCollection(new BagMapping(null));
 
             writer.VerifyXml(mapping)
                 .Element("bag").Exists();
@@ -404,7 +405,7 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         [Test]
         public void ShouldWriteJoin()
         {
-            var mapping = new ClassMapping();
+            var mapping = new ClassMapping(typeof(ExampleClass));
 
             mapping.AddJoin(new JoinMapping());
 
@@ -415,9 +416,9 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         [Test]
         public void ShouldWriteSubclass()
         {
-            var mapping = new ClassMapping();
+            var mapping = new ClassMapping(typeof(ExampleClass));
 
-            mapping.AddSubclass(new SubclassMapping(SubclassType.Subclass));
+            mapping.AddSubclass(new SubclassMapping(typeof(ExampleClass)));
 
             writer.VerifyXml(mapping)
                 .Element("subclass").Exists();
@@ -426,9 +427,9 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         [Test]
         public void ShouldWriteJoinedSubclass()
         {
-            var mapping = new ClassMapping();
+            var mapping = new ClassMapping(typeof(ExampleClass));
 
-            mapping.AddSubclass(new SubclassMapping(SubclassType.JoinedSubclass));
+            mapping.AddSubclass(new SubclassMapping(typeof(ExampleClass)));
 
             writer.VerifyXml(mapping)
                 .Element("joined-subclass").Exists();
@@ -443,7 +444,7 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         [Test]
         public void ShouldWriteDiscriminator()
         {
-            var mapping = new ClassMapping();
+            var mapping = new ClassMapping(typeof(ExampleClass));
 
             mapping.Discriminator = new DiscriminatorMapping();
 

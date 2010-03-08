@@ -22,7 +22,7 @@ namespace FluentNHibernate.Mapping
         protected bool nextBool = true;
 
         readonly IList<FilterPart> filters = new List<FilterPart>();
-        Func<AttributeStore, ICollectionMapping> collectionBuilder;
+        Func<Member, ICollectionMapping> collectionBuilder;
         IMappingStructure<CacheMapping> cacheStructure;
 
         protected ToManyBase(IMappingStructure<ICollectionMapping> structure, IMappingStructure<KeyMapping> keyStructure)

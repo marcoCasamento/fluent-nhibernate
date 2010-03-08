@@ -8,13 +8,16 @@ namespace FluentNHibernate.MappingModel.Collections
 {
     public class BagMapping : CollectionMappingBase
     {
+        readonly Member member;
         private readonly AttributeStore<BagMapping> attributes;
 
-        public BagMapping()
+        public BagMapping(Member member)
             : this(new AttributeStore())
-        {}
+        {
+            this.member = member;
+        }
 
-        public BagMapping(AttributeStore underlyingStore)
+        BagMapping(AttributeStore underlyingStore)
             : base(underlyingStore)
         {
             attributes = new AttributeStore<BagMapping>(underlyingStore);

@@ -7,12 +7,15 @@ namespace FluentNHibernate.MappingModel.Collections
 {
     public class CompositeElementMapping : MappingBase, IMapping, ITypeMapping
     {
+        readonly Type type;
         private readonly MappedMembers mappedMembers;
         protected readonly AttributeStore<CompositeElementMapping> attributes;
 
-        public CompositeElementMapping()
+        public CompositeElementMapping(Type type)
             : this(new AttributeStore())
-        { }
+        {
+            this.type = type;
+        }
 
         public CompositeElementMapping(AttributeStore store)
         {

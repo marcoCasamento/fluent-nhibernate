@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq.Expressions;
-using FluentNHibernate.Utils;
 using FluentNHibernate.Visitors;
 
 namespace FluentNHibernate.MappingModel.Collections
@@ -8,6 +7,10 @@ namespace FluentNHibernate.MappingModel.Collections
     public class ListMapping : CollectionMappingBase, IIndexedCollectionMapping
     {
         private readonly AttributeStore<ListMapping> attributes;
+
+        public ListMapping(Member member)
+            : base(member)
+        {}
 
         public IIndexMapping Index
         {

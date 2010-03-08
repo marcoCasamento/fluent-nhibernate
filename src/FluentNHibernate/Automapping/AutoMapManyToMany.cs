@@ -43,9 +43,9 @@ namespace FluentNHibernate.Automapping
         private ICollectionMapping GetCollection(Member property)
         {
             if (property.PropertyType.FullName.Contains("ISet"))
-                return new SetMapping();
+                return new SetMapping(property);
 
-            return new BagMapping();
+            return new BagMapping(property);
         }
 
         private void ConfigureModel(Member property, ICollectionMapping mapping, ClassMappingBase classMap, Type parentSide)

@@ -22,7 +22,7 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         [SetUp]
         public void CreateDsl()
         {
-            mapping = new ComponentMapping(ComponentType.Component);
+            mapping = new ComponentMapping(typeof(ExampleClass));
             inspector = new ComponentInspector(mapping);
         }
 
@@ -51,14 +51,14 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         [Test]
         public void AnysCollectionHasSameCountAsMapping()
         {
-            mapping.AddAny(new AnyMapping());
+            mapping.AddAny(new AnyMapping(null));
             inspector.Anys.Count().ShouldEqual(1);
         }
 
         [Test]
         public void AnysCollectionOfInspectors()
         {
-            mapping.AddAny(new AnyMapping());
+            mapping.AddAny(new AnyMapping(null));
             inspector.Anys.First().ShouldBeOfType<IAnyInspector>();
         }
 
@@ -93,14 +93,14 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         [Test]
         public void CollectionsCollectionHasSameCountAsMapping()
         {
-            mapping.AddCollection(new BagMapping());
+            mapping.AddCollection(new BagMapping(null));
             inspector.Collections.Count().ShouldEqual(1);
         }
 
         [Test]
         public void CollectionsCollectionOfInspectors()
         {
-            mapping.AddCollection(new BagMapping());
+            mapping.AddCollection(new BagMapping(null));
             inspector.Collections.First().ShouldBeOfType<ICollectionInspector>();
         }
 
@@ -113,14 +113,14 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         [Test]
         public void ComponentsCollectionHasSameCountAsMapping()
         {
-            mapping.AddComponent(new ComponentMapping(ComponentType.Component));
+            mapping.AddComponent(new ComponentMapping(typeof(ExampleClass)));
             inspector.Components.Count().ShouldEqual(1);
         }
 
         [Test]
         public void ComponentsCollectionOfInspectors()
         {
-            mapping.AddComponent(new ComponentMapping(ComponentType.Component));
+            mapping.AddComponent(new ComponentMapping(typeof(ExampleClass)));
             inspector.Components.First().ShouldBeOfType<IComponentBaseInspector>();
         }
 
@@ -221,14 +221,14 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         [Test]
         public void OneToOnesCollectionHasSameCountAsMapping()
         {
-            mapping.AddOneToOne(new OneToOneMapping());
+            mapping.AddOneToOne(new OneToOneMapping(null));
             inspector.OneToOnes.Count().ShouldEqual(1);
         }
 
         [Test]
         public void OneToOnesCollectionOfInspectors()
         {
-            mapping.AddOneToOne(new OneToOneMapping());
+            mapping.AddOneToOne(new OneToOneMapping(null));
             inspector.OneToOnes.First().ShouldBeOfType<IOneToOneInspector>();
         }
 
@@ -287,14 +287,14 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         [Test]
         public void PropertiesCollectionHasSameCountAsMapping()
         {
-            mapping.AddProperty(new PropertyMapping());
+            mapping.AddProperty(new PropertyMapping(null));
             inspector.Properties.Count().ShouldEqual(1);
         }
 
         [Test]
         public void PropertiesCollectionOfInspectors()
         {
-            mapping.AddProperty(new PropertyMapping());
+            mapping.AddProperty(new PropertyMapping(null));
             inspector.Properties.First().ShouldBeOfType<IPropertyInspector>();
         }
 
@@ -307,14 +307,14 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         [Test]
         public void ReferencesCollectionHasSameCountAsMapping()
         {
-            mapping.AddReference(new ManyToOneMapping());
+            mapping.AddReference(new ManyToOneMapping(null));
             inspector.References.Count().ShouldEqual(1);
         }
 
         [Test]
         public void ReferencesCollectionOfInspectors()
         {
-            mapping.AddReference(new ManyToOneMapping());
+            mapping.AddReference(new ManyToOneMapping(null));
             inspector.References.First().ShouldBeOfType<IManyToOneInspector>();
         }
 

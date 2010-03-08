@@ -8,6 +8,7 @@ namespace FluentNHibernate.MappingModel.Collections
 {
     public class ArrayMapping : CollectionMappingBase, IIndexedCollectionMapping
     {
+        readonly Member member;
         private readonly AttributeStore<ArrayMapping> attributes;
 
         public IIndexMapping Index
@@ -16,11 +17,13 @@ namespace FluentNHibernate.MappingModel.Collections
             set { attributes.Set(x => x.Index, value); }
         }
 
-        public ArrayMapping()
+        public ArrayMapping(Member member)
             : this(new AttributeStore())
-        {}
+        {
+            this.member = member;
+        }
 
-        public ArrayMapping(AttributeStore underlyingStore)
+        ArrayMapping(AttributeStore underlyingStore)
             : base(underlyingStore)
         {
             attributes = new AttributeStore<ArrayMapping>(underlyingStore);

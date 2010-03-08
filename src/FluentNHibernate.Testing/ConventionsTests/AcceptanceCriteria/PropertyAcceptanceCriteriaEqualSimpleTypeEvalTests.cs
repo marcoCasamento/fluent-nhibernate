@@ -22,7 +22,7 @@ namespace FluentNHibernate.Testing.ConventionsTests.AcceptanceCriteria
             acceptance.Expect(x => x.Insert == true);
 
             acceptance
-                .Matches(new PropertyInspector(new PropertyMapping() { Insert = true }))
+                .Matches(new PropertyInspector(new PropertyMapping(null) { Insert = true }))
                 .ShouldBeTrue();
         }
 
@@ -32,7 +32,7 @@ namespace FluentNHibernate.Testing.ConventionsTests.AcceptanceCriteria
             acceptance.Expect(x => x.Insert == true);
 
             acceptance
-                .Matches(new PropertyInspector(new PropertyMapping() { Insert = false }))
+                .Matches(new PropertyInspector(new PropertyMapping(null) { Insert = false }))
                 .ShouldBeFalse();
         }
 
@@ -42,7 +42,7 @@ namespace FluentNHibernate.Testing.ConventionsTests.AcceptanceCriteria
             acceptance.Expect(x => x.Insert == true);
 
             acceptance
-                .Matches(new PropertyInspector(new PropertyMapping()))
+                .Matches(new PropertyInspector(new PropertyMapping(null)))
                 .ShouldBeFalse();
         }
 
@@ -52,7 +52,7 @@ namespace FluentNHibernate.Testing.ConventionsTests.AcceptanceCriteria
             acceptance.Expect(x => x.Insert != true);
 
             acceptance
-                .Matches(new PropertyInspector(new PropertyMapping() { Insert = false }))
+                .Matches(new PropertyInspector(new PropertyMapping(null) { Insert = false }))
                 .ShouldBeTrue();
         }
 
@@ -62,7 +62,7 @@ namespace FluentNHibernate.Testing.ConventionsTests.AcceptanceCriteria
             acceptance.Expect(x => x.Insert != true);
 
             acceptance
-                .Matches(new PropertyInspector(new PropertyMapping() { Insert = true }))
+                .Matches(new PropertyInspector(new PropertyMapping(null) { Insert = true }))
                 .ShouldBeFalse();
         }
 
@@ -72,7 +72,7 @@ namespace FluentNHibernate.Testing.ConventionsTests.AcceptanceCriteria
             acceptance.Expect(x => x.Insert != true);
 
             acceptance
-                .Matches(new PropertyInspector(new PropertyMapping()))
+                .Matches(new PropertyInspector(new PropertyMapping(null)))
                 .ShouldBeTrue();
         }
     }

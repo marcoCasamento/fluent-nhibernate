@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using FluentNHibernate.Automapping.TestFixtures;
 using FluentNHibernate.MappingModel;
 using FluentNHibernate.MappingModel.ClassBased;
 using FluentNHibernate.MappingModel.Collections;
@@ -52,7 +53,7 @@ namespace FluentNHibernate.Testing.MappingModel
         public override void establish_context()
         {
             parent_mapping = new ParentMapping();
-            external_component_mapping = new ExternalComponentMapping(ComponentType.Component)
+            external_component_mapping = new ExternalComponentMapping(typeof(Target))
             {
                 Access = "access",
                 Insert = true,
@@ -62,13 +63,13 @@ namespace FluentNHibernate.Testing.MappingModel
                 Unique = true,
                 Update = true
             };
-            external_component_mapping.AddAny(new AnyMapping());
-            external_component_mapping.AddCollection(new BagMapping());
-            external_component_mapping.AddComponent(new ComponentMapping(ComponentType.Component));
+            external_component_mapping.AddAny(new AnyMapping(null));
+            external_component_mapping.AddCollection(new BagMapping(null));
+            external_component_mapping.AddComponent(new ComponentMapping(typeof(ExampleClass)));
             external_component_mapping.AddFilter(new FilterMapping());
-            external_component_mapping.AddOneToOne(new OneToOneMapping());
-            external_component_mapping.AddProperty(new PropertyMapping());
-            external_component_mapping.AddReference(new ManyToOneMapping());
+            external_component_mapping.AddOneToOne(new OneToOneMapping(null));
+            external_component_mapping.AddProperty(new PropertyMapping(null));
+            external_component_mapping.AddReference(new ManyToOneMapping(null));
 
             member_property = new DummyPropertyInfo("Component", typeof(Target)).ToMember();
             reference_component_mapping = new ReferenceComponentMapping(ComponentType.Component, member_property, typeof(ComponentTarget), typeof(Target), "column-prefix");

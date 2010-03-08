@@ -20,7 +20,7 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         [SetUp]
         public void CreateDsl()
         {
-            mapping = new BagMapping();
+            mapping = new BagMapping(null);
             inspector = new CollectionInspector(mapping);
         }
 
@@ -183,16 +183,14 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         [Test]
         public void CompositeElementMapped()
         {
-            mapping.CompositeElement = new CompositeElementMapping();
-            mapping.CompositeElement.Class = new TypeReference(typeof(ExampleClass));
+            mapping.CompositeElement = new CompositeElementMapping(typeof(ExampleClass));
             inspector.CompositeElement.Class.ShouldEqual(new TypeReference(typeof(ExampleClass)));
         }
 
         [Test]
         public void CompositeElementIsSet()
         {
-            mapping.CompositeElement = new CompositeElementMapping();
-            mapping.CompositeElement.Class = new TypeReference(typeof(ExampleClass));
+            mapping.CompositeElement = new CompositeElementMapping(typeof(ExampleClass));
             inspector.IsSet(Prop(x => x.CompositeElement))
                 .ShouldBeTrue();
         }

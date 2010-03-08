@@ -34,7 +34,7 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         public void ShouldWriteProperties()
         {
             var mapping = new NaturalIdMapping();
-            mapping.AddProperty(new PropertyMapping());
+            mapping.AddProperty(new PropertyMapping(null));
 
             writer.VerifyXml(mapping)
                 .Element("property").Exists();
@@ -44,7 +44,7 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         public void ShouldWriteManyToOnes()
         {
             var mapping = new NaturalIdMapping();
-            mapping.AddReference(new ManyToOneMapping());
+            mapping.AddReference(new ManyToOneMapping(null));
 
             writer.VerifyXml(mapping)
                 .Element("many-to-one").Exists();

@@ -101,7 +101,7 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         [Test]
         public void ShouldWriteTypeColumns()
         {
-            var mapping = new AnyMapping();
+            var mapping = new AnyMapping(null);
 
             mapping.AddTypeColumn(new ColumnMapping { Name = "Column1" });
 
@@ -112,7 +112,7 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         [Test]
         public void ShouldWriteIdentifierColumns()
         {
-            var mapping = new AnyMapping();
+            var mapping = new AnyMapping(null);
 
             mapping.AddIdentifierColumn(new ColumnMapping { Name = "Column1" });
 
@@ -123,7 +123,7 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         [Test]
         public void ShouldWriteTypeColumnsBeforeIdentifiers()
         {
-            var mapping = new AnyMapping();
+            var mapping = new AnyMapping(null);
 
             mapping.AddIdentifierColumn(new ColumnMapping { Name = "Column1" });
             mapping.AddTypeColumn(new ColumnMapping { Name = "Column2" });
@@ -135,7 +135,7 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         [Test]
         public void ShouldWriteMetaValues()
         {
-            var mapping = new AnyMapping();
+            var mapping = new AnyMapping(null);
 
             mapping.AddMetaValue(new MetaValueMapping());
 

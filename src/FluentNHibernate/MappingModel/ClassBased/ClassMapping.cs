@@ -7,11 +7,14 @@ namespace FluentNHibernate.MappingModel.ClassBased
 {
     public class ClassMapping : ClassMappingBase, IMapping, ITypeMapping
     {
+        readonly Type type;
         private readonly AttributeStore<ClassMapping> attributes;
 
-        public ClassMapping()
+        public ClassMapping(Type type)
             : this(new AttributeStore())
-        {}
+        {
+            this.type = type;
+        }
 
         public ClassMapping(AttributeStore store)
         {

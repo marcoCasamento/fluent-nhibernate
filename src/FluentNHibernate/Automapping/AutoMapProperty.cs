@@ -54,11 +54,7 @@ namespace FluentNHibernate.Automapping
                     if (acceptance != null)
                         acceptance.Accept(criteria);
 
-                    return criteria.Matches(new PropertyInspector(new PropertyMapping
-                    {
-                        Type = new TypeReference(property.PropertyType),
-                        Member = property
-                    }));
+                    return criteria.Matches(new PropertyInspector(new PropertyMapping(property)));
                 });
 
             return conventions.FirstOrDefault() != null;
@@ -78,12 +74,7 @@ namespace FluentNHibernate.Automapping
 
         private PropertyMapping GetPropertyMapping(Type type, Member property, ComponentMapping component)
         {
-            var mapping = new PropertyMapping
-            {
-                ContainingEntityType = type,
-                Member = property
-            };
-
+            var mapping = new PropertyMapping(property);
             var columnName = property.Name;
             
             if (component != null)

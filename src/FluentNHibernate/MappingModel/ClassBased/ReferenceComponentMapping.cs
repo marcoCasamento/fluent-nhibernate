@@ -20,6 +20,11 @@ namespace FluentNHibernate.MappingModel.ClassBased
         private Type containingEntityType;
         private readonly string columnPrefix;
 
+        public ReferenceComponentMapping(Member member)
+        {
+            this.property = member;
+        }
+
         public ReferenceComponentMapping(ComponentType componentType, Member property, Type componentEntityType, Type containingEntityType, string columnPrefix)
         {
             ComponentType = componentType;
