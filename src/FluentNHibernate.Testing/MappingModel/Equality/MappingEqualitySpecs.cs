@@ -30,7 +30,7 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
 
             mapping.AddIdentifierDefaultColumn(new ColumnMapping { Name = "default-id-col" });
             mapping.AddIdentifierColumn(new ColumnMapping { Name = "id-col" });
-            mapping.AddMetaValue(new MetaValueMapping { Value = "value" });
+            mapping.AddMetaValue(new MetaValueMapping(null) { Value = "value" });
             mapping.AddTypeDefaultColumn(new ColumnMapping { Name = "default-type-col" });
             mapping.AddTypeColumn(new ColumnMapping { Name = "type-col" });
 
@@ -914,9 +914,8 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
     {
         public override MetaValueMapping create_mapping()
         {
-            return new MetaValueMapping
+            return new MetaValueMapping(typeof(Target))
             {
-                Class = new TypeReference(typeof(Target)),
                 ContainingEntityType = typeof(Target),
                 Value = "value"
             };

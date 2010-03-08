@@ -233,10 +233,22 @@ namespace FluentNHibernate.MappingModel.ClassBased
             return (values != null ? values.GetHashCode() : 0);
         }
 
-        public void AddChild(IMapping child)
+        public override void AddChild(IMapping child)
         {
+            base.AddChild(child);
+
             if (child is CacheMapping)
                 Cache = (CacheMapping)child;
+            if (child is IIdentityMapping)
+                Id = (IIdentityMapping)child;
+            if (child is NaturalIdMapping)
+                NaturalId = (NaturalIdMapping)child;
+            if (child is VersionMapping)
+                Version = (VersionMapping)child;
+            if (child is DiscriminatorMapping)
+                Discriminator = (DiscriminatorMapping)child;
+            if (child is TuplizerMapping)
+                Tuplizer = (TuplizerMapping)child;
         }
 
         public void UpdateValues(IEnumerable<KeyValuePair<Attr, object>> otherValues)

@@ -190,5 +190,13 @@ namespace FluentNHibernate.MappingModel.ClassBased
                 return ((mappedMembers != null ? mappedMembers.GetHashCode() : 0) * 397) ^ (subclasses != null ? subclasses.GetHashCode() : 0);
             }
         }
+
+        public virtual void AddChild(IMapping child)
+        {
+            mappedMembers.AddChild(child);
+
+            if (child is SubclassMapping)
+                AddSubclass((SubclassMapping)child);
+        }
     }
 }

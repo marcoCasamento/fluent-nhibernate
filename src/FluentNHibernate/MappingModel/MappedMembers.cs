@@ -255,5 +255,21 @@ namespace FluentNHibernate.MappingModel
                 return result;
             }
         }
+
+        public void AddChild(IMapping mapping)
+        {
+            if (mapping is PropertyMapping)
+                AddProperty((PropertyMapping)mapping);
+            if (mapping is ICollectionMapping)
+                AddCollection((ICollectionMapping)mapping);
+            if (mapping is ManyToOneMapping)
+                AddReference((ManyToOneMapping)mapping);
+            if (mapping is IComponentMapping)
+                AddComponent((IComponentMapping)mapping);
+            if (mapping is AnyMapping)
+                AddAny((AnyMapping)mapping);
+            if (mapping is JoinMapping)
+                AddJoin((JoinMapping)mapping);
+        }
     }
 }

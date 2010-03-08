@@ -77,8 +77,8 @@ namespace FluentNHibernate.Mapping
 
         public AnyPart<T> AddMetaValue<TModel>(string valueMap)
         {
-            var metaValue = new BucketStructure<MetaValueMapping>();
-            metaValue.SetValue(Attr.Class, new TypeReference(typeof(TModel)));
+            structure.SetValue(Attr.MetaType, new TypeReference(typeof(string)));
+            var metaValue = new TypeStructure<MetaValueMapping>(typeof(TModel));
             metaValue.SetValue(Attr.Value, valueMap);
             structure.AddChild(metaValue);
             return this;

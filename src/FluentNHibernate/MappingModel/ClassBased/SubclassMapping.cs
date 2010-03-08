@@ -190,9 +190,9 @@ namespace FluentNHibernate.MappingModel.ClassBased
             }
         }
 
-        public void AddChild(IMapping child)
+        public override void AddChild(IMapping child)
         {
-            throw new NotImplementedException();
+            base.AddChild(child);
         }
 
         public void UpdateValues(IEnumerable<KeyValuePair<Attr, object>> values)
