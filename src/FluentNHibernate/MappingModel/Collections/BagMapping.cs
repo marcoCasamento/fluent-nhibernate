@@ -73,5 +73,10 @@ namespace FluentNHibernate.MappingModel.Collections
                 }
             }
         }
+
+        public override void AddChild(IMapping child)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

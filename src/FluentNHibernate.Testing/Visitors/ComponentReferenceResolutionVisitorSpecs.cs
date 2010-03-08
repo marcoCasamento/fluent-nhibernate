@@ -14,7 +14,7 @@ namespace FluentNHibernate.Testing.Visitors
         public override void establish_context()
         {
             var user_defined_mappings = Stub<IUserDefinedMapping>.Create(cfg =>
-                cfg.Stub(x => x.Structure).Return(new BucketStructure<ExternalComponentMapping>()));
+                cfg.Stub(x => x.Structure).Return(null));
             var external_component = Stub<IExternalComponentMappingProvider>.Create(cfg =>
                 cfg.Stub(x => x.GetUserDefinedMappings()).Return(user_defined_mappings));
 

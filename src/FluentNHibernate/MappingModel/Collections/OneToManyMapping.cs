@@ -85,5 +85,10 @@ namespace FluentNHibernate.MappingModel.Collections
                 return ((attributes != null ? attributes.GetHashCode() : 0) * 397) ^ (ContainingEntityType != null ? ContainingEntityType.GetHashCode() : 0);
             }
         }
+
+        public void AddChild(IMapping child)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

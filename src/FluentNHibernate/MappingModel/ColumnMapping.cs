@@ -137,5 +137,10 @@ namespace FluentNHibernate.MappingModel
                 return ((attributes != null ? attributes.GetHashCode() : 0) * 397) ^ (Member != null ? Member.GetHashCode() : 0);
             }
         }
+
+        public void AddChild(IMapping child)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

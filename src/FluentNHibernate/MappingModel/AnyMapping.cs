@@ -5,7 +5,7 @@ using FluentNHibernate.Visitors;
 
 namespace FluentNHibernate.MappingModel
 {
-    public class AnyMapping : MappingBase, IMapping, IMemberMapping
+    public class AnyMapping : MappingBase, IMemberMapping
     {
         readonly Member member;
         private readonly AttributeStore<AnyMapping> attributes;
@@ -180,6 +180,11 @@ namespace FluentNHibernate.MappingModel
                 result = (result * 397) ^ (ContainingEntityType != null ? ContainingEntityType.GetHashCode() : 0);
                 return result;
             }
+        }
+
+        public void AddChild(IMapping child)
+        {
+            throw new NotImplementedException();
         }
     }
 }

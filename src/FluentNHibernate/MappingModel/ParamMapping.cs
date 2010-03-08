@@ -14,5 +14,10 @@ namespace FluentNHibernate.MappingModel
         {
             throw new NotImplementedException();
         }
+
+        public void AddChild(IMapping child)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -71,5 +71,10 @@ namespace FluentNHibernate.MappingModel.Identity
                 return result;
             }
         }
+
+        public void AddChild(IMapping child)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

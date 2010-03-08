@@ -7,13 +7,12 @@ namespace FluentNHibernate.MappingModel.ClassBased
 {
     public class ClassMapping : ClassMappingBase, IMapping, ITypeMapping
     {
-        readonly Type type;
         private readonly AttributeStore<ClassMapping> attributes;
 
         public ClassMapping(Type type)
             : this(new AttributeStore())
         {
-            this.type = type;
+            Type = type;
         }
 
         public ClassMapping(AttributeStore store)
@@ -248,6 +247,12 @@ namespace FluentNHibernate.MappingModel.ClassBased
         public override int GetHashCode()
         {
             return (attributes != null ? attributes.GetHashCode() : 0);
+        }
+
+        public void AddChild(IMapping child)
+        {
+            if (child is CacheMapping)
+                Cache = (CacheMapping)child;
         }
     }
 }

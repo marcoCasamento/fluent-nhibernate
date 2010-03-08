@@ -238,5 +238,7 @@ namespace FluentNHibernate.MappingModel.Collections
                 return result;
             }
         }
+
+        public abstract void AddChild(IMapping child);
     }
 }

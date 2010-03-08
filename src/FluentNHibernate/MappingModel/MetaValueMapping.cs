@@ -70,5 +70,10 @@ namespace FluentNHibernate.MappingModel
                     (ContainingEntityType != null ? ContainingEntityType.GetHashCode() : 0);
             }
         }
+
+        public void AddChild(IMapping child)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -147,17 +147,18 @@ namespace FluentNHibernate
 
         private void BuildSeparateMappings(Action<HibernateMapping> add)
         {
+            var factory = new DefaultMappingFactory();
+
             foreach (var classMap in classProviders)
             {
                 var userMappings = classMap.GetUserDefinedMappings();
 
-                if (userMappings.Structure is ClassMapping)
+                if (userMappings.Structure is IMappingStructure<ClassMapping>)
                 {
                     var hbm = classMap.GetHibernateMapping();
+                    var model = userMappings.CreateEmptyModel(factory);
 
-                    //var classMapping = userMappings.CreateModelShape();
-
-                    hbm.AddClass((ClassMapping)userMappings.Structure);
+                    hbm.AddClass((ClassMapping)model);
 
                     add(hbm);
                 }
@@ -314,14 +315,21 @@ namespace FluentNHibernate
 
         private class PassThroughUserDefinedMapping : IUserDefinedMapping
         {
+            readonly ClassMapping classMapping;
+
             public PassThroughUserDefinedMapping(ClassMapping classMapping)
             {
-                //Mapping = classMapping;
+                this.classMapping = classMapping;
                 Type = classMapping.Type;
             }
 
             public IMappingStructure Structure { get; private set; }
             public Type Type { get; private set; }
+            
+            public IMapping CreateEmptyModel(IMappingFactory factory)
+            {
+                return classMapping;
+            }
         }
     }
 }

@@ -71,5 +71,10 @@ namespace FluentNHibernate.MappingModel
         {
             attributes.SetDefault(property, value);
         }
+
+        public void AddChild(IMapping child)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

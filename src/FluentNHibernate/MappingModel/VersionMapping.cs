@@ -4,7 +4,7 @@ using FluentNHibernate.Visitors;
 
 namespace FluentNHibernate.MappingModel
 {
-    public class VersionMapping : ColumnBasedMappingBase, IMapping, IMemberMapping
+    public class VersionMapping : ColumnBasedMappingBase, IMemberMapping
     {
         readonly Member member;
 
@@ -79,6 +79,11 @@ namespace FluentNHibernate.MappingModel
                     return (base.GetHashCode() * 397) ^ (ContainingEntityType != null ? ContainingEntityType.GetHashCode() : 0);
                 }
             }
+        }
+
+        public void AddChild(IMapping child)
+        {
+            throw new NotImplementedException();
         }
     }
 }

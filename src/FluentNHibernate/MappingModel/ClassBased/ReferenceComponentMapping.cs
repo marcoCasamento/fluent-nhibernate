@@ -240,5 +240,10 @@ namespace FluentNHibernate.MappingModel.ClassBased
                 return result;
             }
         }
+
+        public void AddChild(IMapping child)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

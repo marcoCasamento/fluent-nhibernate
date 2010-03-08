@@ -127,5 +127,10 @@ namespace FluentNHibernate.MappingModel
                 return result;
             }
         }
+
+        public void AddChild(IMapping child)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

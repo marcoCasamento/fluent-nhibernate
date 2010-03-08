@@ -4,7 +4,7 @@ using FluentNHibernate.Visitors;
 
 namespace FluentNHibernate.MappingModel.ClassBased
 {
-    public class SubclassMapping : ClassMappingBase, IMapping, ITypeMapping
+    public class SubclassMapping : ClassMappingBase, ITypeMapping
     {
         readonly Type type;
         public SubclassType SubclassType { get; set; }
@@ -187,6 +187,11 @@ namespace FluentNHibernate.MappingModel.ClassBased
                     return (base.GetHashCode() * 397) ^ (attributes != null ? attributes.GetHashCode() : 0);
                 }
             }
+        }
+
+        public void AddChild(IMapping child)
+        {
+            throw new NotImplementedException();
         }
 
         public override string ToString()
