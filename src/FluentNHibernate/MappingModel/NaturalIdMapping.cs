@@ -5,7 +5,7 @@ using FluentNHibernate.Visitors;
 
 namespace FluentNHibernate.MappingModel
 {
-    public class NaturalIdMapping : MappingBase
+    public class NaturalIdMapping : MappingBase, IMapping
     {
         private readonly AttributeStore<NaturalIdMapping> attributes;
         private readonly IList<PropertyMapping> properties = new List<PropertyMapping>();

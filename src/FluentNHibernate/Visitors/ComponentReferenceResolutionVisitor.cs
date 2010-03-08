@@ -25,7 +25,7 @@ namespace FluentNHibernate.Visitors
             if (providers.Count() > 1)
                 throw new AmbiguousComponentReferenceException(mapping.Type, mapping.ContainingEntityType, mapping.Member);
 
-            mapping.AssociateExternalMapping((ExternalComponentMapping)providers.Single().GetUserDefinedMappings().Mapping);
+            mapping.AssociateExternalMapping((ExternalComponentMapping)providers.Single().GetUserDefinedMappings().Structure);
         }
     }
 }

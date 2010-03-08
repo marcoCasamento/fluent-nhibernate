@@ -6,14 +6,14 @@ namespace FluentNHibernate.Mapping
 {
     public class KeyManyToOnePart
     {
-        private readonly KeyManyToOneMapping mapping;
-        private bool nextBool = true;
+        readonly IMappingStructure<KeyManyToOneMapping> structure;
+        bool nextBool = true;
 
-        public KeyManyToOnePart(KeyManyToOneMapping mapping)
+        public KeyManyToOnePart(IMappingStructure<KeyManyToOneMapping> structure)
         {
-            this.mapping = mapping;
-            Access = new AccessStrategyBuilder<KeyManyToOnePart>(this, value => mapping.Access = value);
-            NotFound = new NotFoundExpression<KeyManyToOnePart>(this, value => mapping.NotFound = value);
+            this.structure = structure;
+            Access = new AccessStrategyBuilder<KeyManyToOnePart>(this, value => structure.SetValue(Attr.Access, value));
+            NotFound = new NotFoundExpression<KeyManyToOnePart>(this, value => structure.SetValue(Attr.NotFound, value));
         }
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace FluentNHibernate.Mapping
 
         public KeyManyToOnePart ForeignKey(string foreignKey)
         {
-            mapping.ForeignKey = foreignKey;
+            structure.SetValue(Attr.ForeignKey, foreignKey);
             return this;
         }
 
@@ -44,17 +44,26 @@ namespace FluentNHibernate.Mapping
 
         public KeyManyToOnePart Lazy()
         {
-            mapping.Lazy = nextBool;
+            structure.SetValue(Attr.Lazy, nextBool);
             nextBool = true;
             return this;
         }
 
         public KeyManyToOnePart Name(string name)
         {
-            mapping.Name = name;
+            structure.SetValue(Attr.Name, name);
             return this;
         }
 
-        
+        public KeyManyToOnePart Column(string columnName)
+        {
+            var column = new ColumnStructure(structure);
+
+            new ColumnPart(column)
+                .Name(columnName);
+
+            structure.AddChild(column);
+            return this;
+        }
     }
 }

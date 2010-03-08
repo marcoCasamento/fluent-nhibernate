@@ -1,12 +1,10 @@
 using System;
 using System.Linq.Expressions;
-using System.Reflection;
-using FluentNHibernate.Utils;
 using FluentNHibernate.Visitors;
 
 namespace FluentNHibernate.MappingModel.Collections
 {
-    public class IndexManyToManyMapping : MappingBase, IIndexMapping, IHasColumnMappings
+    public class IndexManyToManyMapping : MappingBase, IIndexMapping, IHasColumnMappings, IMapping
     {
         private readonly AttributeStore<IndexManyToManyMapping> attributes;
         private readonly IDefaultableList<ColumnMapping> columns = new DefaultableList<ColumnMapping>();

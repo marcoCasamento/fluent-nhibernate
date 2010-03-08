@@ -5,7 +5,7 @@ using FluentNHibernate.Visitors;
 
 namespace FluentNHibernate.MappingModel
 {
-    public class CacheMapping : MappingBase
+    public class CacheMapping : MappingBase, IMapping
     {
         private readonly AttributeStore<CacheMapping> attributes;
 

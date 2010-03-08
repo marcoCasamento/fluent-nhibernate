@@ -11,155 +11,221 @@ using FluentNHibernate.MappingModel.Collections;
 using FluentNHibernate.MappingModel.Identity;
 using FluentNHibernate.Testing.DomainModel;
 using FluentNHibernate.Testing.DomainModel.Mapping;
+using FluentNHibernate.Utils;
 using FluentNHibernate.Utils.Reflection;
 
 namespace FluentNHibernate.Testing.FluentInterfaceTests
 {
     public abstract class BaseModelFixture
     {
-        protected ModelTester<ClassMap<T>, ClassMapping> ClassMap<T>()
+        protected static ModelTester<ClassMap<T>, ClassMapping> ClassMap<T>()
         {
-            return new ModelTester<ClassMap<T>, ClassMapping>(() => new ClassMap<T>(), x => (ClassMapping)((IMappingProvider)x).GetUserDefinedMappings().Mapping);
+            return new ModelTester<ClassMap<T>, ClassMapping>(
+                () => new ClassMap<T>(),
+                x => (ClassMapping)((IMappingProvider)x).GetUserDefinedMappings().Structure);
         }
 
-        protected ModelTester<DiscriminatorPart, DiscriminatorMapping> DiscriminatorMap<T>()
+        protected static ModelTester<DiscriminatorPart, DiscriminatorMapping> DiscriminatorMap<T>()
         {
-            return new ModelTester<DiscriminatorPart, DiscriminatorMapping>(() =>
-            {
-                return new DiscriminatorPart("column", typeof(T), (x, y) => {}, new TypeReference(typeof(object)));
-            }, x => ((IDiscriminatorMappingProvider)x).GetDiscriminatorMapping());
+            var structure = new BucketStructure<DiscriminatorMapping>();
+            return new ModelTester<DiscriminatorPart, DiscriminatorMapping>(
+                () => new DiscriminatorPart(structure),
+                structure.CreateMappingNode);
         }
 
-        protected ModelTester<SubClassPart<T>, SubclassMapping> Subclass<T>()
+        protected static ModelTester<SubClassPart<T>, SubclassMapping> Subclass<T>()
         {
-            return new ModelTester<SubClassPart<T>, SubclassMapping>(() => new SubClassPart<T>(null, null), x => ((ISubclassMappingProvider)x).GetSubclassMapping());
+            var structure = new TypeStructure<SubclassMapping>(typeof(T));
+            return new ModelTester<SubClassPart<T>, SubclassMapping>(
+                () => new SubClassPart<T>(null, structure),
+                structure.CreateMappingNode);
         }
 
-        protected ModelTester<SubclassMap<T>, SubclassMapping> SubclassMapForSubclass<T>()
+        protected static ModelTester<SubclassMap<T>, SubclassMapping> SubclassMapForSubclass<T>()
         {
             return new ModelTester<SubclassMap<T>, SubclassMapping>(() => new SubclassMap<T>(), x =>
             {
                 var userMappings = ((IIndeterminateSubclassMappingProvider)x).GetUserDefinedMappings();
-                var mapping = (SubclassMapping)userMappings.Mapping;
+                var mapping = (SubclassMapping)userMappings.Structure;
                 mapping.SubclassType = SubclassType.Subclass;
                 return mapping;
             });
         }
 
-        protected ModelTester<JoinedSubClassPart<T>, SubclassMapping> JoinedSubclass<T>()
+        protected static ModelTester<JoinedSubClassPart<T>, SubclassMapping> JoinedSubclass<T>()
         {
-            return new ModelTester<JoinedSubClassPart<T>, SubclassMapping>(() => new JoinedSubClassPart<T>("column"), x => ((ISubclassMappingProvider)x).GetSubclassMapping());
+            var structure = new TypeStructure<SubclassMapping>(typeof(T));
+            return new ModelTester<JoinedSubClassPart<T>, SubclassMapping>(
+                () => new JoinedSubClassPart<T>(structure),
+                structure.CreateMappingNode);
         }
 
-        protected ModelTester<SubclassMap<T>, SubclassMapping> SubclassMapForJoinedSubclass<T>()
+        protected static ModelTester<SubclassMap<T>, SubclassMapping> SubclassMapForJoinedSubclass<T>()
         {
             return new ModelTester<SubclassMap<T>, SubclassMapping>(() => new SubclassMap<T>(), x =>
             {
                 var userMappings = ((IIndeterminateSubclassMappingProvider)x).GetUserDefinedMappings();
-                var mapping = (SubclassMapping)userMappings.Mapping;
+                var mapping = (SubclassMapping)userMappings.Structure;
                 mapping.SubclassType = SubclassType.JoinedSubclass;
                 return mapping;
             });
         }
 
-        protected ModelTester<ComponentPart<T>, ComponentMapping> Component<T>()
+        protected static ModelTester<ComponentPart<T>, ComponentMapping> Component<T>()
         {
-            return new ModelTester<ComponentPart<T>, ComponentMapping>(() => new ComponentPart<T>(typeof(ExampleClass), ReflectionHelper.GetMember<VersionTarget>(x => x.VersionNumber)), x => (ComponentMapping)((IComponentMappingProvider)x).GetComponentMapping());
+            var structure = new MemberStructure<ComponentMapping>(ReflectionHelper.GetMember<VersionTarget>(x => x.VersionNumber));
+            return new ModelTester<ComponentPart<T>, ComponentMapping>(
+                () => new ComponentPart<T>(structure),
+                structure.CreateMappingNode);
         }
 
-        protected ModelTester<DynamicComponentPart<T>, ComponentMapping> DynamicComponent<T>()
+        protected static ModelTester<DynamicComponentPart<T>, ComponentMapping> DynamicComponent<T>()
         {
-            return new ModelTester<DynamicComponentPart<T>, ComponentMapping>(() => new DynamicComponentPart<T>(typeof(ExampleClass), ReflectionHelper.GetMember<VersionTarget>(x => x.VersionNumber)), x => (ComponentMapping)((IComponentMappingProvider)x).GetComponentMapping());
+            var structure = new MemberStructure<ComponentMapping>(ReflectionHelper.GetMember<VersionTarget>(x => x.VersionNumber));
+            return new ModelTester<DynamicComponentPart<T>, ComponentMapping>(
+                () => new DynamicComponentPart<T>(structure),
+                structure.CreateMappingNode);
         }
 
-        protected ModelTester<VersionPart, VersionMapping> Version()
+        protected static ModelTester<VersionPart, VersionMapping> Version()
         {
-            return new ModelTester<VersionPart, VersionMapping>(() => new VersionPart(typeof(VersionTarget), ReflectionHelper.GetMember<VersionTarget>(x => x.VersionNumber)), x => ((IVersionMappingProvider)x).GetVersionMapping());
+            var structure = new MemberStructure<VersionMapping>(ReflectionHelper.GetMember<VersionTarget>(x => x.VersionNumber));
+            return new ModelTester<VersionPart, VersionMapping>(
+                () => new VersionPart(structure),
+                structure.CreateMappingNode);
         }
 
-        protected ModelTester<CachePart, CacheMapping> Cache()
+        protected static ModelTester<CachePart, CacheMapping> Cache()
         {
-            return new ModelTester<CachePart, CacheMapping>(() => new CachePart(typeof(CachedRecord)), x => ((ICacheMappingProvider)x).GetCacheMapping());
+            var structure = new BucketStructure<CacheMapping>();
+            return new ModelTester<CachePart, CacheMapping>(
+                () => new CachePart(structure),
+                structure.CreateMappingNode);
         }
 
-        protected ModelTester<IdentityPart, IdMapping> Id()
+        protected static ModelTester<IdentityPart<int>, IdMapping> Id()
         {
-            return new ModelTester<IdentityPart, IdMapping>(() => new IdentityPart(typeof(IdentityTarget), ReflectionHelper.GetMember<IdentityTarget>(x => x.IntId)), x => ((IIdentityMappingProvider)x).GetIdentityMapping());
+            var structure = new MemberStructure<IdMapping>(ReflectionHelper.GetMember<IdentityTarget>(x => x.IntId));
+            return new ModelTester<IdentityPart<int>, IdMapping>(
+                () => new IdentityPart<int>(structure),
+                structure.CreateMappingNode);
         }
 
-        protected ModelTester<CompositeIdentityPart<T>, CompositeIdMapping> CompositeId<T>()
+        protected static ModelTester<CompositeIdentityPart<T>, CompositeIdMapping> CompositeId<T>()
         {
-            return new ModelTester<CompositeIdentityPart<T>, CompositeIdMapping>(() => new CompositeIdentityPart<T>(), x => ((ICompositeIdMappingProvider)x).GetCompositeIdMapping());
+            var structure = new BucketStructure<CompositeIdMapping>();
+            return new ModelTester<CompositeIdentityPart<T>, CompositeIdMapping>(
+                () => new CompositeIdentityPart<T>(structure),
+                structure.CreateMappingNode);
         }
 
-        protected ModelTester<OneToOnePart<PropertyReferenceTarget>, OneToOneMapping> OneToOne()
+        protected static ModelTester<OneToOnePart<PropertyReferenceTarget>, OneToOneMapping> OneToOne()
         {
-            return new ModelTester<OneToOnePart<PropertyReferenceTarget>, OneToOneMapping>(() => new OneToOnePart<PropertyReferenceTarget>(typeof(PropertyTarget), ReflectionHelper.GetMember<PropertyTarget>(x => x.Reference)), x => ((IOneToOneMappingProvider)x).GetOneToOneMapping());
+            var structure = new MemberStructure<OneToOneMapping>(ReflectionHelper.GetMember<PropertyTarget>(x => x.Reference));
+            return new ModelTester<OneToOnePart<PropertyReferenceTarget>, OneToOneMapping>(
+                () => new OneToOnePart<PropertyReferenceTarget>(structure),
+                structure.CreateMappingNode);
         }
 
-        protected ModelTester<PropertyPart, PropertyMapping> Property()
+        protected static ModelTester<PropertyPart, PropertyMapping> Property()
         {
-            return new ModelTester<PropertyPart, PropertyMapping>(() => new PropertyPart(ReflectionHelper.GetMember<PropertyTarget>(x => x.Name), typeof(PropertyTarget)), x => ((IPropertyMappingProvider)x).GetPropertyMapping());
+            var structure = new MemberStructure<PropertyMapping>(ReflectionHelper.GetMember<PropertyTarget>(x => x.Name));
+            return new ModelTester<PropertyPart, PropertyMapping>(
+                () => new PropertyPart(structure),
+                structure.CreateMappingNode);
         }
 
-        protected ModelTester<PropertyPart, PropertyMapping> Property<T>(Expression<Func<T, object>> property)
+        protected static ModelTester<PropertyPart, PropertyMapping> Property<T>(Expression<Func<T, object>> property)
         {
-            return new ModelTester<PropertyPart, PropertyMapping>(() => new PropertyPart(ReflectionHelper.GetMember(property), typeof(T)), x => ((IPropertyMappingProvider)x).GetPropertyMapping());
+            var structure = new MemberStructure<PropertyMapping>(property.ToMember());
+            return new ModelTester<PropertyPart, PropertyMapping>(
+                () => new PropertyPart(structure),
+                structure.CreateMappingNode);
         }
 
-        protected ModelTester<OneToManyPart<T>, ICollectionMapping> OneToMany<T>(Expression<Func<OneToManyTarget, IEnumerable<T>>> property)
+        protected static ModelTester<OneToManyPart<T>, ICollectionMapping> OneToMany<T>(Expression<Func<OneToManyTarget, IEnumerable<T>>> property)
         {
-            return new ModelTester<OneToManyPart<T>, ICollectionMapping>(() => new OneToManyPart<T>(typeof(OneToManyTarget), ReflectionHelper.GetMember(property)), x => x.GetCollectionMapping());
+            var structure = new MemberStructure<ICollectionMapping>(property.ToMember());
+            return new ModelTester<OneToManyPart<T>, ICollectionMapping>(
+                () => new OneToManyPart<T>(structure),
+                structure.CreateMappingNode);
         }
 
-        protected ModelTester<ManyToManyPart<T>, ICollectionMapping> ManyToMany<T>(Expression<Func<ManyToManyTarget, IList<T>>> property)
+        protected static ModelTester<ManyToManyPart<T>, ICollectionMapping> ManyToMany<T>(Expression<Func<ManyToManyTarget, IList<T>>> property)
         {
-            return new ModelTester<ManyToManyPart<T>, ICollectionMapping>(() => new ManyToManyPart<T>(typeof(ManyToManyTarget), ReflectionHelper.GetMember(property)), x => x.GetCollectionMapping());
+            var structure = new MemberStructure<ICollectionMapping>(ReflectionHelper.GetMember(property));
+            return new ModelTester<ManyToManyPart<T>, ICollectionMapping>(
+                () => new ManyToManyPart<T>(structure),
+                structure.CreateMappingNode);
         }
 
-        protected ModelTester<ManyToManyPart<IDictionary>, ICollectionMapping> ManyToMany(Expression<Func<ManyToManyTarget, IDictionary>> property)
+        protected static ModelTester<ManyToManyPart<IDictionary>, ICollectionMapping> ManyToMany(Expression<Func<ManyToManyTarget, IDictionary>> property)
         {
-            return new ModelTester<ManyToManyPart<IDictionary>, ICollectionMapping>(() => new ManyToManyPart<IDictionary>(typeof(ManyToManyTarget), ReflectionHelper.GetMember(property)), x => x.GetCollectionMapping());
+            var structure = new MemberStructure<ICollectionMapping>(ReflectionHelper.GetMember(property));
+            return new ModelTester<ManyToManyPart<IDictionary>, ICollectionMapping>(
+                () => new ManyToManyPart<IDictionary>(structure),
+                structure.CreateMappingNode);
         }
 
-        protected ModelTester<ManyToManyPart<IDictionary<TIndex, TValue>>, ICollectionMapping> ManyToMany<TIndex, TValue>(Expression<Func<ManyToManyTarget, IDictionary<TIndex, TValue>>> property)
+        protected static ModelTester<ManyToManyPart<IDictionary<TIndex, TValue>>, ICollectionMapping> ManyToMany<TIndex, TValue>(Expression<Func<ManyToManyTarget, IDictionary<TIndex, TValue>>> property)
         {
-            return new ModelTester<ManyToManyPart<IDictionary<TIndex, TValue>>, ICollectionMapping>(() => new ManyToManyPart<IDictionary<TIndex, TValue>>(typeof(ManyToManyTarget), ReflectionHelper.GetMember(property)), x => x.GetCollectionMapping());
+            var structure = new MemberStructure<ICollectionMapping>(ReflectionHelper.GetMember(property));
+            return new ModelTester<ManyToManyPart<IDictionary<TIndex, TValue>>, ICollectionMapping>(
+               () => new ManyToManyPart<IDictionary<TIndex, TValue>>(structure),
+               structure.CreateMappingNode);
         }
 
-        protected ModelTester<ManyToOnePart<PropertyReferenceTarget>, ManyToOneMapping> ManyToOne()
+        protected static ModelTester<ManyToOnePart<PropertyReferenceTarget>, ManyToOneMapping> ManyToOne()
         {
-            return new ModelTester<ManyToOnePart<PropertyReferenceTarget>, ManyToOneMapping>(() => new ManyToOnePart<PropertyReferenceTarget>(typeof(PropertyTarget), ReflectionHelper.GetMember<PropertyTarget>(x => x.Reference)), x => ((IManyToOneMappingProvider)x).GetManyToOneMapping());
+            var structure = new MemberStructure<ManyToOneMapping>(ReflectionHelper.GetMember<PropertyTarget>(x => x.Reference));
+            return new ModelTester<ManyToOnePart<PropertyReferenceTarget>, ManyToOneMapping>(
+                () => new ManyToOnePart<PropertyReferenceTarget>(structure),
+                structure.CreateMappingNode);
         }
 
-        protected ModelTester<AnyPart<T>, AnyMapping> Any<T>()
+        protected static ModelTester<AnyPart<T>, AnyMapping> Any<T>()
         {
-            return new ModelTester<AnyPart<T>, AnyMapping>(() => new AnyPart<T>(typeof(MappedObject), ReflectionHelper.GetMember<MappedObject>(x => x.Parent)), x => ((IAnyMappingProvider)x).GetAnyMapping());
+            var structure = new MemberStructure<AnyMapping>(ReflectionHelper.GetMember<MappedObject>(x => x.Parent));
+            return new ModelTester<AnyPart<T>, AnyMapping>(
+                () => new AnyPart<T>(structure),
+                structure.CreateMappingNode);
         }
 
-        protected ModelTester<JoinPart<T>, JoinMapping> Join<T>(string table)
+        protected static ModelTester<JoinPart<T>, JoinMapping> Join<T>(string table)
         {
-            return new ModelTester<JoinPart<T>, JoinMapping>(() => new JoinPart<T>(table), x => ((IJoinMappingProvider)x).GetJoinMapping());
+            var structure = new BucketStructure<JoinMapping>();
+            return new ModelTester<JoinPart<T>, JoinMapping>(
+                () => new JoinPart<T>(structure),
+                structure.CreateMappingNode);
         }
 
-        protected ModelTester<HibernateMappingPart, HibernateMapping> HibernateMapping()
+        protected static ModelTester<HibernateMappingPart, HibernateMapping> HibernateMapping()
         {
             return new ModelTester<HibernateMappingPart, HibernateMapping>(() => new HibernateMappingPart(), x => ((IHibernateMappingProvider)x).GetHibernateMapping());
         }
 
-        protected ModelTester<CompositeElementPart<T>, CompositeElementMapping> CompositeElement<T>()
+        protected static ModelTester<CompositeElementPart<T>, CompositeElementMapping> CompositeElement<T>()
         {
-            return new ModelTester<CompositeElementPart<T>, CompositeElementMapping>(() => new CompositeElementPart<T>(typeof(MappedObject)), x => ((ICompositeElementMappingProvider)x).GetCompositeElementMapping());
+            var structure = new BucketStructure<CompositeElementMapping>();
+            return new ModelTester<CompositeElementPart<T>, CompositeElementMapping>(
+                () => new CompositeElementPart<T>(structure),
+                structure.CreateMappingNode);
         }
 
-        protected ModelTester<StoredProcedurePart, StoredProcedureMapping> StoredProcedure()
+        protected static ModelTester<StoredProcedurePart, StoredProcedureMapping> StoredProcedure()
         {
-            return new ModelTester<StoredProcedurePart, StoredProcedureMapping>(() => new StoredProcedurePart(null, null), x => x.GetStoredProcedureMapping());
+            return null;
+            //return new ModelTester<StoredProcedurePart, StoredProcedureMapping>(
+            //    () => new StoredProcedurePart(null, null),
+            //    x => x.GetStoredProcedureMapping());
         }
 
-        protected ModelTester<NaturalIdPart<T>, NaturalIdMapping> NaturalId<T>()
+        protected static ModelTester<NaturalIdPart<T>, NaturalIdMapping> NaturalId<T>()
         {
-            return new ModelTester<NaturalIdPart<T>, NaturalIdMapping>(() => new NaturalIdPart<T>(), x => ((INaturalIdMappingProvider)x).GetNaturalIdMapping());
+            var structure = new BucketStructure<NaturalIdMapping>();
+            return new ModelTester<NaturalIdPart<T>, NaturalIdMapping>(
+                () => new NaturalIdPart<T>(structure), 
+                structure.CreateMappingNode);
         }
     }
 }

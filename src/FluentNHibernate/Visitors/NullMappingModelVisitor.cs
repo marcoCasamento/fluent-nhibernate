@@ -382,5 +382,10 @@ namespace FluentNHibernate.Visitors
         {
             
         }
+
+        public virtual void Visit(ParamMapping mapping)
+        {
+            
+        }
     }
 }

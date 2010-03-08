@@ -6,19 +6,24 @@ using FluentNHibernate.MappingModel;
 
 namespace FluentNHibernate.Mapping
 {
-    public class ColumnMappingCollection<TParent> : IEnumerable<ColumnMapping>
+    public class ColumnMappingCollection<TParent> : IEnumerable<IMappingStructure<ColumnMapping>>
     {
-        private readonly IList<ColumnMapping> columns = new List<ColumnMapping>();
-        private readonly TParent parent;
+        readonly TParent parent;
+        readonly IMappingStructure parentStructure;
 
-        public ColumnMappingCollection(TParent parent)
+        public ColumnMappingCollection(TParent parent, IMappingStructure structure)
         {
             this.parent = parent;
+            this.parentStructure = structure;
         }
 
         public TParent Add(string name)
         {
-            columns.Add(new ColumnMapping { Name = name });
+            var column = new ColumnStructure(parentStructure);
+            
+            column.SetValue(Attr.Name, name);
+            parentStructure.AddChild(column);
+
             return parent;
         }
 
@@ -33,28 +38,28 @@ namespace FluentNHibernate.Mapping
 
         public TParent Add(string columnName, Action<ColumnPart> customColumnMapping)
         {
-            var mapping = new ColumnMapping { Name = columnName };
-            var part = new ColumnPart(mapping);
-            customColumnMapping(part);
-            columns.Add(mapping);
-            return parent;
-        }
+            var column = new ColumnStructure(parentStructure);
+            var part = new ColumnPart(column);
 
-        public TParent Add(ColumnMapping column)
-        {
-            columns.Add(column);
+            customColumnMapping(part);
+            
+            parentStructure.AddChild(column);
+
             return parent;
         }
 
         public TParent Clear()
         {
-            columns.Clear();
+            parentStructure.RemoveChildrenMatching(x => x is IMappingStructure<ColumnMapping>);
             return parent;
         }
 
-        public IEnumerator<ColumnMapping> GetEnumerator()
+        public IEnumerator<IMappingStructure<ColumnMapping>> GetEnumerator()
         {
-            return columns.GetEnumerator();
+            return parentStructure.Children
+                .Where(x => x is IMappingStructure<ColumnMapping>)
+                .Select(x => x as IMappingStructure<ColumnMapping>)
+                .GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()

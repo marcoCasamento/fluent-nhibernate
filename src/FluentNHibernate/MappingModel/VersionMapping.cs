@@ -1,11 +1,10 @@
 using System;
-using System.Linq.Expressions;
 using FluentNHibernate.Utils;
 using FluentNHibernate.Visitors;
 
 namespace FluentNHibernate.MappingModel
 {
-    public class VersionMapping : ColumnBasedMappingBase
+    public class VersionMapping : ColumnBasedMappingBase, IMapping, IMemberMapping
     {
         public VersionMapping()
             : this(new AttributeStore())

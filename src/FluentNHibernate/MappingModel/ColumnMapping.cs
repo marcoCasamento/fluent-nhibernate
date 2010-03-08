@@ -4,7 +4,7 @@ using FluentNHibernate.Visitors;
 
 namespace FluentNHibernate.MappingModel
 {
-    public class ColumnMapping : MappingBase
+    public class ColumnMapping : MappingBase, IMapping
     {
         private readonly AttributeStore<ColumnMapping> attributes;
 

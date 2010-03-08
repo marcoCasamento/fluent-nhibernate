@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
+using FluentNHibernate.Mapping;
 using NUnit.Framework;
 
 namespace FluentNHibernate.Testing
@@ -11,6 +12,12 @@ namespace FluentNHibernate.Testing
 
     public static class SpecificationExtensions
     {
+        public static void ShouldHaveValue(this IMappingStructure structure, Attr property, object value)
+        {
+            structure.Values.Any(x => x.Key == property && x.Value == value)
+                .ShouldBeTrue();
+        }
+
         public static void ShouldBeFalse(this bool condition)
         {
             Assert.IsFalse(condition);

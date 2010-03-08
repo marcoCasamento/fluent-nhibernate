@@ -58,7 +58,7 @@ namespace FluentNHibernate.Testing.Automapping
         {
             var map = model.FindMapping<T>();
 
-            mapping((ClassMapping)map.GetUserDefinedMappings().Mapping);
+            mapping((ClassMapping)map.GetUserDefinedMappings().Structure);
         }
     }
 

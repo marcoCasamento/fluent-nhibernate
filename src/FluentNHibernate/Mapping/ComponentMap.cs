@@ -7,26 +7,21 @@ namespace FluentNHibernate.Mapping
 {
     public class ComponentMap<T> : ComponentPartBase<T>, IExternalComponentMappingProvider
     {
-        private readonly AttributeStore<ComponentMapping> attributes;
+        readonly IMappingStructure<ComponentMapping> structure;
 
         public ComponentMap()
-            : this(new AttributeStore())
+            : this(new TypeStructure<ComponentMapping>(typeof(T)))
         {}
 
-        internal ComponentMap(AttributeStore underlyingStore)
-            : base(underlyingStore, "")
+        ComponentMap(IMappingStructure<ComponentMapping> structure)
+            : base(structure)
         {
-            attributes = new AttributeStore<ComponentMapping>(underlyingStore);
-        }
-
-        protected override ComponentMapping CreateComponentMappingRoot(AttributeStore store)
-        {
-            return new ExternalComponentMapping(ComponentType.Component, attributes.CloneInner());
+            this.structure = structure;
         }
 
         IUserDefinedMapping IMappingProvider.GetUserDefinedMappings()
         {
-            return new FluentMapUserDefinedMappings(typeof(T), CreateComponentMapping());
+            return new FluentMapUserDefinedMappings(typeof(T), structure);
         }
 
         public HibernateMapping GetHibernateMapping()

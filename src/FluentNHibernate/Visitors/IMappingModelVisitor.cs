@@ -89,5 +89,6 @@ namespace FluentNHibernate.Visitors
         void Visit(FilterDefinitionMapping mapping);
         void Visit(StoredProcedureMapping mapping);
         void Visit(TuplizerMapping mapping);
+        void Visit(ParamMapping mapping);
     }
 }

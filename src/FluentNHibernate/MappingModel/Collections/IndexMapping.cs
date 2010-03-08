@@ -6,7 +6,7 @@ using FluentNHibernate.Visitors;
 
 namespace FluentNHibernate.MappingModel.Collections
 {
-    public class IndexMapping : MappingBase, IIndexMapping, IHasColumnMappings
+    public class IndexMapping : MappingBase, IIndexMapping, IHasColumnMappings, IMapping
     {
         private readonly AttributeStore<IndexMapping> attributes;
         private readonly IDefaultableList<ColumnMapping> columns = new DefaultableList<ColumnMapping>();

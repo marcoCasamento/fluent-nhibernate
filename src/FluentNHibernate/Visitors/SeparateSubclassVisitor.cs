@@ -23,7 +23,7 @@ namespace FluentNHibernate.Visitors
             foreach (var provider in subclasses)
             {
                 var userMappings = provider.GetUserDefinedMappings();
-                var subclassMapping = (SubclassMapping)userMappings.Mapping;
+                var subclassMapping = (SubclassMapping)userMappings.Structure;
                 subclassMapping.SubclassType = GetSubclassType(mapping);
 
                 mapping.AddSubclass(subclassMapping);
@@ -39,7 +39,7 @@ namespace FluentNHibernate.Visitors
             foreach (var provider in subclasses)
             {
                 var userMappings = provider.GetUserDefinedMappings();
-                var subclassMapping = (SubclassMapping)userMappings.Mapping;
+                var subclassMapping = (SubclassMapping)userMappings.Structure;
                 subclassMapping.SubclassType = mapping.SubclassType;
 
                 mapping.AddSubclass(subclassMapping);

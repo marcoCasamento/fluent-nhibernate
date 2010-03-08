@@ -36,8 +36,8 @@ namespace FluentNHibernate.Automapping
 
         private GeneratorMapping GetDefaultGenerator(Member property)
         {
-            var generatorMapping = new GeneratorMapping();
-            var defaultGenerator = new GeneratorBuilder(generatorMapping, property.PropertyType);
+            var generatorStructure = new BucketStructure<GeneratorMapping>();
+            var defaultGenerator = new GeneratorBuilder(generatorStructure, property.PropertyType);
 
             if (property.PropertyType == typeof(Guid))
                 defaultGenerator.GuidComb();
@@ -46,7 +46,7 @@ namespace FluentNHibernate.Automapping
             else
                 defaultGenerator.Assigned();
 
-            return generatorMapping;
+            return generatorStructure.CreateMappingNode(new DefaultMappingFactory());
         }
     }
 }

@@ -5,7 +5,7 @@ using FluentNHibernate.Visitors;
 
 namespace FluentNHibernate.MappingModel
 {
-    public class AnyMapping : MappingBase
+    public class AnyMapping : MappingBase, IMapping, IMemberMapping
     {
         private readonly AttributeStore<AnyMapping> attributes;
         private readonly IDefaultableList<ColumnMapping> typeColumns = new DefaultableList<ColumnMapping>();

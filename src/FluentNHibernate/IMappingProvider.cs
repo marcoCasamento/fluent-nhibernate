@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using FluentNHibernate.Mapping;
 using FluentNHibernate.MappingModel;
 using FluentNHibernate.MappingModel.ClassBased;
 
@@ -15,19 +16,33 @@ namespace FluentNHibernate
 
     public interface IUserDefinedMapping
     {
-        object Mapping { get; }
+        IMappingStructure Structure { get; }
         Type Type { get; }
     }
 
     public class FluentMapUserDefinedMappings : IUserDefinedMapping
     {
-        public FluentMapUserDefinedMappings(Type entityType, object mapping)
+        public FluentMapUserDefinedMappings(Type entityType, IMappingStructure structure)
         {
-            Mapping = mapping;
+            Structure = structure;
             Type = entityType;
         }
 
-        public object Mapping { get; private set; }
+        public IMappingStructure Structure { get; private set; }
         public Type Type { get; private set; }
+        
+        public object CreateModelShape()
+        {
+            return Structure;
+        }
+    }
+
+    /// <summary>
+    /// Represents a single user-defined value in a mapping, could be a class,
+    /// bag, attribute, anything...
+    /// </summary>
+    public interface IUserValue
+    {
+        IEnumerable<IUserValue> Values { get; }
     }
 }

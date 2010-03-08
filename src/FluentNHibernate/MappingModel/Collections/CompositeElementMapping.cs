@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Reflection;
-using FluentNHibernate.Mapping;
-using FluentNHibernate.Utils;
 using FluentNHibernate.Visitors;
 
 namespace FluentNHibernate.MappingModel.Collections
 {
-    public class CompositeElementMapping : MappingBase
+    public class CompositeElementMapping : MappingBase, IMapping, ITypeMapping
     {
         private readonly MappedMembers mappedMembers;
         protected readonly AttributeStore<CompositeElementMapping> attributes;

@@ -13,8 +13,8 @@ namespace FluentNHibernate.Automapping
     {
         private readonly IList<Member> propertiesMapped = new List<Member>();
 
-        public AutoSubClassPart(DiscriminatorPart parent, string discriminatorValue)
-            : base(parent, discriminatorValue)
+        public AutoSubClassPart(DiscriminatorPart parent, IMappingStructure<SubclassMapping> structure)
+            : base(parent, structure)
         {}
 
         public IEnumerable<Member> PropertiesMapped
@@ -82,7 +82,7 @@ namespace FluentNHibernate.Automapping
 
             action(joinedclass);
 
-            subclasses[typeof(TSubclass)] = joinedclass;
+            //subclasses[typeof(TSubclass)] = joinedclass;
         }
 
         public IAutoClasslike JoinedSubClass(Type type, string keyColumn)
@@ -90,7 +90,7 @@ namespace FluentNHibernate.Automapping
             var genericType = typeof(AutoJoinedSubClassPart<>).MakeGenericType(type);
             var joinedclass = (ISubclassMappingProvider)Activator.CreateInstance(genericType, keyColumn);
 
-            subclasses[type] = joinedclass;
+            //subclasses[type] = joinedclass;
 
             return (IAutoClasslike)joinedclass;
         }
@@ -102,7 +102,7 @@ namespace FluentNHibernate.Automapping
 
             action(subclass);
 
-            subclasses[typeof(TSubclass)] = subclass;
+            //subclasses[typeof(TSubclass)] = subclass;
         }
 
         public IAutoClasslike SubClass(Type type, string discriminatorValue)
@@ -110,7 +110,7 @@ namespace FluentNHibernate.Automapping
             var genericType = typeof(AutoSubClassPart<>).MakeGenericType(type);
             var subclass = (ISubclassMappingProvider)Activator.CreateInstance(genericType, discriminatorValue);
 
-            subclasses[type] = subclass;
+            //subclasses[type] = subclass;
 
             return (IAutoClasslike)subclass;
         }

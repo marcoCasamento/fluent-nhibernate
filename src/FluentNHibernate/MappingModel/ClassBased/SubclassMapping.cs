@@ -4,7 +4,7 @@ using FluentNHibernate.Visitors;
 
 namespace FluentNHibernate.MappingModel.ClassBased
 {
-    public class SubclassMapping : ClassMappingBase
+    public class SubclassMapping : ClassMappingBase, IMapping, ITypeMapping
     {
         public SubclassType SubclassType { get; set; }
         private AttributeStore<SubclassMapping> attributes;

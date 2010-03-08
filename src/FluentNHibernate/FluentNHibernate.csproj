@@ -398,6 +398,8 @@
     <Compile Include="MappingModel\EqualityExtensions.cs" />
     <Compile Include="MappingModel\NaturalIdMapping.cs" />
     <Compile Include="MappingModel\Output\XmlNaturalIdWriter.cs" />
+    <Compile Include="MappingModel\IMapping.cs" />
+    <Compile Include="MappingModel\ParamMapping.cs" />
     <Compile Include="Mapping\NaturalIdPart.cs" />
     <Compile Include="Mapping\Providers\IExternalComponentMappingProvider.cs" />
     <Compile Include="Mapping\Providers\INaturalIdMappingProvider.cs" />

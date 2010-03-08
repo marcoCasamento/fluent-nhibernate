@@ -5,123 +5,305 @@ using System.Linq.Expressions;
 using FluentNHibernate.Mapping.Providers;
 using FluentNHibernate.MappingModel;
 using FluentNHibernate.MappingModel.ClassBased;
+using FluentNHibernate.MappingModel.Identity;
 using FluentNHibernate.Utils;
 using NHibernate.Persister.Entity;
 
 namespace FluentNHibernate.Mapping
 {
-    public class ClassMap<T> : ClasslikeMapBase<T>, IMappingProvider
+    public enum Attr
     {
-        protected readonly AttributeStore<ClassMapping> attributes = new AttributeStore<ClassMapping>();
-        private readonly IList<JoinMapping> joins = new List<JoinMapping>();
-        private readonly OptimisticLockBuilder<ClassMap<T>> optimisticLock;
+        Name,
+        Lazy,
+        Access,
+        Cascade,
+        IdType,
+        Insert,
+        Update,
+        OptimisticLock,
+        Usage,
+        Region,
+        Include,
+        Polymorphism,
+        SchemaAction,
+        DiscriminatorValue,
+        Schema,
+        Table,
+        Mutable,
+        DynamicUpdate,
+        DynamicInsert,
+        BatchSize,
+        Check,
+        Persister,
+        Proxy,
+        SelectBeforeUpdate,
+        Where,
+        Subselect,
+        EntityName,
+        Parent,
+        Unique,
+        Mapped,
+        UnsavedValue,
+        Force,
+        Formula,
+        Precision,
+        Length,
+        Scale,
+        NotNull,
+        UniqueKey,
+        Index,
+        Default,
+        Type,
+        DefaultCascade,
+        DefaultAccess,
+        AutoImport,
+        DefaultLazy,
+        Catalog,
+        Namespace,
+        Assembly,
+        Generator,
+        SqlType,
+        Rename,
+        Class,
+        Abstract,
+        Optional,
+        Inverse,
+        Key,
+        Fetch,
+        ForeignKey,
+        NotFound,
+        OrderBy,
+        PropertyRef,
+        MetaType,
+        Version,
+        EntityType,
+        Id,
+        Discriminator,
+        Cache,
+        ChildType,
+        CollectionType,
+        CompositeElement,
+        Element,
+        Generic,
+        Relationship,
+        Nullable,
+        Extends,
+        OnDelete,
+        ParentType,
+        Sort,
+        Value,
+        Constrained,
+        Generated,
+        Tuplizer,
+        Condition,
+        SPType,
+        Query,
+        Mode
+    }
+
+    public interface IMappingStructure
+    {
+        IEnumerable<KeyValuePair<Attr, object>> Values { get; }
+        IEnumerable<IMappingStructure> Children { get; }
+        void AddChild(IMappingStructure child);
+        void SetValue(Attr key, object value);
+        void RemoveChildrenMatching(Predicate<IMappingStructure> predicate);
+    }
+
+    public interface IMappingStructure<T> : IMappingStructure
+        where T : IMapping // ????
+    {
+        T CreateMappingNode(IMappingFactory factory);
+    }
+
+    public abstract class MappingStructure<T> : IMappingStructure<T>
+        where T : IMapping
+    {
+        readonly Dictionary<Attr, object> values = new Dictionary<Attr, object>();
+        readonly List<IMappingStructure> children = new List<IMappingStructure>();
+
+        public abstract T CreateMappingNode(IMappingFactory factory);
+        
+        public void SetValue(Attr key, object value)
+        {
+            values[key] = value;
+        }
+
+        public void RemoveChildrenMatching(Predicate<IMappingStructure> predicate)
+        {
+            children.RemoveAll(predicate);
+        }
+
+        public IEnumerable<KeyValuePair<Attr, object>> Values
+        {
+            get { return values; }
+        }
+
+        public IEnumerable<IMappingStructure> Children
+        {
+            get { return children.AsReadOnly(); }
+        }
+
+        public void AddChild(IMappingStructure child)
+        {
+            children.Add(child);
+        }
+    }
+
+    public class TypeStructure<T> : MappingStructure<T>
+        where T : IMapping, ITypeMapping
+    {
+        readonly Type type;
+
+        public TypeStructure(Type type)
+        {
+            this.type = type;
+        }
+
+        public override T CreateMappingNode(IMappingFactory factory)
+        {
+            return factory.CreateTypeMapping<T>(type, Values);
+        }
+    }
+
+    /// <summary>
+    /// Structure that has no real category (key, discriminator...)
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public class BucketStructure<T> : MappingStructure<T>
+        where T : IMapping
+    {
+        public override T CreateMappingNode(IMappingFactory factory)
+        {
+            return factory.CreateMapping<T>(Values);
+        }
+    }
+
+    public class MemberStructure<T> : MappingStructure<T>
+        where T : IMapping, IMemberMapping
+    {
+        readonly Member member;
+
+        public MemberStructure(Member member)
+        {
+            this.member = member;
+        }
+
+        public override T CreateMappingNode(IMappingFactory factory)
+        {
+            return factory.CreateMemberMapping<T>(member, Values);
+        }
+    }
+
+    public class ColumnStructure : MappingStructure<ColumnMapping>
+    {
+        readonly IMappingStructure parent;
+
+        public ColumnStructure(IMappingStructure parent)
+        {
+            this.parent = parent;
+        }
+
+        public override ColumnMapping CreateMappingNode(IMappingFactory factory)
+        {
+            return factory.CreateColumnMapping(Merge(parent.Values, Values));
+        }
 
         /// <summary>
-        /// Specify caching for this entity.
+        /// Merges two key collections, overwriting any values in the left with ones from the
+        /// right.
         /// </summary>
-        public CachePart Cache { get; private set; }
-        protected IIdentityMappingProvider id;
+        private IEnumerable<KeyValuePair<Attr, object>> Merge(IEnumerable<KeyValuePair<Attr, object>> left, IEnumerable<KeyValuePair<Attr, object>> right)
+        {
+            var merged = new Dictionary<Attr, object>();
+
+            left.Each(x => merged[x.Key] = x.Value);
+            right.Each(x => merged[x.Key] = x.Value);
+
+            return merged;
+        }
+    }
+
+    public class DefaultMappingFactory : IMappingFactory
+    {
+        public T CreateMemberMapping<T>(Member member, IEnumerable<KeyValuePair<Attr, object>> values) where T : IMemberMapping
+        {
+            throw new NotImplementedException();
+        }
+
+        public T CreateTypeMapping<T>(Type type, IEnumerable<KeyValuePair<Attr, object>> values) where T : ITypeMapping
+        {
+            throw new NotImplementedException();
+        }
+
+        public ColumnMapping CreateColumnMapping(IEnumerable<KeyValuePair<Attr, object>> values)
+        {
+            throw new NotImplementedException();
+        }
+
+        public T CreateMapping<T>(IEnumerable<KeyValuePair<Attr, object>> values) where T : IMapping
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public interface IMappingFactory
+    {
+        T CreateMemberMapping<T>(Member member, IEnumerable<KeyValuePair<Attr, object>> values) where T : IMemberMapping;
+        T CreateTypeMapping<T>(Type type, IEnumerable<KeyValuePair<Attr, object>> values) where T : ITypeMapping;
+        ColumnMapping CreateColumnMapping(IEnumerable<KeyValuePair<Attr, object>> values);
+        T CreateMapping<T>(IEnumerable<KeyValuePair<Attr, object>> values) where T : IMapping;
+    } 
+
+    public class ClassMap<T> : ClasslikeMapBase<T>, IMappingProvider
+    {
+        private readonly OptimisticLockBuilder<ClassMap<T>> optimisticLock;
 
         private readonly IList<ImportPart> imports = new List<ImportPart>();
         private bool nextBool = true;
 
-        protected DiscriminatorPart discriminator;
-        protected IVersionMappingProvider version;
-        protected ICompositeIdMappingProvider compositeId;
-        protected INaturalIdMappingProvider naturalId;
         private readonly HibernateMappingPart hibernateMappingPart = new HibernateMappingPart();
         private readonly PolymorphismBuilder<ClassMap<T>> polymorphism;
         private SchemaActionBuilder<ClassMap<T>> schemaAction;
         protected TuplizerMapping tuplizerMapping;
 
+        readonly IMappingStructure<ClassMapping> structure;
+        IMappingStructure<CacheMapping> cacheStructure;
+
         public ClassMap()
+            : this(new TypeStructure<ClassMapping>(typeof(T)))
+        {}
+
+        ClassMap(IMappingStructure<ClassMapping> structure)
+            : base(structure)
         {
-            optimisticLock = new OptimisticLockBuilder<ClassMap<T>>(this, value => attributes.Set(x => x.OptimisticLock, value));
-            polymorphism = new PolymorphismBuilder<ClassMap<T>>(this, value => attributes.Set(x => x.Polymorphism, value));
-            schemaAction = new SchemaActionBuilder<ClassMap<T>>(this, value => attributes.Set(x => x.SchemaAction, value));
-            Cache = new CachePart(typeof(T));
+            this.structure = structure;
+
+            optimisticLock = new OptimisticLockBuilder<ClassMap<T>>(this, value => structure.SetValue(Attr.OptimisticLock, value));
+            polymorphism = new PolymorphismBuilder<ClassMap<T>>(this, value => structure.SetValue(Attr.Polymorphism, value));
+            schemaAction = new SchemaActionBuilder<ClassMap<T>>(this, value => structure.SetValue(Attr.SchemaAction, value));
+        }
+
+        /// <summary>
+        /// Specify caching for this entity.
+        /// </summary>
+        public CachePart Cache
+        {
+            get
+            {
+                if (cacheStructure == null)
+                {
+                    cacheStructure = new BucketStructure<CacheMapping>();
+                    structure.AddChild(cacheStructure);
+                }
+
+                return new CachePart(cacheStructure);
+            }
         }
 
         IUserDefinedMapping IMappingProvider.GetUserDefinedMappings()
         {
-		    var mapping = new ClassMapping(attributes.CloneInner());
-
-            mapping.Type = typeof(T);
-            mapping.Name = typeof(T).AssemblyQualifiedName;
-
-            foreach (var property in properties)
-                mapping.AddProperty(property.GetPropertyMapping());
-
-            foreach (var component in components)
-                mapping.AddComponent(component.GetComponentMapping());
-
-            if (version != null)
-                mapping.Version = version.GetVersionMapping();
-
-            foreach (var oneToOne in oneToOnes)
-                mapping.AddOneToOne(oneToOne.GetOneToOneMapping());
-
-            foreach (var collection in collections)
-                mapping.AddCollection(collection.GetCollectionMapping());
-
-            foreach (var reference in references)
-                mapping.AddReference(reference.GetManyToOneMapping());
-
-            foreach (var any in anys)
-                mapping.AddAny(any.GetAnyMapping());
-
-            foreach (var subclass in subclasses.Values)
-                mapping.AddSubclass(subclass.GetSubclassMapping());
-
-		    foreach (var join in joins)
-		        mapping.AddJoin(join);
-
-            if (discriminator != null)
-                mapping.Discriminator = ((IDiscriminatorMappingProvider)discriminator).GetDiscriminatorMapping();
-
-            if (Cache.IsDirty)
-                mapping.Cache = ((ICacheMappingProvider)Cache).GetCacheMapping();
-
-            if (id != null)
-                mapping.Id = id.GetIdentityMapping();
-
-            if (compositeId != null)
-                mapping.Id = compositeId.GetCompositeIdMapping();
-
-            if (naturalId != null)
-                mapping.NaturalId = naturalId.GetNaturalIdMapping();
-
-            if (!mapping.IsSpecified("TableName"))
-                mapping.SetDefaultValue(x => x.TableName, GetDefaultTableName());
-
-            foreach (var filter in filters)
-                mapping.AddFilter(filter.GetFilterMapping());
-
-            foreach (var storedProcedure in storedProcedures)
-                mapping.AddStoredProcedure(storedProcedure.GetStoredProcedureMapping());
-
-            mapping.Tuplizer = tuplizerMapping;
-
-            return new FluentMapUserDefinedMappings(typeof(T), mapping);
-        }
-
-        private string GetDefaultTableName()
-        {
-            var tableName = EntityType.Name;
-
-            if (EntityType.IsGenericType)
-            {
-                // special case for generics: GenericType_GenericParameterType
-                tableName = EntityType.Name.Substring(0, EntityType.Name.IndexOf('`'));
-
-                foreach (var argument in EntityType.GetGenericArguments())
-                {
-                    tableName += "_";
-                    tableName += argument.Name;
-                }
-            }
-
-            return "`" + tableName + "`";
+            return new FluentMapUserDefinedMappings(typeof(T), structure);
         }
 
         public HibernateMapping GetHibernateMapping()
@@ -141,27 +323,30 @@ namespace FluentNHibernate.Mapping
 
         public virtual NaturalIdPart<T> NaturalId()
         {
-            var part = new NaturalIdPart<T>();
+            var natrualIdStructure = new BucketStructure<NaturalIdMapping>();
+            var part = new NaturalIdPart<T>(natrualIdStructure);
 
-            naturalId = part;
+            structure.AddChild(natrualIdStructure);
 
             return part;
         }
 
         public virtual CompositeIdentityPart<T> CompositeId()
         {
-            var part = new CompositeIdentityPart<T>();
+            var compositeIdStructure = new BucketStructure<CompositeIdMapping>();
+            var part = new CompositeIdentityPart<T>(compositeIdStructure);
 
-            compositeId = part;
+            structure.AddChild(compositeIdStructure);
 
             return part;
         }
 
         public virtual CompositeIdentityPart<TId> CompositeId<TId>(Expression<Func<T, TId>> expression)
         {
-            var part = new CompositeIdentityPart<TId>(expression.ToMember().Name);
+            var compositeIdStructure = new MemberStructure<CompositeIdMapping>(expression.ToMember());
+            var part = new CompositeIdentityPart<TId>(compositeIdStructure);
 
-            compositeId = part;
+            structure.AddChild(compositeIdStructure);
 
             return part;
         }
@@ -173,29 +358,30 @@ namespace FluentNHibernate.Mapping
 
         protected virtual VersionPart Version(Member property)
         {
-            var versionPart = new VersionPart(typeof(T), property);
+            var versionStructure = new MemberStructure<VersionMapping>(property);
+            var versionPart = new VersionPart(versionStructure);
 
-            version = versionPart;
+            structure.AddChild(versionStructure);
 
             return versionPart;
         }
 
         public virtual DiscriminatorPart DiscriminateSubClassesOnColumn<TDiscriminator>(string columnName, TDiscriminator baseClassDiscriminator)
         {
-            var part = new DiscriminatorPart(columnName, typeof(T), subclasses.Add, new TypeReference(typeof(TDiscriminator)));
+            var discriminatorStructure = new BucketStructure<DiscriminatorMapping>();
+            var part = new DiscriminatorPart(discriminatorStructure);
 
-            discriminator = part;
-
-            attributes.Set(x => x.DiscriminatorValue, baseClassDiscriminator);
+            part.Column(columnName);
 
             return part;
         }
 
         public virtual DiscriminatorPart DiscriminateSubClassesOnColumn<TDiscriminator>(string columnName)
         {
-            var part = new DiscriminatorPart(columnName, typeof(T), subclasses.Add, new TypeReference(typeof(TDiscriminator)));
+            var discriminatorStructure = new BucketStructure<DiscriminatorMapping>();
+            var part = new DiscriminatorPart(discriminatorStructure);
 
-            discriminator = part;
+            part.Column(columnName);
 
             return part;
         }
@@ -205,32 +391,33 @@ namespace FluentNHibernate.Mapping
             return DiscriminateSubClassesOnColumn<string>(columnName);
         }
 
-        public virtual IdentityPart Id(Expression<Func<T, object>> expression)
+        public virtual IdentityPart<TReturn> Id<TReturn>(Expression<Func<T, TReturn>> expression)
         {
             return Id(expression, null);
         }
 
-        public virtual IdentityPart Id(Expression<Func<T, object>> expression, string column)
+        public virtual IdentityPart<TReturn> Id<TReturn>(Expression<Func<T, TReturn>> expression, string column)
         {
-            var member = expression.ToMember();
-            var part = new IdentityPart(EntityType, member);
+            var idStructure = new MemberStructure<IdMapping>(expression.ToMember());
+            var part = new IdentityPart<TReturn>(idStructure);
 
             if (column != null)
                 part.Column(column);
 
-            id = part;
+            structure.AddChild(idStructure);
             
             return part;
         }
 
-        public virtual IdentityPart Id<TColumn>(string column)
+        public virtual IdentityPart<TReturn> Id<TReturn>(string column)
         {
-            var part = new IdentityPart(typeof(T), typeof(TColumn), column);
+            var idStructure = new BucketStructure<IdMapping>();
+            var part = new IdentityPart<TReturn>(idStructure);
             
             if (column != null)
                 part.Column(column);
-            
-            id = part;
+
+            structure.AddChild(idStructure);
 
             return part;
         } 
@@ -238,11 +425,14 @@ namespace FluentNHibernate.Mapping
         [Obsolete("Inline definitions of subclasses are depreciated. Please create a derived class from SubclassMap in the same way you do with ClassMap.")]
         public virtual void JoinedSubClass<TSubclass>(string keyColumn, Action<JoinedSubClassPart<TSubclass>> action) where TSubclass : T
         {
-            var subclass = new JoinedSubClassPart<TSubclass>(keyColumn);
+            var subclassStructure = new TypeStructure<SubclassMapping>(typeof(TSubclass));
+            var subclass = new JoinedSubClassPart<TSubclass>(subclassStructure);
+
+            subclass.KeyColumns.Add(keyColumn);
 
             action(subclass);
 
-            subclasses[typeof(TSubclass)] = subclass;
+            structure.AddChild(subclassStructure);
         }
 
         /// <summary>
@@ -251,7 +441,7 @@ namespace FluentNHibernate.Mapping
         /// <param name="schema">Schema name</param>
         public void Schema(string schema)
         {
-            attributes.Set(x => x.Schema, schema);
+            structure.SetValue(Attr.Schema, schema);
         }
 
         /// <summary>
@@ -260,7 +450,7 @@ namespace FluentNHibernate.Mapping
         /// <param name="tableName">Table name</param>
         public void Table(string tableName)
         {
-            attributes.Set(x => x.TableName, tableName);
+            structure.SetValue(Attr.Table, tableName);
         }
 
         /// <summary>
@@ -281,7 +471,7 @@ namespace FluentNHibernate.Mapping
         /// </summary>
         public void LazyLoad()
         {
-            attributes.Set(x => x.Lazy, nextBool);
+            structure.SetValue(Attr.Lazy, nextBool);
             nextBool = true;
         }
 
@@ -292,11 +482,14 @@ namespace FluentNHibernate.Mapping
         /// <param name="action">Joined table mapping</param>
         public void Join(string tableName, Action<JoinPart<T>> action)
         {
-            var join = new JoinPart<T>(tableName);
+            var joinStructure = new BucketStructure<JoinMapping>();
+            var join = new JoinPart<T>(joinStructure);
+
+            join.Table(tableName);
 
             action(join);
 
-            joins.Add(((IJoinMappingProvider)join).GetJoinMapping());
+            structure.AddChild(joinStructure);
         }
 
         /// <summary>
@@ -317,7 +510,7 @@ namespace FluentNHibernate.Mapping
         /// </summary>
         public void ReadOnly()
         {
-            attributes.Set(x => x.Mutable, !nextBool);
+            structure.SetValue(Attr.Mutable, !nextBool);
             nextBool = true;
         }
 
@@ -326,7 +519,7 @@ namespace FluentNHibernate.Mapping
         /// </summary>
         public void DynamicUpdate()
         {
-            attributes.Set(x => x.DynamicUpdate, nextBool);
+            structure.SetValue(Attr.DynamicUpdate, nextBool);
             nextBool = true;
         }
 
@@ -335,13 +528,13 @@ namespace FluentNHibernate.Mapping
         /// </summary>
         public void DynamicInsert()
         {
-            attributes.Set(x => x.DynamicInsert, nextBool);
+            structure.SetValue(Attr.DynamicInsert, nextBool);
             nextBool = true;
         }
 
         public ClassMap<T> BatchSize(int size)
         {
-            attributes.Set(x => x.BatchSize, size);
+            structure.SetValue(Attr.BatchSize, size);
             return this;
         }
 
@@ -365,7 +558,7 @@ namespace FluentNHibernate.Mapping
 
         public void CheckConstraint(string constraint)
         {
-            attributes.Set(x => x.Check, constraint);
+            structure.SetValue(Attr.Check, constraint);
         }
 
         public void Persister<TPersister>() where TPersister : IEntityPersister
@@ -380,7 +573,7 @@ namespace FluentNHibernate.Mapping
 
         private void Persister(string type)
         {
-            attributes.Set(x => x.Persister, type);
+            structure.SetValue(Attr.Persister, type);
         }
 
         public void Proxy<TProxy>()
@@ -395,12 +588,12 @@ namespace FluentNHibernate.Mapping
 
         public void Proxy(string type)
         {
-            attributes.Set(x => x.Proxy, type);
+            structure.SetValue(Attr.Proxy, type);
         }
 
         public void SelectBeforeUpdate()
         {
-            attributes.Set(x => x.SelectBeforeUpdate, nextBool);
+            structure.SetValue(Attr.SelectBeforeUpdate, nextBool);
             nextBool = true;
         }
 
@@ -409,7 +602,7 @@ namespace FluentNHibernate.Mapping
 		/// </summary>
     	public void Where(string where)
     	{
-            attributes.Set(x => x.Where, where);
+            structure.SetValue(Attr.Where, where);
     	}
 
         /// <summary>
@@ -418,7 +611,7 @@ namespace FluentNHibernate.Mapping
         /// <param name="subselectSql">Subselect SQL Query</param>
         public void Subselect(string subselectSql)
         {
-            attributes.Set(x => x.Subselect, subselectSql);
+            structure.SetValue(Attr.Subselect, subselectSql);
         }
 
         /// <summary>
@@ -427,7 +620,7 @@ namespace FluentNHibernate.Mapping
         /// <remarks>See http://nhforge.org/blogs/nhibernate/archive/2008/10/21/entity-name-in-action-a-strongly-typed-entity.aspx</remarks>
         public void EntityName(string entityName)
         {
-            attributes.Set(x => x.EntityName, entityName);
+            structure.SetValue(Attr.EntityName, entityName);
         }
 
         /// <overloads>
@@ -444,7 +637,7 @@ namespace FluentNHibernate.Mapping
         public ClassMap<T> ApplyFilter<TFilter>(string condition) where TFilter : FilterDefinition, new()
         {
             var part = new FilterPart(new TFilter().Name, condition);
-            filters.Add(part);
+            //filters.Add(part);
             return this;
         }
 

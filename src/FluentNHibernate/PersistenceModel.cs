@@ -151,11 +151,13 @@ namespace FluentNHibernate
             {
                 var userMappings = classMap.GetUserDefinedMappings();
 
-                if (userMappings.Mapping is ClassMapping)
+                if (userMappings.Structure is ClassMapping)
                 {
                     var hbm = classMap.GetHibernateMapping();
 
-                    hbm.AddClass((ClassMapping)userMappings.Mapping);
+                    //var classMapping = userMappings.CreateModelShape();
+
+                    hbm.AddClass((ClassMapping)userMappings.Structure);
 
                     add(hbm);
                 }
@@ -176,8 +178,8 @@ namespace FluentNHibernate
             {
                 var userMappings = classMap.GetUserDefinedMappings();
 
-                if (userMappings.Mapping is ClassMapping)
-                    hbm.AddClass((ClassMapping)userMappings.Mapping);
+                if (userMappings.Structure is ClassMapping)
+                    hbm.AddClass((ClassMapping)userMappings.Structure);
             }
             foreach (var filterDefinition in filterDefinitions)
             {
@@ -314,11 +316,11 @@ namespace FluentNHibernate
         {
             public PassThroughUserDefinedMapping(ClassMapping classMapping)
             {
-                Mapping = classMapping;
+                //Mapping = classMapping;
                 Type = classMapping.Type;
             }
 
-            public object Mapping { get; private set; }
+            public IMappingStructure Structure { get; private set; }
             public Type Type { get; private set; }
         }
     }

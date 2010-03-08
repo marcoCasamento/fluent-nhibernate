@@ -5,7 +5,7 @@ using FluentNHibernate.Visitors;
 
 namespace FluentNHibernate.MappingModel.ClassBased
 {
-    public class ComponentMapping : ComponentMappingBase, IComponentMapping
+    public class ComponentMapping : ComponentMappingBase, IComponentMapping, IMapping, IMemberMapping, ITypeMapping
     {
         public ComponentType ComponentType { get; set; }
         private readonly AttributeStore<ComponentMapping> attributes = new AttributeStore<ComponentMapping>();

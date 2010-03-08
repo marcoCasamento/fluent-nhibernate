@@ -1,11 +1,7 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq.Expressions;
-using System.Reflection;
-using FluentNHibernate.Conventions;
-using FluentNHibernate.Mapping.Providers;
 using FluentNHibernate.MappingModel;
 using FluentNHibernate.MappingModel.Collections;
 using FluentNHibernate.Utils;
@@ -13,57 +9,34 @@ using NHibernate.Persister.Entity;
 
 namespace FluentNHibernate.Mapping
 {
-    public abstract class ToManyBase<T, TChild, TRelationshipAttributes> : ICollectionMappingProvider
-        where T : ToManyBase<T, TChild, TRelationshipAttributes>, ICollectionMappingProvider
+    public abstract class ToManyBase<T, TChild, TRelationshipAttributes>
+        where T : ToManyBase<T, TChild, TRelationshipAttributes>
         where TRelationshipAttributes : ICollectionRelationshipMapping
     {
-        private readonly AccessStrategyBuilder<T> access;
-        private readonly FetchTypeExpression<T> fetch;
-        private readonly OptimisticLockBuilder<T> optimisticLock;
-        private readonly CollectionCascadeExpression<T> cascade;
-        protected ElementPart elementPart;
-        protected ICompositeElementMappingProvider componentMapping;
+        readonly IMappingStructure<ICollectionMapping> structure;
+        readonly IMappingStructure<KeyMapping> keyStructure;
+        readonly AccessStrategyBuilder<T> access;
+        readonly FetchTypeExpression<T> fetch;
+        readonly OptimisticLockBuilder<T> optimisticLock;
+        readonly CollectionCascadeExpression<T> cascade;
         protected bool nextBool = true;
 
-        protected readonly AttributeStore<ICollectionMapping> collectionAttributes = new AttributeStore<ICollectionMapping>();
-        protected readonly KeyMapping keyMapping = new KeyMapping();
-        protected readonly AttributeStore<TRelationshipAttributes> relationshipAttributes = new AttributeStore<TRelationshipAttributes>();
-        private readonly IList<FilterPart> filters = new List<FilterPart>();
-        private Func<AttributeStore, ICollectionMapping> collectionBuilder;
-        private IndexMapping indexMapping;
-        protected Member member;
-        private Type entity;
+        readonly IList<FilterPart> filters = new List<FilterPart>();
+        Func<AttributeStore, ICollectionMapping> collectionBuilder;
+        IMappingStructure<CacheMapping> cacheStructure;
 
-        protected ToManyBase(Type entity, Member member, Type type)
+        protected ToManyBase(IMappingStructure<ICollectionMapping> structure, IMappingStructure<KeyMapping> keyStructure)
         {
-            this.entity = entity;
-            this.member = member;
+            this.structure = structure;
+            this.keyStructure = keyStructure;
+            structure.AddChild(keyStructure);
+
+            access = new AccessStrategyBuilder<T>((T)this, value => structure.SetValue(Attr.Access, value));
+            fetch = new FetchTypeExpression<T>((T)this, value => structure.SetValue(Attr.Fetch, value));
+            optimisticLock = new OptimisticLockBuilder<T>((T)this, value => structure.SetValue(Attr.OptimisticLock, value));
+            cascade = new CollectionCascadeExpression<T>((T)this, value => structure.SetValue(Attr.Cascade, value));
+
             AsBag();
-            access = new AccessStrategyBuilder<T>((T)this, value => collectionAttributes.Set(x => x.Access, value));
-            fetch = new FetchTypeExpression<T>((T)this, value => collectionAttributes.Set(x => x.Fetch, value));
-            optimisticLock = new OptimisticLockBuilder<T>((T)this, value => collectionAttributes.Set(x => x.OptimisticLock, value));
-            cascade = new CollectionCascadeExpression<T>((T)this, value => collectionAttributes.Set(x => x.Cascade, value));
-
-            SetDefaultCollectionType(type);
-            SetCustomCollectionType(type);
-            Cache = new CachePart(entity);
-
-            collectionAttributes.SetDefault(x => x.Name, member.Name);
-            relationshipAttributes.SetDefault(x => x.Class, new TypeReference(typeof(TChild)));
-        }
-
-        private void SetDefaultCollectionType(Type type)
-        {
-            if (type.Namespace == "Iesi.Collections.Generic" || type.Closes(typeof(HashSet<>)))
-                AsSet();
-        }
-
-        private void SetCustomCollectionType(Type type)
-        {
-            if (type.Namespace.StartsWith("Iesi") || type.Namespace.StartsWith("System") || type.IsArray)
-                return;
-
-            collectionAttributes.Set(x => x.CollectionType, new TypeReference(type));
         }
 
         /// <summary>
@@ -74,85 +47,37 @@ namespace FluentNHibernate.Mapping
         /// <returns>OneToManyPart</returns>
         public T PropertyRef(string propertyRef)
         {
-            keyMapping.PropertyRef = propertyRef;
+            keyStructure.SetValue(Attr.PropertyRef, propertyRef);
             return (T)this;
         }
-
-        public virtual ICollectionMapping GetCollectionMapping()
-        {
-            var mapping = collectionBuilder(collectionAttributes.CloneInner());
-
-            if (!mapping.IsSpecified("Name"))
-                mapping.SetDefaultValue(x => x.Name, GetDefaultName());
-
-            mapping.ContainingEntityType = entity;
-            mapping.ChildType = typeof(TChild);
-            mapping.Member = member;
-            mapping.Key = keyMapping;
-            mapping.Key.ContainingEntityType = entity;
-            mapping.Relationship = GetRelationship();
-
-            if (Cache.IsDirty)
-                mapping.Cache = ((ICacheMappingProvider)Cache).GetCacheMapping();
-
-            if (componentMapping != null)
-            {
-                mapping.CompositeElement = componentMapping.GetCompositeElementMapping();
-                mapping.Relationship = null; // HACK: bad design
-            }
-
-            // HACK: Index only on list and map - shouldn't have to do this!
-            if (indexMapping != null && mapping is IIndexedCollectionMapping)
-                ((IIndexedCollectionMapping)mapping).Index = indexMapping;
-
-            if (elementPart != null)
-            {
-                mapping.Element = elementPart.GetElementMapping();
-                mapping.Relationship = null;
-            }
-
-            foreach (var filterPart in Filters)
-                mapping.Filters.Add(filterPart.GetFilterMapping());
-
-            return mapping;
-        }
-
-        private string GetDefaultName()
-        {
-            if (member.IsMethod)
-            {
-                // try to guess the backing field name (GetSomething -> something)
-                if (member.Name.StartsWith("Get"))
-                {
-                    var name = member.Name.Substring(3);
-
-                    if (char.IsUpper(name[0]))
-                        name = char.ToLower(name[0]) + name.Substring(1);
-
-                    return name;
-                }
-            }
-
-            return member.Name;
-        }
-
-        protected abstract ICollectionRelationshipMapping GetRelationship();
 
         /// <summary>
         /// Specify caching for this entity.
         /// </summary>
-        public CachePart Cache { get; private set; }
+        public CachePart Cache
+        {
+            get
+            {
+                if (cacheStructure == null)
+                {
+                    cacheStructure = new BucketStructure<CacheMapping>();
+                    structure.AddChild(cacheStructure);
+                }
+
+                return new CachePart(cacheStructure);
+            }
+        }
 
         public T LazyLoad()
         {
-            collectionAttributes.Set(x => x.Lazy, nextBool);
+            structure.SetValue(Attr.Lazy, nextBool);
             nextBool = true;
             return (T)this;
         }
 
         public T Inverse()
         {
-            collectionAttributes.Set(x => x.Inverse, nextBool);
+            structure.SetValue(Attr.Inverse, nextBool);
             nextBool = true;
             return (T)this;
         }
@@ -190,10 +115,6 @@ namespace FluentNHibernate.Mapping
         {
             collectionBuilder = attrs => new ListMapping(attrs);
             CreateIndexMapping(null);
-
-            if (indexMapping.Columns.IsEmpty())
-                indexMapping.AddDefaultColumn(new ColumnMapping { Name = "Index" });
-
             return (T)this;
         }
 
@@ -201,10 +122,6 @@ namespace FluentNHibernate.Mapping
         {
             collectionBuilder = attrs => new ListMapping(attrs);
             CreateIndexMapping(customIndexMapping);
-
-            if (indexMapping.Columns.IsEmpty())
-                indexMapping.AddDefaultColumn(new ColumnMapping { Name = "Index" });
-
             return (T)this;
         }
 
@@ -271,8 +188,7 @@ namespace FluentNHibernate.Mapping
         {
             collectionBuilder = attrs => new MapMapping(attrs);
             AsIndexedCollection<TIndex>(string.Empty, customIndexMapping);
-            Element(string.Empty);
-            customElementMapping(elementPart);
+            Element(string.Empty, customElementMapping);
             return (T)this;
         }
 
@@ -296,41 +212,37 @@ namespace FluentNHibernate.Mapping
         public T AsIndexedCollection<TIndex>(string indexColumn, Action<IndexPart> customIndexMapping)
         {
             CreateIndexMapping(customIndexMapping);
-
-            if (!indexMapping.IsSpecified("Type"))
-                indexMapping.SetDefaultValue(x => x.Type, new TypeReference(typeof(TIndex)));
-
-            if (indexMapping.Columns.IsEmpty())
-                indexMapping.AddDefaultColumn(new ColumnMapping { Name = indexColumn });
-
             return (T)this;
         }
 
         private void CreateIndexMapping(Action<IndexPart> customIndex)
         {
-            var indexPart = new IndexPart(typeof(T));
+            var indexStructure = new BucketStructure<IndexMapping>();
+            var indexPart = new IndexPart(indexStructure);
 
             if (customIndex != null)
                 customIndex(indexPart);
 
-            indexMapping = indexPart.GetIndexMapping();
+            structure.AddChild(indexStructure);
         }
 
         public T Element(string columnName)
         {
-            elementPart = new ElementPart(typeof(T));
-            elementPart.Type<TChild>();
-
-            if (!string.IsNullOrEmpty(columnName))
-                elementPart.Column(columnName);
-
-            return (T)this;
+            return Element(columnName, x => {});
         }
 
         public T Element(string columnName, Action<ElementPart> customElementMapping)
         {
-            Element(columnName);
-            if (customElementMapping != null) customElementMapping(elementPart);
+            var elementStructure = new BucketStructure<ElementMapping>();
+            var part = new ElementPart(elementStructure);
+            part.Type<TChild>();
+
+            if (!string.IsNullOrEmpty(columnName))
+                part.Column(columnName);
+
+            if (customElementMapping != null)
+                customElementMapping(part);
+
             return (T)this;
         }
 
@@ -340,11 +252,12 @@ namespace FluentNHibernate.Mapping
         /// <param name="action">Component mapping</param>
         public T Component(Action<CompositeElementPart<TChild>> action)
         {
-            var part = new CompositeElementPart<TChild>(typeof(T));
+            var compositeElementStructure = new TypeStructure<CompositeElementMapping>(typeof(TChild));
+            var part = new CompositeElementPart<TChild>(compositeElementStructure);
 
             action(part);
 
-            componentMapping = part;
+            structure.AddChild(compositeElementStructure);
 
             return (T)this;
         }
@@ -355,13 +268,13 @@ namespace FluentNHibernate.Mapping
         /// <param name="name">Table name</param>
         public T Table(string name)
         {
-            collectionAttributes.Set(x => x.TableName, name);
+            structure.SetValue(Attr.Table, name);
             return (T)this;
         }
 
         public T ForeignKeyCascadeOnDelete()
         {
-            keyMapping.OnDelete = "cascade";
+            keyStructure.SetValue(Attr.OnDelete, "cascade");
             return (T)this;
         }
 
@@ -385,19 +298,19 @@ namespace FluentNHibernate.Mapping
 
         public T Persister<TPersister>() where TPersister : IEntityPersister
         {
-            collectionAttributes.Set(x => x.Persister, new TypeReference(typeof(TPersister)));
+            structure.SetValue(Attr.Persister, new TypeReference(typeof(TPersister)));
             return (T)this;
         }
 
         public T Check(string checkSql)
         {
-            collectionAttributes.Set(x => x.Check, checkSql);
+            structure.SetValue(Attr.Check, checkSql);
             return (T)this;
         }
 
         public T Generic()
         {
-            collectionAttributes.Set(x => x.Generic, nextBool);
+            structure.SetValue(Attr.Generic, nextBool);
             nextBool = true;
             return (T)this;
         }
@@ -418,13 +331,13 @@ namespace FluentNHibernate.Mapping
         /// </summary>
         public T Where(string where)
         {
-            collectionAttributes.Set(x => x.Where, where);
+            structure.SetValue(Attr.Where, where);
             return (T)this;
         }
 
         public T BatchSize(int size)
         {
-            collectionAttributes.Set(x => x.BatchSize, size);
+            structure.SetValue(Attr.BatchSize, size);
             return (T)this;
         }
 
@@ -470,13 +383,13 @@ namespace FluentNHibernate.Mapping
         /// </summary>
         public T CollectionType(TypeReference type)
         {
-            collectionAttributes.Set(x => x.CollectionType, type);
+            structure.SetValue(Attr.CollectionType, type);
             return (T)this;
         }
 
         public T Schema(string schema)
         {
-            collectionAttributes.Set(x => x.Schema, schema);
+            structure.SetValue(Attr.Schema, schema);
             return (T)this;
         }
 

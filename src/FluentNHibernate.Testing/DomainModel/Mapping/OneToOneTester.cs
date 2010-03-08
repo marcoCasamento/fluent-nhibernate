@@ -40,7 +40,7 @@ namespace FluentNHibernate.Testing.DomainModel.Mapping
                 .ForMapping(m =>
                 {
                     m.Id(x => x.Id);
-                    m.HasOne(x => x.Parent).ForeignKey();
+                    m.HasOne(x => x.Parent).ForeignKey("FK_MappedObjectToParent");
                 })
                 .Element("class/one-to-one")
                     .HasAttribute("foreign-key", "FK_MappedObjectToParent");

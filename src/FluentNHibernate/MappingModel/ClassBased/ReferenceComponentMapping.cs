@@ -11,7 +11,7 @@ namespace FluentNHibernate.MappingModel.ClassBased
     /// A reference to a component which is declared externally. Contains properties
     /// that can't be declared externally (property name, for example)
     /// </summary>
-    public class ReferenceComponentMapping : IComponentMapping
+    public class ReferenceComponentMapping : IComponentMapping, IMapping, IMemberMapping
     {
         public ComponentType ComponentType { get; set; }
         private readonly Member property;

@@ -4,7 +4,7 @@ using FluentNHibernate.Visitors;
 
 namespace FluentNHibernate.MappingModel
 {
-    public class MetaValueMapping : MappingBase
+    public class MetaValueMapping : MappingBase, IMapping
     {
         private readonly AttributeStore<MetaValueMapping> attributes;
 

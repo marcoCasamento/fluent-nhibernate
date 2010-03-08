@@ -4,21 +4,21 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 using FluentNHibernate.Mapping.Providers;
+using FluentNHibernate.MappingModel;
+using FluentNHibernate.MappingModel.ClassBased;
+using FluentNHibernate.MappingModel.Collections;
 using FluentNHibernate.Utils;
 
 namespace FluentNHibernate.Mapping
 {
     public abstract class ClasslikeMapBase<T>
     {
-        protected readonly IList<IPropertyMappingProvider> properties = new List<IPropertyMappingProvider>();
-        protected readonly IList<IComponentMappingProvider> components = new List<IComponentMappingProvider>();
-        protected readonly IList<IOneToOneMappingProvider> oneToOnes = new List<IOneToOneMappingProvider>();
-        protected readonly Dictionary<Type, ISubclassMappingProvider> subclasses = new Dictionary<Type, ISubclassMappingProvider>();
-        protected readonly IList<ICollectionMappingProvider> collections = new List<ICollectionMappingProvider>();
-        protected readonly IList<IManyToOneMappingProvider> references = new List<IManyToOneMappingProvider>();
-        protected readonly IList<IAnyMappingProvider> anys = new List<IAnyMappingProvider>();
-        protected readonly IList<IFilterMappingProvider> filters = new List<IFilterMappingProvider>();
-        protected readonly IList<IStoredProcedureMappingProvider> storedProcedures = new List<IStoredProcedureMappingProvider>();
+        readonly IMappingStructure structure;
+
+        protected ClasslikeMapBase(IMappingStructure structure)
+        {
+            this.structure = structure;
+        }
 
         public PropertyPart Map(Expression<Func<T, object>> expression)
         {
@@ -32,12 +32,13 @@ namespace FluentNHibernate.Mapping
 
         protected virtual PropertyPart Map(Member property, string columnName)
         {
-            var propertyMap = new PropertyPart(property, typeof(T));
+            var propertyStructure = new MemberStructure<PropertyMapping>(property);
+            var propertyMap = new PropertyPart(propertyStructure);
 
             if (!string.IsNullOrEmpty(columnName))
                 propertyMap.Column(columnName);
 
-            properties.Add(propertyMap);
+            structure.AddChild(propertyStructure);
 
             return propertyMap;
         }
@@ -64,12 +65,13 @@ namespace FluentNHibernate.Mapping
 
         protected virtual ManyToOnePart<TOther> References<TOther>(Member property, string columnName)
         {
-            var part = new ManyToOnePart<TOther>(EntityType, property);
+            var referencesStructure = new MemberStructure<ManyToOneMapping>(property);
+            var part = new ManyToOnePart<TOther>(referencesStructure);
 
             if (columnName != null)
                 part.Column(columnName);
 
-            references.Add(part);
+            structure.AddChild(referencesStructure);
 
             return part;
         }
@@ -81,9 +83,10 @@ namespace FluentNHibernate.Mapping
 
         protected virtual AnyPart<TOther> ReferencesAny<TOther>(Member property)
         {
-            var part = new AnyPart<TOther>(typeof(T), property);
+            var anyStructure = new MemberStructure<AnyMapping>(property);
+            var part = new AnyPart<TOther>(anyStructure);
 
-            anys.Add(part);
+            structure.AddChild(anyStructure);
 
             return part;
         }
@@ -100,9 +103,10 @@ namespace FluentNHibernate.Mapping
 
         protected virtual OneToOnePart<TOther> HasOne<TOther>(Member property)
         {
-            var part = new OneToOnePart<TOther>(EntityType, property);
+            var oneToOneStructure = new MemberStructure<OneToOneMapping>(property);
+            var part = new OneToOnePart<TOther>(oneToOneStructure);
 
-            oneToOnes.Add(part);
+            structure.AddChild(oneToOneStructure);
 
             return part;
         }
@@ -114,11 +118,12 @@ namespace FluentNHibernate.Mapping
 
         protected DynamicComponentPart<IDictionary> DynamicComponent(Member property, Action<DynamicComponentPart<IDictionary>> action)
         {
-            var part = new DynamicComponentPart<IDictionary>(typeof(T), property);
+            var componentStructure = new MemberStructure<ComponentMapping>(property);
+            var part = new DynamicComponentPart<IDictionary>(componentStructure);
             
             action(part);
 
-            components.Add(part);
+            structure.AddChild(componentStructure);
 
             return part;
         }
@@ -133,9 +138,10 @@ namespace FluentNHibernate.Mapping
         /// <returns>Component reference builder</returns>
         public ReferenceComponentPart<TComponent> Component<TComponent>(Expression<Func<T, TComponent>> member)
         {
-            var part = new ReferenceComponentPart<TComponent>(member.ToMember(), typeof(T));
+            var componentStructure = new MemberStructure<ReferenceComponentMapping>(member.ToMember());
+            var part = new ReferenceComponentPart<TComponent>(componentStructure);
 
-            components.Add(part);
+            structure.AddChild(componentStructure);
 
             return part;
         }
@@ -164,11 +170,12 @@ namespace FluentNHibernate.Mapping
         
         protected virtual ComponentPart<TComponent> Component<TComponent>(Member property, Action<ComponentPart<TComponent>> action)
         {
-            var part = new ComponentPart<TComponent>(typeof(T), property);
+            var componentStructure = new MemberStructure<ComponentMapping>(property);
+            var part = new ComponentPart<TComponent>(componentStructure);
 
             action(part);
 
-            components.Add(part);
+            structure.AddChild(componentStructure);
 
             return part;
         }
@@ -187,9 +194,10 @@ namespace FluentNHibernate.Mapping
 
         protected virtual OneToManyPart<TChild> HasMany<TChild>(Member member)
         {
-            var part = new OneToManyPart<TChild>(EntityType, member);
+            var collectionStructure = new MemberStructure<ICollectionMapping>(member);
+            var part = new OneToManyPart<TChild>(collectionStructure);
 
-            collections.Add(part);
+            structure.AddChild(collectionStructure);
 
             return part;
         }
@@ -242,9 +250,10 @@ namespace FluentNHibernate.Mapping
 
         protected virtual ManyToManyPart<TChild> HasManyToMany<TChild>(Member property)
         {
-            var part = new ManyToManyPart<TChild>(EntityType, property);
+            var collectionStructure = new MemberStructure<ICollectionMapping>(property);
+            var part = new ManyToManyPart<TChild>(collectionStructure);
 
-            collections.Add(part);
+            structure.AddChild(collectionStructure);
 
             return part;
         }
@@ -306,19 +315,9 @@ namespace FluentNHibernate.Mapping
         protected StoredProcedurePart StoredProcedure(string element, string innerText)
         {
             var part = new StoredProcedurePart(element, innerText);
-            storedProcedures.Add(part);
+            //storedProcedures.Add(part);
             return part;
         }
-
-        protected virtual IEnumerable<IPropertyMappingProvider> Properties
-		{
-			get { return properties; }
-		}
-
-        protected virtual IEnumerable<IComponentMappingProvider> Components
-		{
-			get { return components; }
-		}
 
         public Type EntityType
         {

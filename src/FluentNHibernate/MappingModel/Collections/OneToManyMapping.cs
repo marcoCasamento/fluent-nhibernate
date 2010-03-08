@@ -4,7 +4,7 @@ using FluentNHibernate.Visitors;
 
 namespace FluentNHibernate.MappingModel.Collections
 {
-    public class OneToManyMapping : MappingBase, ICollectionRelationshipMapping
+    public class OneToManyMapping : MappingBase, ICollectionRelationshipMapping, IMapping
     {
         private readonly AttributeStore<OneToManyMapping> attributes;
 

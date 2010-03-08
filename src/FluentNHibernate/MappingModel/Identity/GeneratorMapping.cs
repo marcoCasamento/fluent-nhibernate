@@ -6,7 +6,7 @@ using FluentNHibernate.Visitors;
 
 namespace FluentNHibernate.MappingModel.Identity
 {
-    public class GeneratorMapping : MappingBase
+    public class GeneratorMapping : MappingBase, IMapping
     {
         private readonly AttributeStore<GeneratorMapping> attributes = new AttributeStore<GeneratorMapping>();
 

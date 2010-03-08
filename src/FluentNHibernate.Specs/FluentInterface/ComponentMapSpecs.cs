@@ -22,7 +22,7 @@ namespace FluentNHibernate.Specs.FluentInterface
         };
 
         Because of = () =>
-            mapping = (ComponentMapping)(component as IMappingProvider).GetUserDefinedMappings().Mapping;
+            mapping = (ComponentMapping)(component as IMappingProvider).GetUserDefinedMappings().Structure;
 
         It should_create_an_external_component_mapping = () =>
             mapping.ShouldBeOfType<ExternalComponentMapping>();
@@ -69,7 +69,7 @@ namespace FluentNHibernate.Specs.FluentInterface
         };
 
         Because of = () =>
-            mapping = ((ClassMapping)(classmap as IMappingProvider).GetUserDefinedMappings().Mapping)
+            mapping = ((ClassMapping)(classmap as IMappingProvider).GetUserDefinedMappings().Structure)
                 .Components.First();
 
         It should_create_a_reference_component_mapping = () =>

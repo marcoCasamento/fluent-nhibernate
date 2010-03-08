@@ -1,4 +1,5 @@
-﻿using FluentNHibernate.Mapping.Providers;
+﻿using FluentNHibernate.Mapping;
+using FluentNHibernate.Mapping.Providers;
 using FluentNHibernate.MappingModel.ClassBased;
 using FluentNHibernate.Testing.Utils;
 using FluentNHibernate.Visitors;
@@ -12,9 +13,8 @@ namespace FluentNHibernate.Testing.Visitors
     {
         public override void establish_context()
         {
-            external_component_mapping = new ExternalComponentMapping(ComponentType.Component) { Type = typeof(ComponentTarget) };
             var user_defined_mappings = Stub<IUserDefinedMapping>.Create(cfg =>
-                cfg.Stub(x => x.Mapping).Return(external_component_mapping));
+                cfg.Stub(x => x.Structure).Return(new BucketStructure<ExternalComponentMapping>()));
             var external_component = Stub<IExternalComponentMappingProvider>.Create(cfg =>
                 cfg.Stub(x => x.GetUserDefinedMappings()).Return(user_defined_mappings));
 
@@ -89,7 +89,7 @@ namespace FluentNHibernate.Testing.Visitors
         public override void establish_context()
         {
             var udm_one = Stub<IUserDefinedMapping>.Create(cfg =>
-                cfg.Stub(x => x.Mapping).Return(new ExternalComponentMapping(ComponentType.Component) {Type = typeof(ComponentTarget)}));
+                cfg.Stub(x => x.Structure).Return(new TypeStructure<ExternalComponentMapping>(typeof(ComponentType))));
             var external_component_one = Stub<IExternalComponentMappingProvider>.Create(cfg =>
             {
                 cfg.Stub(x => x.GetUserDefinedMappings())
@@ -100,7 +100,7 @@ namespace FluentNHibernate.Testing.Visitors
             });
 
             var udm_two = Stub<IUserDefinedMapping>.Create(cfg =>
-                cfg.Stub(x => x.Mapping).Return(new ExternalComponentMapping(ComponentType.Component) {Type = typeof(ComponentTarget)}));
+                cfg.Stub(x => x.Structure).Return(new TypeStructure<ExternalComponentMapping>(typeof(ComponentType))));
             var external_component_two = Stub<IExternalComponentMappingProvider>.Create(cfg =>
             {
                 cfg.Stub(x => x.GetUserDefinedMappings())

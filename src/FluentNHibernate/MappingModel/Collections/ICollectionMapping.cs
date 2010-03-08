@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace FluentNHibernate.MappingModel.Collections
 {
-    public interface ICollectionMapping : IMappingBase
+    public interface ICollectionMapping : IMappingBase, IMapping, IMemberMapping
     {
         CacheMapping Cache { get; set; }
         bool Inverse { get; set; }
