@@ -80,14 +80,6 @@ namespace FluentNHibernate.Automapping
             if (component != null)
                 columnName = expressions.GetComponentColumnPrefix(component.Member) + columnName;
 
-            mapping.AddDefaultColumn(new ColumnMapping { Name = columnName });
-
-            if (!mapping.IsSpecified("Name"))
-                mapping.Name = mapping.Member.Name;
-
-            if (!mapping.IsSpecified("Type"))
-                mapping.SetDefaultValue("Type", GetDefaultType(property));
-
             return mapping;
         }
 

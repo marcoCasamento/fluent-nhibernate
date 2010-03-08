@@ -23,8 +23,6 @@ namespace FluentNHibernate.Automapping
             if (!(classMap is ClassMapping)) return;
 
             var version = new VersionMapping(property);
-            version.SetDefaultValue("Type", GetDefaultType(property));
-            version.AddDefaultColumn(new ColumnMapping { Name = property.Name });
 
             if (IsSqlTimestamp(property))
             {

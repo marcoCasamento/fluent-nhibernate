@@ -9,13 +9,7 @@ namespace FluentNHibernate.MappingModel
 {
     public class DiscriminatorMapping : ColumnBasedMappingBase, IMapping
     {
-        public DiscriminatorMapping()
-            : this(new AttributeStore())
-        {}
-
-        public DiscriminatorMapping(AttributeStore underlyingStore)
-            : base(underlyingStore)
-        {}
+        readonly ValueStore values = new ValueStore();
 
         public override void AcceptVisitor(IMappingModelVisitor visitor)
         {
@@ -26,26 +20,26 @@ namespace FluentNHibernate.MappingModel
 
         public bool Force
         {
-            get { return attributes.Get<bool>("Force"); }
-            set { attributes.Set("Force", value); }
+            get { return values.Get<bool>(Attr.Force); }
+            set { values.Set(Attr.Force, value); }
         }
 
         public bool Insert
         {
-            get { return attributes.Get<bool>("Insert"); }
-            set { attributes.Set("Insert", value); }
+            get { return values.Get<bool>(Attr.Insert); }
+            set { values.Set(Attr.Insert, value); }
         }
 
         public string Formula
         {
-            get { return attributes.Get("Formula"); }
-            set { attributes.Set("Formula", value); }
+            get { return values.Get(Attr.Formula); }
+            set { values.Set(Attr.Formula, value); }
         }
 
         public TypeReference Type
         {
-            get { return attributes.Get<TypeReference>("Type"); }
-            set { attributes.Set("Type", value); }
+            get { return values.Get<TypeReference>(Attr.Type); }
+            set { values.Set(Attr.Type, value); }
         }
 
         public Type ContainingEntityType { get; set; }
@@ -56,7 +50,7 @@ namespace FluentNHibernate.MappingModel
             if (ReferenceEquals(this, other)) return true;
             return Equals(other.ContainingEntityType, ContainingEntityType) &&
                 other.columns.ContentEquals(columns) &&
-                Equals(other.attributes, attributes);
+                Equals(other.values, values);
         }
 
         public override bool Equals(object obj)
@@ -71,16 +65,21 @@ namespace FluentNHibernate.MappingModel
         {
             unchecked
             {
-                return ((ContainingEntityType != null ? ContainingEntityType.GetHashCode() : 0) * 397) ^ ((columns != null ? columns.GetHashCode() : 0) * 397) ^ (attributes != null ? attributes.GetHashCode() : 0);
+                return ((ContainingEntityType != null ? ContainingEntityType.GetHashCode() : 0) * 397) ^ ((columns != null ? columns.GetHashCode() : 0) * 397) ^ (values != null ? values.GetHashCode() : 0);
             }
         }
 
-        public void AddChild(IMapping child)
+        public override void AddChild(IMapping child)
         {
         }
 
         public void UpdateValues(IEnumerable<KeyValuePair<Attr, object>> values)
         {
+        }
+
+        public bool HasValue(Attr attr)
+        {
+            return values.HasValue(attr);
         }
     }
 }

@@ -8,16 +8,16 @@ namespace FluentNHibernate.MappingModel
     public class VersionMapping : ColumnBasedMappingBase, IMemberMapping
     {
         readonly Member member;
+        readonly ValueStore values = new ValueStore();
 
         public VersionMapping(Member member)
-            : this(new AttributeStore())
         {
             this.member = member;
-        }
 
-        VersionMapping(AttributeStore underlyingStore)
-            : base(underlyingStore)
-        {}
+            Name = member.Name;
+            Type = member.PropertyType == typeof(DateTime) ? new TypeReference("timestamp") : new TypeReference(member.PropertyType);
+            AddDefaultColumn(new ColumnMapping { Name = member.Name });
+        }
 
         public override void AcceptVisitor(IMappingModelVisitor visitor)
         {
@@ -28,32 +28,32 @@ namespace FluentNHibernate.MappingModel
 
         public string Name
         {
-            get { return attributes.Get("Name"); }
-            set { attributes.Set("Name", value); }
+            get { return values.Get(Attr.Name); }
+            set { values.Set(Attr.Name, value); }
         }
 
         public string Access
         {
-            get { return attributes.Get("Access"); }
-            set { attributes.Set("Access", value); }
+            get { return values.Get(Attr.Access); }
+            set { values.Set(Attr.Access, value); }
         }
 
         public TypeReference Type
         {
-            get { return attributes.Get<TypeReference>("Type"); }
-            set { attributes.Set("Type", value); }
+            get { return values.Get<TypeReference>(Attr.Type); }
+            set { values.Set(Attr.Type, value); }
         }
 
         public string UnsavedValue
         {
-            get { return attributes.Get("UnsavedValue"); }
-            set { attributes.Set("UnsavedValue", value); }
+            get { return values.Get(Attr.UnsavedValue); }
+            set { values.Set(Attr.UnsavedValue, value); }
         }
 
         public string Generated
         {
-            get { return attributes.Get("Generated"); }
-            set { attributes.Set("Generated", value); }
+            get { return values.Get(Attr.Generated); }
+            set { values.Set(Attr.Generated, value); }
         }
 
         public Type ContainingEntityType { get; set; }
@@ -82,14 +82,14 @@ namespace FluentNHibernate.MappingModel
             }
         }
 
-        public void AddChild(IMapping child)
+        public void UpdateValues(IEnumerable<KeyValuePair<Attr, object>> otherValues)
         {
-            throw new NotImplementedException();
+            values.Merge(otherValues);
         }
 
-        public void UpdateValues(IEnumerable<KeyValuePair<Attr, object>> values)
+        public bool HasValue(Attr attr)
         {
-            throw new NotImplementedException();
+            return values.HasValue(attr);
         }
     }
 }

@@ -32,5 +32,10 @@ namespace FluentNHibernate.MappingModel
         {
             return values.ContainsKey(attr);
         }
+
+        public ValueStore Clone()
+        {
+            return this; // TODO: Fix
+        }
     }
 }

@@ -87,6 +87,7 @@ namespace FluentNHibernate.Testing.DomainModel.Mapping
         public virtual MappingTester<T> HasAttribute(string name, string value)
         {
             Assert.IsNotNull(currentElement, "Couldn't find element matching '" + currentPath + "'");
+            Assert.IsTrue(currentElement.HasAttribute(name), "Attribute '" + name + "' is missing.");
 
             var actual = currentElement.GetAttribute(name);
 
