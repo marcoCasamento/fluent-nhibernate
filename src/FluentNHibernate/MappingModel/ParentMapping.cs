@@ -5,7 +5,7 @@ using FluentNHibernate.Visitors;
 
 namespace FluentNHibernate.MappingModel
 {
-    public class ParentMapping : MappingBase, IMapping, IMemberMapping
+    public class ParentMapping : MappingBase, IMemberMapping
     {
         readonly Member member;
         private readonly ValueStore values = new ValueStore();

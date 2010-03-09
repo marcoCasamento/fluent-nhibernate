@@ -264,6 +264,8 @@ namespace FluentNHibernate.MappingModel
                 AddCollection((ICollectionMapping)mapping);
             if (mapping is ManyToOneMapping)
                 AddReference((ManyToOneMapping)mapping);
+            if (mapping is OneToOneMapping)
+                AddOneToOne((OneToOneMapping)mapping);
             if (mapping is IComponentMapping)
                 AddComponent((IComponentMapping)mapping);
             if (mapping is AnyMapping)

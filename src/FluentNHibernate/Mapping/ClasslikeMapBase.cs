@@ -103,7 +103,8 @@ namespace FluentNHibernate.Mapping
 
         protected virtual OneToOnePart<TOther> HasOne<TOther>(Member property)
         {
-            var oneToOneStructure = new MemberStructure<OneToOneMapping>(property);
+            var member = property.PropertyType == typeof(TOther) ? property : new OverriddenReturnTypeMember(property, typeof(TOther));
+            var oneToOneStructure = new MemberStructure<OneToOneMapping>(member);
             var part = new OneToOnePart<TOther>(oneToOneStructure);
 
             structure.AddChild(oneToOneStructure);

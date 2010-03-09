@@ -79,7 +79,7 @@ namespace FluentNHibernate.Testing.DomainModel.Mapping
                 .ForMapping(m =>
                 {
                     m.Id(x => x.Id);
-                    m.HasOne(x => (UserLoginInfo)x.LoginInfo);
+                    m.HasOne<UserLoginInfo>(x => x.LoginInfo);
                 })
                 .Element("class/one-to-one")
                 .HasAttribute("class", typeof (UserLoginInfo).AssemblyQualifiedName);
