@@ -5,17 +5,16 @@ using FluentNHibernate.Visitors;
 
 namespace FluentNHibernate.MappingModel
 {
-    public class ParentMapping : MappingBase, IMapping
+    public class ParentMapping : MappingBase, IMapping, IMemberMapping
     {
-        private readonly AttributeStore<ParentMapping> attributes;
+        readonly Member member;
+        private readonly ValueStore values = new ValueStore();
 
-        public ParentMapping()
-            : this(new AttributeStore())
-        {}
-
-        protected ParentMapping(AttributeStore underlyingStore)
+        public ParentMapping(Member member)
         {
-            attributes = new AttributeStore<ParentMapping>(underlyingStore);
+            this.member = member;
+
+            Name = member.Name;
         }
 
         public override void AcceptVisitor(IMappingModelVisitor visitor)
@@ -25,25 +24,20 @@ namespace FluentNHibernate.MappingModel
 
         public string Name
         {
-            get { return attributes.Get(x => x.Name); }
-            set { attributes.Set(x => x.Name, value); }
+            get { return values.Get(Attr.Name); }
+            set { values.Set(Attr.Name, value); }
         }
 
         public Type ContainingEntityType { get; set; }
 
         public override bool IsSpecified(string property)
         {
-            return attributes.IsSpecified(property);
+            return false;
         }
 
-        public bool HasValue<TResult>(Expression<Func<ParentMapping, TResult>> property)
+        public bool HasValue(Attr attr)
         {
-            return attributes.HasValue(property);
-        }
-
-        public void SetDefaultValue<TResult>(Expression<Func<ParentMapping, TResult>> property, TResult value)
-        {
-            attributes.SetDefault(property, value);
+            return values.HasValue(attr);
         }
 
         public override bool Equals(object obj)
@@ -55,26 +49,26 @@ namespace FluentNHibernate.MappingModel
 
         public bool Equals(ParentMapping other)
         {
-            return Equals(other.attributes, attributes) && Equals(other.ContainingEntityType, ContainingEntityType);
+            return Equals(other.values, values) && Equals(other.ContainingEntityType, ContainingEntityType);
         }
 
         public override int GetHashCode()
         {
             unchecked
             {
-                return ((attributes != null ? attributes.GetHashCode() : 0) * 397) ^
+                return ((values != null ? values.GetHashCode() : 0) * 397) ^
                     (ContainingEntityType != null ? ContainingEntityType.GetHashCode() : 0);
             }
         }
 
         public void AddChild(IMapping child)
         {
-            throw new NotImplementedException();
+            
         }
 
-        public void UpdateValues(IEnumerable<KeyValuePair<Attr, object>> values)
+        public void UpdateValues(IEnumerable<KeyValuePair<Attr, object>> otherValues)
         {
-            throw new NotImplementedException();
+            values.Merge(otherValues);
         }
     }
 }

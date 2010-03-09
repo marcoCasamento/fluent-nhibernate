@@ -241,7 +241,7 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         [Test]
         public void ParentMapped()
         {
-            mapping.Parent = new ParentMapping();
+            mapping.Parent = new ParentMapping(null);
             mapping.Parent.Name = "name";
             inspector.Parent.Name.ShouldEqual("name");
         }
@@ -249,7 +249,7 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         [Test]
         public void ParentIsSet()
         {
-            mapping.Parent = new ParentMapping();
+            mapping.Parent = new ParentMapping(null);
             mapping.Parent.Name = "name";
             inspector.IsSet(Prop(x => x.Parent))
                 .ShouldBeTrue();

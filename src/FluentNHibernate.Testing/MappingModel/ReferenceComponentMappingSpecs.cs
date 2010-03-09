@@ -52,7 +52,7 @@ namespace FluentNHibernate.Testing.MappingModel
     {
         public override void establish_context()
         {
-            parent_mapping = new ParentMapping();
+            parent_mapping = new ParentMapping(null);
             external_component_mapping = new ExternalComponentMapping(typeof(Target))
             {
                 Access = "access",

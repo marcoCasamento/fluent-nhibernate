@@ -48,7 +48,7 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         [Test]
         public void ParentMapped()
         {
-            mapping.Parent = new ParentMapping();
+            mapping.Parent = new ParentMapping(null);
             mapping.Parent.Name = "test";
             inspector.Parent.Name.ShouldEqual("test");
         }
@@ -56,7 +56,7 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         [Test]
         public void ParentIsSet()
         {
-            mapping.Parent = new ParentMapping();
+            mapping.Parent = new ParentMapping(null);
             mapping.Parent.Name = "test";
             inspector.IsSet(Prop(x => x.Parent))
                 .ShouldBeTrue();

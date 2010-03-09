@@ -203,12 +203,12 @@ namespace FluentNHibernate.MappingModel.ClassBased
             get { return mergedComponent; }
         }
 
-        public bool HasValue(string property)
+        public bool HasValue(Attr attr)
         {
             if (!IsAssociated)
                 return false;
 
-            return mergedComponent.HasValue(property);
+            return mergedComponent.HasValue(attr);
         }
 
         public bool Equals(ReferenceComponentMapping other)

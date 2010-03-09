@@ -175,7 +175,7 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
             {
                 Class = new TypeReference(typeof(Target)),
                 ContainingEntityType = typeof(Target),
-                Parent = new ParentMapping(),
+                Parent = new ParentMapping(null),
             };
 
             mapping.AddProperty(create_property());
@@ -234,7 +234,7 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
                 Member = new DummyPropertyInfo("name", typeof(Target)).ToMember(),
                 Name = "name",
                 OptimisticLock = true,
-                Parent = new ParentMapping(),
+                Parent = new ParentMapping(null),
                 Type = typeof(Target),
                 Unique = true,
                 Update = true
@@ -330,7 +330,7 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
                 Member = new DummyPropertyInfo("name", typeof(Target)).ToMember(),
                 Name = "name",
                 OptimisticLock = true,
-                Parent = new ParentMapping(),
+                Parent = new ParentMapping(null),
                 Type = typeof(Target),
                 Unique = true,
                 Update = true
@@ -395,7 +395,7 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
                 Member = new DummyPropertyInfo("name", typeof(Target)).ToMember(),
                 Name = "name",
                 OptimisticLock = true,
-                Parent = new ParentMapping(),
+                Parent = new ParentMapping(null),
                 Type = typeof(Target),
                 Unique = true,
                 Update = true
@@ -981,7 +981,7 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
     {
         public override ParentMapping create_mapping()
         {
-            return new ParentMapping
+            return new ParentMapping(null)
             {
                 ContainingEntityType = typeof(Target),
                 Name = "name"
@@ -1039,7 +1039,7 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
             mapping.Insert = true;
             mapping.Name = "name";
             mapping.OptimisticLock = true;
-            mapping.Parent = new ParentMapping();
+            mapping.Parent = new ParentMapping(null);
             mapping.Unique = true;
             mapping.Update = true;
             mapping.AddAny(new AnyMapping(null));

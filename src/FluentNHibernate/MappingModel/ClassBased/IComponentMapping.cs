@@ -36,6 +36,6 @@ namespace FluentNHibernate.MappingModel.ClassBased
         void AddCollection(ICollectionMapping mapping);
         void AddReference(ManyToOneMapping mapping);
         void AddAny(AnyMapping mapping);
-        bool HasValue(string property);
+        bool HasValue(Attr attr);
     }
 }
