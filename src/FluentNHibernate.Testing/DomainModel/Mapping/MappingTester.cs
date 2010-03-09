@@ -166,8 +166,7 @@ namespace FluentNHibernate.Testing.DomainModel.Mapping
 
         public MappingTester<T> ValueEquals(string value)
         {
-            currentElement.InnerXml.ShouldEqual(value);
-
+            Assert.AreEqual(value, currentElement.InnerText);
             return this;
         }
 

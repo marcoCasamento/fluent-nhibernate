@@ -477,7 +477,7 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
                 ContainingEntityType = typeof(Target),
             };
 
-            mapping.Params.Add("left", "right");
+            mapping.AddParam(new ParamMapping { Name = "left", Value = "right" });
 
             return mapping;
         }

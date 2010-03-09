@@ -6,7 +6,7 @@ using FluentNHibernate.Visitors;
 
 namespace FluentNHibernate.MappingModel.Identity
 {
-    public class IdMapping : ColumnBasedMappingBase, IIdentityMapping, IMapping, IMemberMapping
+    public class IdMapping : ColumnBasedMappingBase, IIdentityMapping, IMemberMapping
     {
         readonly ValueStore values = new ValueStore();
         readonly Member member;
@@ -15,22 +15,27 @@ namespace FluentNHibernate.MappingModel.Identity
         {
             this.member = member;
 
+            Name = member.Name;
+            Type = new TypeReference(member.PropertyType);
             Generator = GetDefaultGenerator(member);
+
+            var column = new ColumnMapping { Name = member.Name };
+            column.SpecifyParentValues(values);
+            AddDefaultColumn(column);
         }
 
         private static GeneratorMapping GetDefaultGenerator(Member property)
         {
-            var generatorStructure = new BucketStructure<GeneratorMapping>();
-            var defaultGenerator = new GeneratorBuilder(generatorStructure, property.PropertyType);
+            var mapping = new GeneratorMapping();
 
             if (property.PropertyType == typeof(Guid))
-                defaultGenerator.GuidComb();
+                mapping.Class = "guid.comb";
             else if (property.PropertyType == typeof(int) || property.PropertyType == typeof(long))
-                defaultGenerator.Identity();
+                mapping.Class = "identity";
             else
-                defaultGenerator.Assigned();
+                mapping.Class = "assigned";
 
-            return generatorStructure.CreateMappingNode(new DefaultMappingFactory());
+            return mapping;
         }
 
 
@@ -101,10 +106,15 @@ namespace FluentNHibernate.MappingModel.Identity
 
         public override void AddChild(IMapping child)
         {
+            if (child is GeneratorMapping)
+                Generator = (GeneratorMapping)child;
+            if (child is ColumnMapping)
+                AddColumn((ColumnMapping)child);
         }
 
-        public void UpdateValues(IEnumerable<KeyValuePair<Attr, object>> values)
+        public void UpdateValues(IEnumerable<KeyValuePair<Attr, object>> otherValues)
         {
+            values.Merge(otherValues);
         }
 
         public bool HasValue(Attr attr)

@@ -17,7 +17,11 @@ namespace FluentNHibernate.Mapping
         {
             var paramStructure = new BucketStructure<ParamMapping>();
 
-            //parameters.Add(name, value);
+            paramStructure.SetValue(Attr.Name, name);
+            paramStructure.SetValue(Attr.Value, value);
+
+            structure.AddChild(paramStructure);
+
             return this;
         }
     }
