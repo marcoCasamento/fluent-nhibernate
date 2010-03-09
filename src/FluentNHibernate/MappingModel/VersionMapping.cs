@@ -16,7 +16,10 @@ namespace FluentNHibernate.MappingModel
 
             Name = member.Name;
             Type = member.PropertyType == typeof(DateTime) ? new TypeReference("timestamp") : new TypeReference(member.PropertyType);
-            AddDefaultColumn(new ColumnMapping { Name = member.Name });
+            
+            var column = new ColumnMapping { Name = member.Name };
+            column.SpecifyParentValues(values);
+            AddDefaultColumn(column);
         }
 
         public override void AcceptVisitor(IMappingModelVisitor visitor)

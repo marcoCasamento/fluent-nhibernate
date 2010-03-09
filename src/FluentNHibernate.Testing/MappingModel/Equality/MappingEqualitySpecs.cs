@@ -28,11 +28,11 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
                 Update = true
             };
 
-            mapping.AddIdentifierDefaultColumn(new ColumnMapping { Name = "default-id-col" });
-            mapping.AddIdentifierColumn(new ColumnMapping { Name = "id-col" });
+            mapping.AddIdentifierDefaultColumn(new ColumnMapping() { Name = "default-id-col" });
+            mapping.AddIdentifierColumn(new ColumnMapping() { Name = "id-col" });
             mapping.AddMetaValue(new MetaValueMapping(null) { Value = "value" });
-            mapping.AddTypeDefaultColumn(new ColumnMapping { Name = "default-type-col" });
-            mapping.AddTypeColumn(new ColumnMapping { Name = "type-col" });
+            mapping.AddTypeDefaultColumn(new ColumnMapping() { Name = "default-type-col" });
+            mapping.AddTypeColumn(new ColumnMapping() { Name = "type-col" });
 
             return mapping;
         }
@@ -266,7 +266,7 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
     {
         public override ColumnMapping create_mapping()
         {
-            return new ColumnMapping
+            return new ColumnMapping()
             {
                 Check = "check",
                 Default = "default",
@@ -304,8 +304,8 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
                 Type = new TypeReference(typeof(Target))
             };
 
-            mapping.AddDefaultColumn(new ColumnMapping { Name = "default" });
-            mapping.AddColumn(new ColumnMapping { Name = "col" });
+            mapping.AddDefaultColumn(new ColumnMapping() { Name = "default" });
+            mapping.AddColumn(new ColumnMapping() { Name = "col" });
             
             return mapping;
         }
@@ -370,7 +370,7 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
                 Type = new TypeReference(typeof(Target))
             };
 
-            mapping.AddColumn(new ColumnMapping { Name = "col" });
+            mapping.AddColumn(new ColumnMapping() { Name = "col" });
 
             return mapping;
         }
@@ -536,8 +536,8 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
                 UnsavedValue = "unsaved"
             };
 
-            mapping.AddDefaultColumn(new ColumnMapping { Name = "default" });
-            mapping.AddColumn(new ColumnMapping { Name = "col" });
+            mapping.AddDefaultColumn(new ColumnMapping() { Name = "default" });
+            mapping.AddColumn(new ColumnMapping() { Name = "col" });
 
             return mapping;
         }
@@ -580,8 +580,8 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
                 ForeignKey = "fk"
             };
 
-            mapping.AddDefaultColumn(new ColumnMapping { Name = "default" });
-            mapping.AddColumn(new ColumnMapping { Name = "col" });
+            mapping.AddDefaultColumn(new ColumnMapping() { Name = "default" });
+            mapping.AddColumn(new ColumnMapping() { Name = "col" });
 
             return mapping;
         }
@@ -604,8 +604,8 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
                 Type = new TypeReference(typeof(Target)),
             };
 
-            mapping.AddDefaultColumn(new ColumnMapping { Name = "default" });
-            mapping.AddColumn(new ColumnMapping { Name = "col" });
+            mapping.AddDefaultColumn(new ColumnMapping() { Name = "default" });
+            mapping.AddColumn(new ColumnMapping() { Name = "col" });
 
             return mapping;
         }
@@ -713,7 +713,7 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
                 NotFound = "not-found"
             };
 
-            mapping.AddColumn(new ColumnMapping { Name = "col" });
+            mapping.AddColumn(new ColumnMapping() { Name = "col" });
 
             return mapping;
         }
@@ -738,7 +738,7 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
                 Type = new TypeReference(typeof(Target))
             };
 
-            mapping.AddColumn(new ColumnMapping { Name = "col" });
+            mapping.AddColumn(new ColumnMapping() { Name = "col" });
 
             return mapping;
         }
@@ -766,8 +766,8 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
                 Update = true
             };
 
-            mapping.AddDefaultColumn(new ColumnMapping { Name = "default" });
-            mapping.AddColumn(new ColumnMapping { Name = "col" });
+            mapping.AddDefaultColumn(new ColumnMapping() { Name = "default" });
+            mapping.AddColumn(new ColumnMapping() { Name = "col" });
 
             return mapping;
         }
@@ -832,8 +832,8 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
                 NotFound = "not found"
             };
 
-            mapping.AddDefaultColumn(new ColumnMapping { Name = "default" });
-            mapping.AddColumn(new ColumnMapping { Name = "col" });
+            mapping.AddDefaultColumn(new ColumnMapping() { Name = "default" });
+            mapping.AddColumn(new ColumnMapping() { Name = "col" });
 
             return mapping;
         }
@@ -863,8 +863,8 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
                 Where = "where"
             };
 
-            mapping.AddDefaultColumn(new ColumnMapping { Name = "default" });
-            mapping.AddColumn(new ColumnMapping { Name = "col" });
+            mapping.AddDefaultColumn(new ColumnMapping() { Name = "default" });
+            mapping.AddColumn(new ColumnMapping() { Name = "col" });
 
             return mapping;
         }
@@ -1014,8 +1014,8 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
                 Update = true
             };
 
-            mapping.AddDefaultColumn(new ColumnMapping { Name = "default" });
-            mapping.AddColumn(new ColumnMapping { Name = "col" });
+            mapping.AddDefaultColumn(new ColumnMapping() { Name = "default" });
+            mapping.AddColumn(new ColumnMapping() { Name = "col" });
 
             return mapping;
         }
@@ -1189,8 +1189,8 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
                 UnsavedValue = "value"
             };
 
-            mapping.AddDefaultColumn(new ColumnMapping { Name = "default" });
-            mapping.AddColumn(new ColumnMapping { Name = "col" });
+            mapping.AddDefaultColumn(new ColumnMapping() { Name = "default" });
+            mapping.AddColumn(new ColumnMapping() { Name = "col" });
 
             return mapping;
         }

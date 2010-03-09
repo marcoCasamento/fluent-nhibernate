@@ -71,7 +71,7 @@ namespace FluentNHibernate.Automapping
                 ContainingEntityType = parent
             };
 
-            mapping.AddDefaultColumn(new ColumnMapping { Name = child.Name + "_id" });
+            mapping.AddDefaultColumn(new ColumnMapping() { Name = child.Name + "_id" });
 
             return mapping;
         }
@@ -86,7 +86,7 @@ namespace FluentNHibernate.Automapping
             var key = new KeyMapping();
 
             key.ContainingEntityType = classMap.Type;
-            key.AddDefaultColumn(new ColumnMapping { Name = columnName });
+            key.AddDefaultColumn(new ColumnMapping() { Name = columnName });
 
             mapping.SetDefaultValue(x => x.Key, key);
         }

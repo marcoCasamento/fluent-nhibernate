@@ -149,7 +149,13 @@ namespace FluentNHibernate.Mapping
 
         public override ColumnMapping CreateMappingNode(IMappingFactory factory)
         {
-            return factory.CreateMapping<ColumnMapping>();
+            var mapping = new ColumnMapping();
+
+            Children
+                .Select(x => x.CreateMappingNode(factory))
+                .Each(mapping.AddChild);
+
+            return mapping;
         }
 
         public override IEnumerable<KeyValuePair<Attr, object>> Values

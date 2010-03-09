@@ -191,8 +191,8 @@ namespace FluentNHibernate.Testing.Visitors
         {
             var any = new AnyMapping(null);
 
-            any.AddIdentifierDefaultColumn(new ColumnMapping { Name = column });
-            any.AddTypeDefaultColumn(new ColumnMapping { Name = column });
+            any.AddIdentifierDefaultColumn(new ColumnMapping() { Name = column });
+            any.AddTypeDefaultColumn(new ColumnMapping() { Name = column });
             
             return any;
         }
@@ -202,7 +202,7 @@ namespace FluentNHibernate.Testing.Visitors
             var collection = new BagMapping(null);
 
             collection.Key = new KeyMapping();
-            collection.Key.AddDefaultColumn(new ColumnMapping { Name = column });
+            collection.Key.AddDefaultColumn(new ColumnMapping() { Name = column });
 
             return collection;
         }
@@ -210,14 +210,14 @@ namespace FluentNHibernate.Testing.Visitors
         protected PropertyMapping property_with_column(string column)
         {
             var property = new PropertyMapping(null);
-            property.AddDefaultColumn(new ColumnMapping { Name = "propertyColumn" });
+            property.AddDefaultColumn(new ColumnMapping() { Name = "propertyColumn" });
             return property;
         }
 
         protected ManyToOneMapping reference_with_column(string column)
         {
             var reference = new ManyToOneMapping(null);
-            reference.AddDefaultColumn(new ColumnMapping { Name = "propertyColumn" });
+            reference.AddDefaultColumn(new ColumnMapping() { Name = "propertyColumn" });
             return reference;
         }
 

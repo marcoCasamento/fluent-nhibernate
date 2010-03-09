@@ -57,7 +57,7 @@ namespace FluentNHibernate.Automapping
                 Type = new TypeReference(property.PropertyType.GetGenericArguments()[0])
             };
 
-            element.AddDefaultColumn(new ColumnMapping { Name = expressions.SimpleTypeCollectionValueColumn(property) });
+            element.AddDefaultColumn(new ColumnMapping() { Name = expressions.SimpleTypeCollectionValueColumn(property) });
             mapping.SetDefaultValue(x => x.Element, element);
         }
     }

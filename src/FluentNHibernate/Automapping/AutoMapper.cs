@@ -76,7 +76,7 @@ namespace FluentNHibernate.Automapping
                         ContainingEntityType = classType,
                         Type = new TypeReference(typeof(string))
                     };
-                    discriminator.AddDefaultColumn(new ColumnMapping { Name = discriminatorColumn });
+                    discriminator.AddDefaultColumn(new ColumnMapping() { Name = discriminatorColumn });
 
                     ((ClassMapping)mapping).Discriminator = discriminator;
                     discriminatorSet = true;
@@ -89,7 +89,7 @@ namespace FluentNHibernate.Automapping
                 {
                     subclassMapping = new SubclassMapping(classType);
                     subclassMapping.Key = new KeyMapping();
-                    subclassMapping.Key.AddDefaultColumn(new ColumnMapping { Name = mapping.Type.Name + "_id" });
+                    subclassMapping.Key.AddDefaultColumn(new ColumnMapping() { Name = mapping.Type.Name + "_id" });
                 }
                 else
                     subclassMapping = new SubclassMapping(classType);

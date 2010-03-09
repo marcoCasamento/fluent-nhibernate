@@ -70,7 +70,7 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         public void ShouldWriteTheColumns()
         {
             var mapping = new IdMapping(null);
-            mapping.AddColumn(new ColumnMapping { Name = "Column1" });
+            mapping.AddColumn(new ColumnMapping() { Name = "Column1" });
 
             writer.VerifyXml(mapping)
                 .Element("column").Exists();

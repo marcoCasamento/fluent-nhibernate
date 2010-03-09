@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using FluentNHibernate.Utils;
 using FluentNHibernate.Visitors;
 
 namespace FluentNHibernate.MappingModel
@@ -13,6 +12,12 @@ namespace FluentNHibernate.MappingModel
         public PropertyMapping(Member member)
         {
             this.member = member;
+            
+            Name = member.Name;
+
+            var column = new ColumnMapping { Name = member.Name };
+            column.SpecifyParentValues(values);
+            AddDefaultColumn(column);
         }
 
         public override void AcceptVisitor(IMappingModelVisitor visitor)
@@ -106,12 +111,9 @@ namespace FluentNHibernate.MappingModel
             }
         }
 
-        public override void AddChild(IMapping child)
+        public void UpdateValues(IEnumerable<KeyValuePair<Attr, object>> otherValues)
         {
-        }
-
-        public void UpdateValues(IEnumerable<KeyValuePair<Attr, object>> values)
-        {
+            values.Merge(otherValues);
         }
 
         public bool HasValue(Attr attr)

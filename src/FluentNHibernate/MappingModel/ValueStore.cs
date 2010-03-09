@@ -1,9 +1,10 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace FluentNHibernate.MappingModel
 {
-    public class ValueStore
+    public class ValueStore : IEnumerable<KeyValuePair<Attr, object>>
     {
         readonly Dictionary<Attr, object> values = new Dictionary<Attr, object>();
 
@@ -19,7 +20,7 @@ namespace FluentNHibernate.MappingModel
 
         public T Get<T>(Attr attr)
         {
-            return (T)(values[attr] ?? default(T));
+            return (T)(values.ContainsKey(attr) ? values[attr] : default(T));
         }
 
         public void Merge(IEnumerable<KeyValuePair<Attr, object>> otherValues)
@@ -36,6 +37,16 @@ namespace FluentNHibernate.MappingModel
         public ValueStore Clone()
         {
             return this; // TODO: Fix
+        }
+
+        public IEnumerator<KeyValuePair<Attr, object>> GetEnumerator()
+        {
+            return values.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }
