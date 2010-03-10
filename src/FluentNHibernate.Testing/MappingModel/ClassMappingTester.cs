@@ -51,7 +51,7 @@ namespace FluentNHibernate.Testing.MappingModel
         [Test]
         public void CanAddBag()
         {
-            var bag = new BagMapping(null)
+            var bag = new CollectionMapping(null)
                           {
                               Name = "bag1",
                               Key = new KeyMapping(),

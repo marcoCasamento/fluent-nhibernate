@@ -7,19 +7,19 @@ namespace FluentNHibernate.Testing.MappingModel.Output
     [TestFixture]
     public class XmlCollectionWriterTester
     {
-        private IXmlWriter<ICollectionMapping> writer;
+        private IXmlWriter<CollectionMapping> writer;
 
         [SetUp]
         public void GetWriterFromContainer()
         {
             var container = new XmlWriterContainer();
-            writer = container.Resolve<IXmlWriter<ICollectionMapping>>();
+            writer = container.Resolve<IXmlWriter<CollectionMapping>>();
         }
 
         [Test]
         public void ShouldWriteBagForBagMapping()
         {
-            var mapping = new BagMapping(null);
+            var mapping = new CollectionMapping(null);
 
             writer.VerifyXml(mapping)
                 .RootElement.HasName("bag");
@@ -28,7 +28,7 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         [Test]
         public void ShouldWriteListForListMapping()
         {
-            var mapping = new ListMapping(null);
+            var mapping = new CollectionMapping(null);
 
             writer.VerifyXml(mapping)
                 .RootElement.HasName("list");
@@ -37,7 +37,7 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         [Test]
         public void ShouldWriteSetForSetMapping()
         {
-            var mapping = new SetMapping(null);
+            var mapping = new CollectionMapping(null);
 
             writer.VerifyXml(mapping)
                 .RootElement.HasName("set");
@@ -46,7 +46,7 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         [Test]
         public void ShouldWriteMapForMapMapping()
         {
-            var mapping = new MapMapping(null);
+            var mapping = new CollectionMapping(null);
 
             writer.VerifyXml(mapping)
                 .RootElement.HasName("map");
@@ -55,7 +55,7 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         [Test]
         public void ShouldWriteArrayForArrayMapping()
         {
-            var mapping = new ArrayMapping(null);
+            var mapping = new CollectionMapping(null);
 
             writer.VerifyXml(mapping)
                 .RootElement.HasName("array");

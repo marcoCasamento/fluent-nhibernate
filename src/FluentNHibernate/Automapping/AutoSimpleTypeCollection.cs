@@ -48,7 +48,7 @@ namespace FluentNHibernate.Automapping
             classMap.AddCollection(mapping);
         }
 
-        private void SetElement(Member property, ClassMappingBase classMap, ICollectionMapping mapping)
+        private void SetElement(Member property, ClassMappingBase classMap, CollectionMapping mapping)
         {
             var element = new ElementMapping
             {

@@ -45,11 +45,11 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
     }
 
     [TestFixture]
-    public class when_comparing_two_identical_ArrayMappings : MappingEqualitySpec<ArrayMapping>
+    public class when_comparing_two_identical_ArrayMappings : MappingEqualitySpec<CollectionMapping>
     {
-        public override ArrayMapping create_mapping()
+        public override CollectionMapping create_mapping()
         {
-            var mapping = new ArrayMapping(new DummyPropertyInfo("name", typeof(Target)).ToMember())
+            var mapping = new CollectionMapping(new DummyPropertyInfo("name", typeof(Target)).ToMember())
             {
                 Access = "access", Cascade = "cascade", ContainingEntityType = typeof(Target),
                 Lazy = true, Name = "name", OptimisticLock = "lock",
@@ -58,7 +58,7 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
                 Element = new ElementMapping(), Fetch = "fetch", Generic = true,
                 Index = new IndexMapping(), Inverse = true, Key = new KeyMapping(),
                 Mutable = true, OrderBy = "order-by",
-                OtherSide = new ArrayMapping(null), Persister = new TypeReference(typeof(Target)), Relationship = new ManyToManyMapping(),
+                OtherSide = new CollectionMapping(null), Persister = new TypeReference(typeof(Target)), Relationship = new ManyToManyMapping(),
                 Schema = "schema", Subselect = "subselect", TableName = "table", Where = "where"
             };
 
@@ -75,11 +75,11 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
     }
 
     [TestFixture]
-    public class when_comparing_two_identical_BagMappings : MappingEqualitySpec<BagMapping>
+    public class when_comparing_two_identical_BagMappings : MappingEqualitySpec<CollectionMapping>
     {
-        public override BagMapping create_mapping()
+        public override CollectionMapping create_mapping()
         {
-            var mapping = new BagMapping(new DummyPropertyInfo("name", typeof(Target)).ToMember())
+            var mapping = new CollectionMapping(new DummyPropertyInfo("name", typeof(Target)).ToMember())
             {
                 Access = "access", Cascade = "cascade", ContainingEntityType = typeof(Target),
                 Lazy = true, Name = "name", OptimisticLock = "lock",
@@ -90,7 +90,7 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
                 Element = new ElementMapping(), Fetch = "fetch", Generic = true,
                 Inverse = true, Key = new KeyMapping(),
                 Mutable = true, OrderBy = "order-by",
-                OtherSide = new ArrayMapping(null), Persister = new TypeReference(typeof(Target)), Relationship = new ManyToManyMapping(),
+                OtherSide = new CollectionMapping(null), Persister = new TypeReference(typeof(Target)), Relationship = new ManyToManyMapping(),
                 Schema = "schema", Subselect = "subselect", TableName = "table", Where = "where"
             };
 
@@ -146,7 +146,7 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
             };
 
             mapping.AddAny(new AnyMapping(null));
-            mapping.AddCollection(new BagMapping(null));
+            mapping.AddCollection(new CollectionMapping(null));
             mapping.AddComponent(create_component());
             mapping.AddFilter(new FilterMapping());
             mapping.AddJoin(new JoinMapping());
@@ -241,7 +241,7 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
             };
 
             mapping.AddAny(new AnyMapping(null));
-            mapping.AddCollection(new BagMapping(null));
+            mapping.AddCollection(new CollectionMapping(null));
             mapping.AddComponent(create_component());
             mapping.AddFilter(new FilterMapping());
             mapping.AddJoin(new JoinMapping());
@@ -337,7 +337,7 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
             };
 
             mapping.AddAny(new AnyMapping(null));
-            mapping.AddCollection(new BagMapping(null));
+            mapping.AddCollection(new CollectionMapping(null));
             mapping.AddComponent(create_component());
             mapping.AddFilter(new FilterMapping());
             mapping.AddJoin(new JoinMapping());
@@ -402,7 +402,7 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
             };
 
             mapping.AddAny(new AnyMapping(null));
-            mapping.AddCollection(new BagMapping(null));
+            mapping.AddCollection(new CollectionMapping(null));
             mapping.AddComponent(create_component());
             mapping.AddFilter(new FilterMapping());
             mapping.AddJoin(new JoinMapping());
@@ -644,7 +644,7 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
             };
 
             mapping.AddAny(new AnyMapping(null));
-            mapping.AddCollection(new BagMapping(null));
+            mapping.AddCollection(new CollectionMapping(null));
             mapping.AddComponent(create_component());
             mapping.AddFilter(new FilterMapping());
             mapping.AddJoin(new JoinMapping());
@@ -780,11 +780,11 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
     }
 
     [TestFixture]
-    public class when_comparing_two_identical_ListMappings : MappingEqualitySpec<ListMapping>
+    public class when_comparing_two_identical_ListMappings : MappingEqualitySpec<CollectionMapping>
     {
-        public override ListMapping create_mapping()
+        public override CollectionMapping create_mapping()
         {
-            var mapping = new ListMapping(new DummyPropertyInfo("name", typeof(Target)).ToMember())
+            var mapping = new CollectionMapping(new DummyPropertyInfo("name", typeof(Target)).ToMember())
             {
                 Access = "access", Cascade = "cascade", ContainingEntityType = typeof(Target),
                 Lazy = true, Name = "name", OptimisticLock = "lock",
@@ -795,7 +795,7 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
                 Element = new ElementMapping(), Fetch = "fetch", Generic = true,
                 Index = new IndexMapping(), Inverse = true, Key = new KeyMapping(),
                 Mutable = true, OrderBy = "order-by",
-                OtherSide = new ArrayMapping(null), Persister = new TypeReference(typeof(Target)), Relationship = new ManyToManyMapping(),
+                OtherSide = new CollectionMapping(null), Persister = new TypeReference(typeof(Target)), Relationship = new ManyToManyMapping(),
                 Schema = "schema", Subselect = "subselect", TableName = "table", Where = "where"
             };
 
@@ -877,11 +877,11 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
     }
 
     [TestFixture]
-    public class when_comparing_two_identical_MapMappings : MappingEqualitySpec<MapMapping>
+    public class when_comparing_two_identical_MapMappings : MappingEqualitySpec<CollectionMapping>
     {
-        public override MapMapping create_mapping()
+        public override CollectionMapping create_mapping()
         {
-            var mapping = new MapMapping(new DummyPropertyInfo("name", typeof(Target)).ToMember())
+            var mapping = new CollectionMapping(new DummyPropertyInfo("name", typeof(Target)).ToMember())
             {
                 Access = "access", Cascade = "cascade", ContainingEntityType = typeof(Target),
                 Lazy = true, Name = "name", OptimisticLock = "lock",
@@ -892,7 +892,7 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
                 Element = new ElementMapping(), Fetch = "fetch", Generic = true,
                 Index = new IndexMapping(), Inverse = true, Key = new KeyMapping(),
                 Mutable = true, OrderBy = "order-by",
-                OtherSide = new ArrayMapping(null), Persister = new TypeReference(typeof(Target)), Relationship = new ManyToManyMapping(),
+                OtherSide = new CollectionMapping(null), Persister = new TypeReference(typeof(Target)), Relationship = new ManyToManyMapping(),
                 Schema = "schema", Subselect = "subselect", TableName = "table", Where = "where",
                 Sort = "sort"
             };
@@ -1043,7 +1043,7 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
             mapping.Unique = true;
             mapping.Update = true;
             mapping.AddAny(new AnyMapping(null));
-            mapping.AddCollection(new BagMapping(null));
+            mapping.AddCollection(new CollectionMapping(null));
             mapping.AddComponent(create_component());
             mapping.AddOneToOne(new OneToOneMapping(null));
             mapping.AddProperty(create_property());
@@ -1060,11 +1060,11 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
     }
 
     [TestFixture]
-    public class when_comparing_two_identical_SetMappings : MappingEqualitySpec<SetMapping>
+    public class when_comparing_two_identical_SetMappings : MappingEqualitySpec<CollectionMapping>
     {
-        public override SetMapping create_mapping()
+        public override CollectionMapping create_mapping()
         {
-            var mapping = new SetMapping(new DummyPropertyInfo("name", typeof(Target)).ToMember())
+            var mapping = new CollectionMapping(new DummyPropertyInfo("name", typeof(Target)).ToMember())
             {
                 Access = "access", Cascade = "cascade", ContainingEntityType = typeof(Target),
                 Lazy = true, Name = "name", OptimisticLock = "lock",
@@ -1075,7 +1075,7 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
                 Element = new ElementMapping(), Fetch = "fetch", Generic = true,
                 Inverse = true, Key = new KeyMapping(),
                 Mutable = true, OrderBy = "order-by",
-                OtherSide = new ArrayMapping(null), Persister = new TypeReference(typeof(Target)), Relationship = new ManyToManyMapping(),
+                OtherSide = new CollectionMapping(null), Persister = new TypeReference(typeof(Target)), Relationship = new ManyToManyMapping(),
                 Schema = "schema", Subselect = "subselect", TableName = "table", Where = "where",
                 Sort = "sort"
             };
@@ -1135,7 +1135,7 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
             };
 
             mapping.AddAny(new AnyMapping(null));
-            mapping.AddCollection(new BagMapping(null));
+            mapping.AddCollection(new CollectionMapping(null));
             mapping.AddComponent(create_component());
             mapping.AddFilter(new FilterMapping());
             mapping.AddJoin(new JoinMapping());

@@ -143,34 +143,34 @@ namespace FluentNHibernate.Testing.FluentInterfaceTests
                 structure.CreateMappingNode);
         }
 
-        protected static ModelTester<OneToManyPart<T>, ICollectionMapping> OneToMany<T>(Expression<Func<OneToManyTarget, IEnumerable<T>>> property)
+        protected static ModelTester<OneToManyPart<T>, CollectionMapping> OneToMany<T>(Expression<Func<OneToManyTarget, IEnumerable<T>>> property)
         {
-            var structure = new MemberStructure<ICollectionMapping>(property.ToMember());
-            return new ModelTester<OneToManyPart<T>, ICollectionMapping>(
+            var structure = new MemberStructure<CollectionMapping>(property.ToMember());
+            return new ModelTester<OneToManyPart<T>, CollectionMapping>(
                 () => new OneToManyPart<T>(structure),
                 structure.CreateMappingNode);
         }
 
-        protected static ModelTester<ManyToManyPart<T>, ICollectionMapping> ManyToMany<T>(Expression<Func<ManyToManyTarget, IList<T>>> property)
+        protected static ModelTester<ManyToManyPart<T>, CollectionMapping> ManyToMany<T>(Expression<Func<ManyToManyTarget, IList<T>>> property)
         {
-            var structure = new MemberStructure<ICollectionMapping>(ReflectionHelper.GetMember(property));
-            return new ModelTester<ManyToManyPart<T>, ICollectionMapping>(
+            var structure = new MemberStructure<CollectionMapping>(ReflectionHelper.GetMember(property));
+            return new ModelTester<ManyToManyPart<T>, CollectionMapping>(
                 () => new ManyToManyPart<T>(structure),
                 structure.CreateMappingNode);
         }
 
-        protected static ModelTester<ManyToManyPart<IDictionary>, ICollectionMapping> ManyToMany(Expression<Func<ManyToManyTarget, IDictionary>> property)
+        protected static ModelTester<ManyToManyPart<IDictionary>, CollectionMapping> ManyToMany(Expression<Func<ManyToManyTarget, IDictionary>> property)
         {
-            var structure = new MemberStructure<ICollectionMapping>(ReflectionHelper.GetMember(property));
-            return new ModelTester<ManyToManyPart<IDictionary>, ICollectionMapping>(
+            var structure = new MemberStructure<CollectionMapping>(ReflectionHelper.GetMember(property));
+            return new ModelTester<ManyToManyPart<IDictionary>, CollectionMapping>(
                 () => new ManyToManyPart<IDictionary>(structure),
                 structure.CreateMappingNode);
         }
 
-        protected static ModelTester<ManyToManyPart<IDictionary<TIndex, TValue>>, ICollectionMapping> ManyToMany<TIndex, TValue>(Expression<Func<ManyToManyTarget, IDictionary<TIndex, TValue>>> property)
+        protected static ModelTester<ManyToManyPart<IDictionary<TIndex, TValue>>, CollectionMapping> ManyToMany<TIndex, TValue>(Expression<Func<ManyToManyTarget, IDictionary<TIndex, TValue>>> property)
         {
-            var structure = new MemberStructure<ICollectionMapping>(ReflectionHelper.GetMember(property));
-            return new ModelTester<ManyToManyPart<IDictionary<TIndex, TValue>>, ICollectionMapping>(
+            var structure = new MemberStructure<CollectionMapping>(ReflectionHelper.GetMember(property));
+            return new ModelTester<ManyToManyPart<IDictionary<TIndex, TValue>>, CollectionMapping>(
                () => new ManyToManyPart<IDictionary<TIndex, TValue>>(structure),
                structure.CreateMappingNode);
         }

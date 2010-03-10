@@ -64,7 +64,7 @@ namespace FluentNHibernate.Testing.MappingModel
                 Update = true
             };
             external_component_mapping.AddAny(new AnyMapping(null));
-            external_component_mapping.AddCollection(new BagMapping(null));
+            external_component_mapping.AddCollection(new CollectionMapping(null));
             external_component_mapping.AddComponent(new ComponentMapping(typeof(ExampleClass)));
             external_component_mapping.AddFilter(new FilterMapping());
             external_component_mapping.AddOneToOne(new OneToOneMapping(null));

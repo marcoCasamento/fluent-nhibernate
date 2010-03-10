@@ -55,7 +55,7 @@ namespace FluentNHibernate.MappingModel.Output
             document.ImportAndAppendChild(xml);
         }
 
-        protected void WriteBaseCollectionAttributes(XmlElement element, ICollectionMapping mapping)
+        protected void WriteBaseCollectionAttributes(XmlElement element, CollectionMapping mapping)
         {
             if (mapping.HasValue(Attr.Access))
                 element.WithAtt("access", mapping.Access);

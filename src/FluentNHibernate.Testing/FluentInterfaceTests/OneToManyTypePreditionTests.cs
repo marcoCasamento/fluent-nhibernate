@@ -12,7 +12,7 @@ namespace FluentNHibernate.Testing.FluentInterfaceTests
         {
             OneToMany(x => x.BagOfChildren)
                 .Mapping(m => { })
-                .ModelShouldMatch(x => x.ShouldBeOfType<BagMapping>());
+                .ModelShouldMatch(x => x.ShouldBeOfType<CollectionMapping>());
         }
 
         [Test]
@@ -20,7 +20,7 @@ namespace FluentNHibernate.Testing.FluentInterfaceTests
         {
             OneToMany(x => x.SetOfChildren)
                 .Mapping(m => { })
-                .ModelShouldMatch(x => x.ShouldBeOfType<SetMapping>());
+                .ModelShouldMatch(x => x.ShouldBeOfType<CollectionMapping>());
         }
 
         [Test]
@@ -28,7 +28,7 @@ namespace FluentNHibernate.Testing.FluentInterfaceTests
         {
             OneToMany(x => x.HashSetOfChildren)
                 .Mapping(m => { })
-                .ModelShouldMatch(x => x.ShouldBeOfType<SetMapping>());
+                .ModelShouldMatch(x => x.ShouldBeOfType<CollectionMapping>());
         }
 
         [Test, Ignore]
@@ -36,7 +36,7 @@ namespace FluentNHibernate.Testing.FluentInterfaceTests
         {
             OneToMany(x => x.ArrayOfChildren)
                 .Mapping(m => { })
-                .ModelShouldMatch(x => x.ShouldBeOfType<ArrayMapping>());
+                .ModelShouldMatch(x => x.ShouldBeOfType<CollectionMapping>());
         }
     }
 }

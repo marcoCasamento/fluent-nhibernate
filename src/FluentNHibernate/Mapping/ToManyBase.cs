@@ -13,7 +13,7 @@ namespace FluentNHibernate.Mapping
         where T : ToManyBase<T, TChild, TRelationshipAttributes>
         where TRelationshipAttributes : ICollectionRelationshipMapping
     {
-        readonly IMappingStructure<ICollectionMapping> structure;
+        readonly IMappingStructure<CollectionMapping> structure;
         readonly IMappingStructure<KeyMapping> keyStructure;
         readonly AccessStrategyBuilder<T> access;
         readonly FetchTypeExpression<T> fetch;
@@ -24,7 +24,7 @@ namespace FluentNHibernate.Mapping
         readonly IList<FilterPart> filters = new List<FilterPart>();
         IMappingStructure<CacheMapping> cacheStructure;
 
-        protected ToManyBase(IMappingStructure<ICollectionMapping> structure, IMappingStructure<KeyMapping> keyStructure)
+        protected ToManyBase(IMappingStructure<CollectionMapping> structure, IMappingStructure<KeyMapping> keyStructure)
         {
             this.structure = structure;
             this.keyStructure = keyStructure;
@@ -96,38 +96,38 @@ namespace FluentNHibernate.Mapping
 
         public T AsSet()
         {
-            structure.OverrideMappingType(typeof(SetMapping));
+            structure.OverrideMappingType(typeof(CollectionMapping));
             return (T)this;
         }
 
         public T AsSet(SortType sort)
         {
-            structure.OverrideMappingType(typeof(SetMapping));
+            structure.OverrideMappingType(typeof(CollectionMapping));
             return (T)this;
         }
 
         public T AsSet<TComparer>() where TComparer : IComparer<TChild>
         {
-            structure.OverrideMappingType(typeof(SetMapping));
+            structure.OverrideMappingType(typeof(CollectionMapping));
             return (T)this;
         }
 
         public T AsBag()
         {
-            structure.OverrideMappingType(typeof(BagMapping));
+            structure.OverrideMappingType(typeof(CollectionMapping));
             return (T)this;
         }
 
         public T AsList()
         {
-            structure.OverrideMappingType(typeof(ListMapping));
+            structure.OverrideMappingType(typeof(CollectionMapping));
             CreateIndexMapping(null);
             return (T)this;
         }
 
         public T AsList(Action<IndexPart> customIndexMapping)
         {
-            structure.OverrideMappingType(typeof(ListMapping));
+            structure.OverrideMappingType(typeof(CollectionMapping));
             CreateIndexMapping(customIndexMapping);
             return (T)this;
         }
@@ -144,48 +144,48 @@ namespace FluentNHibernate.Mapping
 
         public T AsMap(string indexColumnName)
         {
-            structure.OverrideMappingType(typeof(MapMapping));
+            structure.OverrideMappingType(typeof(CollectionMapping));
             AsIndexedCollection<Int32>(indexColumnName, null);
             return (T)this;
         }
 
         public T AsMap(string indexColumnName, SortType sort)
         {
-            structure.OverrideMappingType(typeof(MapMapping));
+            structure.OverrideMappingType(typeof(CollectionMapping));
             AsIndexedCollection<Int32>(indexColumnName, null);
             return (T)this;
         }
 
         public T AsMap<TIndex>(string indexColumnName)
         {
-            structure.OverrideMappingType(typeof(MapMapping));
+            structure.OverrideMappingType(typeof(CollectionMapping));
             AsIndexedCollection<TIndex>(indexColumnName, null);
             return (T)this;
         }
 
         public T AsMap<TIndex>(string indexColumnName, SortType sort)
         {
-            structure.OverrideMappingType(typeof(MapMapping));
+            structure.OverrideMappingType(typeof(CollectionMapping));
             AsIndexedCollection<TIndex>(indexColumnName, null);
             return (T)this;
         }
 
         public T AsMap<TIndex, TComparer>(string indexColumnName) where TComparer : IComparer<TChild>
         {
-            structure.OverrideMappingType(typeof(MapMapping));
+            structure.OverrideMappingType(typeof(CollectionMapping));
             AsIndexedCollection<TIndex>(indexColumnName, null);
             return (T)this;
         }
 
         public T AsMap<TIndex>(Expression<Func<TChild, TIndex>> indexSelector, Action<IndexPart> customIndexMapping)
         {
-            structure.OverrideMappingType(typeof(MapMapping));
+            structure.OverrideMappingType(typeof(CollectionMapping));
             return AsIndexedCollection(indexSelector, customIndexMapping);
         }
 
         public T AsMap<TIndex>(Expression<Func<TChild, TIndex>> indexSelector, Action<IndexPart> customIndexMapping, SortType sort)
         {
-            structure.OverrideMappingType(typeof(MapMapping));
+            structure.OverrideMappingType(typeof(CollectionMapping));
             return AsIndexedCollection(indexSelector, customIndexMapping);
         }
 
@@ -193,7 +193,7 @@ namespace FluentNHibernate.Mapping
         // so a hack is better than nothing.
         public T AsMap<TIndex>(Action<IndexPart> customIndexMapping, Action<ElementPart> customElementMapping)
         {
-            structure.OverrideMappingType(typeof(MapMapping));
+            structure.OverrideMappingType(typeof(CollectionMapping));
             AsIndexedCollection<TIndex>(string.Empty, customIndexMapping);
             Element(string.Empty, customElementMapping);
             return (T)this;
@@ -206,7 +206,7 @@ namespace FluentNHibernate.Mapping
 
         public T AsArray<TIndex>(Expression<Func<TChild, TIndex>> indexSelector, Action<IndexPart> customIndexMapping)
         {
-            structure.OverrideMappingType(typeof(ArrayMapping));
+            structure.OverrideMappingType(typeof(CollectionMapping));
             return AsIndexedCollection(indexSelector, customIndexMapping);
         }
 

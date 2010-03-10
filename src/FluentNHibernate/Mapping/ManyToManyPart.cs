@@ -8,16 +8,16 @@ namespace FluentNHibernate.Mapping
 {
     public class ManyToManyPart<TChild> : ToManyBase<ManyToManyPart<TChild>, TChild, ManyToManyMapping>
     {
-        readonly IMappingStructure<ICollectionMapping> structure;
+        readonly IMappingStructure<CollectionMapping> structure;
         readonly IMappingStructure<KeyMapping> keyStructure;
         readonly FetchTypeExpression<ManyToManyPart<TChild>> fetch;
         readonly NotFoundExpression<ManyToManyPart<TChild>> notFound;
 
-        public ManyToManyPart(IMappingStructure<ICollectionMapping> structure)
+        public ManyToManyPart(IMappingStructure<CollectionMapping> structure)
             : this(structure, new BucketStructure<KeyMapping>())
         {}
 
-        ManyToManyPart(IMappingStructure<ICollectionMapping> structure, IMappingStructure<KeyMapping> keyStructure)
+        ManyToManyPart(IMappingStructure<CollectionMapping> structure, IMappingStructure<KeyMapping> keyStructure)
             : base(structure, keyStructure)
         {
             this.structure = structure;

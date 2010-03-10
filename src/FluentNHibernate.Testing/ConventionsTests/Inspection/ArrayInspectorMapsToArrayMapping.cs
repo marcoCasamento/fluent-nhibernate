@@ -13,13 +13,13 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
     [TestFixture, Category("Inspection DSL")]
     public class ArrayInspectorMapsToArrayMapping
     {
-        private ArrayMapping mapping;
+        private CollectionMapping mapping;
         private IArrayInspector inspector;
 
         [SetUp]
         public void CreateDsl()
         {
-            mapping = new ArrayMapping(null);
+            mapping = new CollectionMapping(null);
             inspector = new ArrayInspector(mapping);
         }
 

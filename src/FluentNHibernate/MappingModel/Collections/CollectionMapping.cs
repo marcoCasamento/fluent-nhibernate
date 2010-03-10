@@ -1,23 +1,44 @@
 using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Reflection;
 using FluentNHibernate.Visitors;
 
 namespace FluentNHibernate.MappingModel.Collections
 {
-    public abstract class CollectionMappingBase : MappingBase, ICollectionMapping
+    public class Collection
+    {
+        public static readonly Collection Set = new Collection("set");
+        public static readonly Collection Bag = new Collection("bag");
+        public static readonly Collection List = new Collection("list");
+        public static readonly Collection Array = new Collection("array");
+        public static readonly Collection Map = new Collection("map");
+
+        readonly string elementName;
+
+        Collection(string elementName)
+        {
+            this.elementName = elementName;
+        }
+
+        public string GetElementName()
+        {
+            return elementName;
+        }
+    }
+    public class CollectionMapping : MappingBase, IMapping, IMemberMapping
     {
         readonly Member member;
-        readonly ValueStore values;
+        readonly ValueStore values = new ValueStore();
         readonly IList<FilterMapping> filters = new List<FilterMapping>();
+        
         public Type ContainingEntityType { get; set; }
         public Member Member { get; set; }
+        public Collection Type { get; set; }
 
-        protected CollectionMappingBase(Member member, ValueStore values)
+        public CollectionMapping(Member member)
         {
             this.member = member;
-            this.values = values;
+
+            Type = Collection.Bag;
         }
 
         public IList<FilterMapping> Filters
@@ -46,13 +67,18 @@ namespace FluentNHibernate.MappingModel.Collections
                 visitor.Visit(Cache);
         }
 
+        public override bool IsSpecified(string property)
+        {
+            return false;
+        }
+
         public Type ChildType
         {
             get { return values.Get<Type>(Attr.ChildType); }
             set { values.Set(Attr.ChildType, value); }
         }
 
-        public ICollectionMapping OtherSide { get; set; }
+        public CollectionMapping OtherSide { get; set; }
         public KeyMapping Key { get; set; }
         public ElementMapping Element { get; set; }
         public CompositeElementMapping CompositeElement { get; set; }
@@ -161,46 +187,15 @@ namespace FluentNHibernate.MappingModel.Collections
             set { values.Set(Attr.OptimisticLock, value); }
         }
 
-        public override bool IsSpecified(string property)
-        {
-            return false;
-        }
-
         public bool HasValue(Attr attr)
         {
             return values.HasValue(attr);
         }
 
-		public abstract string OrderBy { get; set; }
-
-        public bool Equals(CollectionMappingBase other)
+        public string OrderBy
         {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-            return Equals(other.values, values) &&
-                other.filters.ContentEquals(filters) &&
-                Equals(other.ContainingEntityType, ContainingEntityType)
-                && Equals(other.Member, Member);
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != typeof(CollectionMappingBase)) return false;
-            return Equals((CollectionMappingBase)obj);
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int result = (values != null ? values.GetHashCode() : 0);
-                result = (result * 397) ^ (filters != null ? filters.GetHashCode() : 0);
-                result = (result * 397) ^ (ContainingEntityType != null ? ContainingEntityType.GetHashCode() : 0);
-                result = (result * 397) ^ (Member != null ? Member.GetHashCode() : 0);
-                return result;
-            }
+            get { return values.Get(Attr.OrderBy); }
+            set { values.Set(Attr.OrderBy, value); }
         }
 
         public virtual void AddChild(IMapping child)
@@ -220,6 +215,38 @@ namespace FluentNHibernate.MappingModel.Collections
         public virtual void UpdateValues(IEnumerable<KeyValuePair<Attr, object>> otherValues)
         {
             values.Merge(otherValues);
+        }
+
+        public string Sort
+        {
+            get { return values.Get(Attr.Sort); }
+            set { values.Set(Attr.Sort, value); }
+        }
+
+        public IIndexMapping Index { get; set; }
+
+        public bool Equals(CollectionMapping other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return base.Equals(other) && Equals(other.values, values);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            return Equals(obj as CollectionMapping);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                {
+                    return (base.GetHashCode() * 397) ^ (values != null ? values.GetHashCode() : 0);
+                }
+            }
         }
     }
 }

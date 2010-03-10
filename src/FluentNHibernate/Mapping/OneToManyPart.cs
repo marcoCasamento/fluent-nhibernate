@@ -8,17 +8,17 @@ namespace FluentNHibernate.Mapping
 {
     public class OneToManyPart<TChild> : ToManyBase<OneToManyPart<TChild>, TChild, OneToManyMapping>
     {
-        readonly IMappingStructure<ICollectionMapping> structure;
+        readonly IMappingStructure<CollectionMapping> structure;
         readonly IMappingStructure<KeyMapping> keyStructure;
         private readonly ColumnMappingCollection<OneToManyPart<TChild>> keyColumns;
         private readonly CollectionCascadeExpression<OneToManyPart<TChild>> cascade;
         private readonly NotFoundExpression<OneToManyPart<TChild>> notFound;
 
-        public OneToManyPart(IMappingStructure<ICollectionMapping> structure)
+        public OneToManyPart(IMappingStructure<CollectionMapping> structure)
             : this(structure, new BucketStructure<KeyMapping>())
         {}
 
-        OneToManyPart(IMappingStructure<ICollectionMapping> structure, IMappingStructure<KeyMapping> keyStructure)
+        OneToManyPart(IMappingStructure<CollectionMapping> structure, IMappingStructure<KeyMapping> keyStructure)
             : base(structure, keyStructure)
         {
             this.structure = structure;
@@ -109,21 +109,6 @@ namespace FluentNHibernate.Mapping
         }
 
         /// <summary>
-<<<<<<< HEAD
-=======
-        /// This method is used to set a different key column in this table to be used for joins.
-        /// The output is set as the property-ref attribute in the "key" subelement of the collection
-        /// </summary>
-        /// <param name="propertyRef">The name of the column in this table which is linked to the foreign key</param>
-        /// <returns>OneToManyPart</returns>
-        public OneToManyPart<TChild> PropertyRef(string propertyRef)
-        {
-            keyStructure.SetValue(Attr.PropertyRef, propertyRef);
-            return this;
-        }
-
-        /// <summary>
->>>>>>> Updated all the FI classes to create a structure
         /// Sets the order-by clause for this one-to-many relationship.
         /// </summary>
         public OneToManyPart<TChild> OrderBy(string orderBy)

@@ -4,7 +4,7 @@ namespace FluentNHibernate.Visitors
 {
     public class ManyToManyTableNameVisitor : DefaultMappingModelVisitor
     {
-        protected override void ProcessCollection(ICollectionMapping mapping)
+        public override void ProcessCollection(CollectionMapping mapping)
         {
             if (!(mapping.Relationship is ManyToManyMapping))
                 return;

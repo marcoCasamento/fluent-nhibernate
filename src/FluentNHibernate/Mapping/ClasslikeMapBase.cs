@@ -195,7 +195,7 @@ namespace FluentNHibernate.Mapping
 
         protected virtual OneToManyPart<TChild> HasMany<TChild>(Member member)
         {
-            var collectionStructure = new MemberStructure<ICollectionMapping>(member);
+            var collectionStructure = new MemberStructure<CollectionMapping>(member);
             var part = new OneToManyPart<TChild>(collectionStructure);
 
             structure.AddChild(collectionStructure);
@@ -251,7 +251,7 @@ namespace FluentNHibernate.Mapping
 
         protected virtual ManyToManyPart<TChild> HasManyToMany<TChild>(Member property)
         {
-            var collectionStructure = new MemberStructure<ICollectionMapping>(property);
+            var collectionStructure = new MemberStructure<CollectionMapping>(property);
             var part = new ManyToManyPart<TChild>(collectionStructure);
 
             structure.AddChild(collectionStructure);

@@ -40,7 +40,7 @@ namespace FluentNHibernate.Automapping
             classMap.AddCollection(mapping);  
         }
 
-        private void SetRelationship(Member property, ClassMappingBase classMap, ICollectionMapping mapping)
+        private void SetRelationship(Member property, ClassMappingBase classMap, CollectionMapping mapping)
         {
             var relationship = new OneToManyMapping
             {
