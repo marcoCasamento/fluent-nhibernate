@@ -19,6 +19,7 @@ namespace FluentNHibernate.Mapping
         void AddChild(IMappingStructure child);
         void SetValue(Attr key, object value);
         void RemoveChildrenMatching(Predicate<IMappingStructure> predicate);
+        void OverrideMappingType(Type alternative);
         IMapping CreateMappingNode(IMappingFactory factory);
         void ApplyCustomisations();
     }
@@ -34,6 +35,8 @@ namespace FluentNHibernate.Mapping
         readonly Dictionary<Attr, object> values = new Dictionary<Attr, object>();
         readonly List<IMappingStructure> children = new List<IMappingStructure>();
         T node;
+
+        public abstract void OverrideMappingType(Type alternative);
 
         IMapping IMappingStructure.CreateMappingNode(IMappingFactory factory)
         {
@@ -79,15 +82,21 @@ namespace FluentNHibernate.Mapping
         where T : IMapping, ITypeMapping
     {
         readonly Type type;
+        Type alternateMappingType;
 
         public TypeStructure(Type type)
         {
             this.type = type;
         }
 
+        public override void OverrideMappingType(Type alternative)
+        {
+            alternateMappingType = alternative;
+        }
+
         public override T CreateMappingNode(IMappingFactory factory)
         {
-            var mapping = factory.CreateTypeMapping<T>(type);
+            var mapping = (T)factory.CreateTypeMapping(alternateMappingType ?? typeof(T), type);
 
             Children
                 .Select(x => x.CreateMappingNode(factory))
@@ -104,9 +113,16 @@ namespace FluentNHibernate.Mapping
     public class BucketStructure<T> : MappingStructure<T>
         where T : IMapping
     {
+        Type alternateMappingType;
+
+        public override void OverrideMappingType(Type alternative)
+        {
+            alternateMappingType = alternative;
+        }
+
         public override T CreateMappingNode(IMappingFactory factory)
         {
-            var mapping = factory.CreateMapping<T>();
+            var mapping = (T)factory.CreateMapping(alternateMappingType ?? typeof(T));
 
             Children
                 .Select(x => x.CreateMappingNode(factory))
@@ -120,15 +136,21 @@ namespace FluentNHibernate.Mapping
         where T : IMapping, IMemberMapping
     {
         readonly Member member;
+        Type alternateMappingType;
 
         public MemberStructure(Member member)
         {
             this.member = member;
         }
 
+        public override void OverrideMappingType(Type alternative)
+        {
+            alternateMappingType = alternative;
+        }
+
         public override T CreateMappingNode(IMappingFactory factory)
         {
-            var mapping = factory.CreateMemberMapping<T>(member);
+            var mapping = (T)factory.CreateMemberMapping(alternateMappingType ?? typeof(T), member);
 
             Children
                 .Select(x => x.CreateMappingNode(factory))
@@ -146,6 +168,9 @@ namespace FluentNHibernate.Mapping
         {
             this.parent = parent;
         }
+
+        public override void OverrideMappingType(Type alternative)
+        {}
 
         public override ColumnMapping CreateMappingNode(IMappingFactory factory)
         {
@@ -183,27 +208,27 @@ namespace FluentNHibernate.Mapping
 
     public class DefaultMappingFactory : IMappingFactory
     {
-        public T CreateMemberMapping<T>(Member member) where T : IMemberMapping
+        public object CreateMemberMapping(Type mappingType, Member member)
         {
-            return (T)Activator.CreateInstance(typeof(T), member);
+            return Activator.CreateInstance(mappingType, member);
         }
 
-        public T CreateTypeMapping<T>(Type type) where T : ITypeMapping
+        public object CreateTypeMapping(Type mappingType, Type type)
         {
-            return (T)Activator.CreateInstance(typeof(T), type);
+            return Activator.CreateInstance(mappingType, type);
         }
 
-        public T CreateMapping<T>() where T : IMapping
+        public object CreateMapping(Type mappingType)
         {
-            return Activator.CreateInstance<T>();
+            return Activator.CreateInstance(mappingType);
         }
     }
 
     public interface IMappingFactory
     {
-        T CreateMemberMapping<T>(Member member) where T : IMemberMapping;
-        T CreateTypeMapping<T>(Type type) where T : ITypeMapping;
-        T CreateMapping<T>() where T : IMapping;
+        object CreateMemberMapping(Type mappingType, Member member);
+        object CreateTypeMapping(Type mappingType, Type type);
+        object CreateMapping(Type mappingType);
     } 
 
     public class ClassMap<T> : ClasslikeMapBase<T>, IMappingProvider

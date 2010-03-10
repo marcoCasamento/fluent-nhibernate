@@ -28,7 +28,7 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         [Test]
         public void ShouldWriteListForListMapping()
         {
-            var mapping = new ListMapping();
+            var mapping = new ListMapping(null);
 
             writer.VerifyXml(mapping)
                 .RootElement.HasName("list");

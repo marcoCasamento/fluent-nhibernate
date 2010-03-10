@@ -24,7 +24,7 @@ namespace FluentNHibernate.Testing.MappingModel.Defaults
         [Test]
         public void MutableShouldBeTrueByDefaultOnListMapping()
         {
-            var mapping = new ListMapping();
+            var mapping = new ListMapping(null);
             mapping.Mutable.ShouldBeTrue();
         }
 

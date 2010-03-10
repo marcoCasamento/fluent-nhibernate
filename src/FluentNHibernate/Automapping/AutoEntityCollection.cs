@@ -33,7 +33,6 @@ namespace FluentNHibernate.Automapping
 
             mapping.ContainingEntityType = classMap.Type;
             mapping.Member = property;
-            mapping.SetDefaultValue(x => x.Name, property.Name);
 
             SetRelationship(property, classMap, mapping);
             keys.SetKey(property, classMap, mapping);
@@ -49,7 +48,7 @@ namespace FluentNHibernate.Automapping
                 ContainingEntityType = classMap.Type
             };
 
-            mapping.SetDefaultValue(x => x.Relationship, relationship);
+            mapping.Relationship = relationship;
         }
     }
 }

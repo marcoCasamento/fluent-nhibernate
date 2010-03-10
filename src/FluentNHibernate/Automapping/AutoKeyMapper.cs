@@ -25,7 +25,7 @@ namespace FluentNHibernate.Automapping
             key.ContainingEntityType = classMap.Type;
             key.AddDefaultColumn(new ColumnMapping() { Name = columnName });
 
-            mapping.SetDefaultValue(x => x.Key, key);
+            mapping.Key = key;
         }
     }
 }

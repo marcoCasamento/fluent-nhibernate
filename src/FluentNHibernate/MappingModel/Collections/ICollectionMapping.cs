@@ -36,7 +36,6 @@ namespace FluentNHibernate.MappingModel.Collections
         ICollectionMapping OtherSide { get; set; }
         IList<FilterMapping> Filters { get; }
 
-        bool HasValue<TResult>(Expression<Func<ICollectionMapping, TResult>> property);
-        void SetDefaultValue<TResult>(Expression<Func<ICollectionMapping, TResult>> property, TResult value);
+        bool HasValue(Attr attr);
     }
 }

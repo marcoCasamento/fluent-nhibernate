@@ -205,7 +205,7 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         {
             var mapping = CreateInstance();
 
-            mapping.AddCollection(new ListMapping());
+            mapping.AddCollection(new ListMapping(null));
 
             writer.VerifyXml(mapping)
                 .Element("list").Exists();

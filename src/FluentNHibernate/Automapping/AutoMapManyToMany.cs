@@ -51,7 +51,6 @@ namespace FluentNHibernate.Automapping
         private void ConfigureModel(Member property, ICollectionMapping mapping, ClassMappingBase classMap, Type parentSide)
         {
             // TODO: Make the child type safer
-            mapping.SetDefaultValue(x => x.Name, property.Name);
             mapping.Relationship = CreateManyToMany(property, property.PropertyType.GetGenericArguments()[0], classMap.Type);
             mapping.ContainingEntityType = classMap.Type;
             mapping.ChildType = property.PropertyType.GetGenericArguments()[0];
@@ -88,7 +87,7 @@ namespace FluentNHibernate.Automapping
             key.ContainingEntityType = classMap.Type;
             key.AddDefaultColumn(new ColumnMapping() { Name = columnName });
 
-            mapping.SetDefaultValue(x => x.Key, key);
+            mapping.Key = key;
         }
 
         public void Map(ClassMappingBase classMap, Member property)

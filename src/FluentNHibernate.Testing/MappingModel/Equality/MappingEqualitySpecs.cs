@@ -784,7 +784,7 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
     {
         public override ListMapping create_mapping()
         {
-            var mapping = new ListMapping
+            var mapping = new ListMapping(new DummyPropertyInfo("name", typeof(Target)).ToMember())
             {
                 Access = "access", Cascade = "cascade", ContainingEntityType = typeof(Target),
                 Lazy = true, Name = "name", OptimisticLock = "lock",
@@ -794,7 +794,7 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
                 CompositeElement = new CompositeElementMapping(typeof(ExampleClass)),
                 Element = new ElementMapping(), Fetch = "fetch", Generic = true,
                 Index = new IndexMapping(), Inverse = true, Key = new KeyMapping(),
-                Member = new DummyPropertyInfo("name", typeof(Target)).ToMember(), Mutable = true, OrderBy = "order-by",
+                Mutable = true, OrderBy = "order-by",
                 OtherSide = new ArrayMapping(null), Persister = new TypeReference(typeof(Target)), Relationship = new ManyToManyMapping(),
                 Schema = "schema", Subselect = "subselect", TableName = "table", Where = "where"
             };

@@ -7,27 +7,21 @@ namespace FluentNHibernate.MappingModel.Collections
 {
     public class ListMapping : CollectionMappingBase, IIndexedCollectionMapping
     {
-        private readonly AttributeStore<ListMapping> attributes;
+        readonly Member member;
+        private readonly ValueStore values;
 
         public ListMapping(Member member)
-            : base(member)
+            : this(member, new ValueStore())
         {}
 
-        public IIndexMapping Index
+        ListMapping(Member member, ValueStore values)
+            : base(member, values)
         {
-            get { return attributes.Get(x => x.Index); }
-            set { attributes.Set(x => x.Index, value); }
+            this.member = member;
+            this.values = values;
         }
 
-        public ListMapping()
-            : this(new AttributeStore())
-        {}
-
-        public ListMapping(AttributeStore underlyingStore)
-            : base(underlyingStore)
-        {
-            attributes = new AttributeStore<ListMapping>(underlyingStore);
-        }
+        public IIndexMapping Index { get; set; }
 
         public override void AcceptVisitor(IMappingModelVisitor visitor)
         {
@@ -47,24 +41,14 @@ namespace FluentNHibernate.MappingModel.Collections
 
         public new bool IsSpecified(string property)
         {
-            return attributes.IsSpecified(property);
-        }
-
-        public bool HasValue<TResult>(Expression<Func<ListMapping, TResult>> property)
-        {
-            return attributes.HasValue(property);
-        }
-
-        public void SetDefaultValue<TResult>(Expression<Func<ListMapping, TResult>> property, TResult value)
-        {
-            attributes.SetDefault(property, value);
+            return false;
         }
 
         public bool Equals(ListMapping other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return base.Equals(other) && Equals(other.attributes, attributes);
+            return base.Equals(other) && Equals(other.values, values);
         }
 
         public override bool Equals(object obj)
@@ -79,19 +63,18 @@ namespace FluentNHibernate.MappingModel.Collections
             unchecked
             {
                 {
-                    return (base.GetHashCode() * 397) ^ (attributes != null ? attributes.GetHashCode() : 0);
+                    return (base.GetHashCode() * 397) ^ (values != null ? values.GetHashCode() : 0);
                 }
             }
         }
 
         public override void AddChild(IMapping child)
         {
-            throw new NotImplementedException();
         }
 
-        public override void UpdateValues(IEnumerable<KeyValuePair<Attr, object>> values)
+        public override void UpdateValues(IEnumerable<KeyValuePair<Attr, object>> otherValues)
         {
-            throw new NotImplementedException();
+            values.Merge(otherValues);
         }
     }
 }
