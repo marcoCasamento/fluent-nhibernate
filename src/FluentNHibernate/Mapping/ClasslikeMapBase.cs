@@ -248,13 +248,15 @@ namespace FluentNHibernate.Mapping
         /// <returns>many-to-many part</returns>
         private ManyToManyPart<TChild> MapHasManyToMany<TChild, TReturn>(Expression<Func<T, TReturn>> expression)
         {
-            return HasManyToMany<TChild>(expression.ToMember());
+            return HasManyToMany<TChild>(typeof(TChild), expression.ToMember());
         }
 
-        protected virtual ManyToManyPart<TChild> HasManyToMany<TChild>(Member property)
+        protected virtual ManyToManyPart<TChild> HasManyToMany<TChild>(Type childType, Member member)
         {
-            var collectionStructure = new MemberStructure<CollectionMapping>(property);
-            var part = new ManyToManyPart<TChild>(collectionStructure);
+            var collectionStructure = new MemberStructure<CollectionMapping>(member);
+            var key = new TypeStructure<KeyMapping>(typeof(T));
+            var relationship = new TypeStructure<ManyToManyMapping>(typeof(TChild));
+            var part = new ManyToManyPart<TChild>(childType, collectionStructure, key, relationship);
 
             structure.AddChild(collectionStructure);
 
@@ -272,17 +274,17 @@ namespace FluentNHibernate.Mapping
             return MapHasManyToMany<TChild, IEnumerable<TChild>>(expression);
         }
 
-	/// <summary>
+	    /// <summary>
         /// CreateProperties a many-to-many relationship with a IDictionary
         /// </summary>
         /// <typeparam name="TKey">Dictionary key type</typeparam>
         /// <typeparam name="TChild">Child object type / Dictionary value type</typeparam>
         /// <param name="expression">Expression to get property from</param>
         /// <returns>one-to-many part</returns>
-/*	public ManyToManyPart<TChild> HasManyToMany<TKey, TChild>(Expression<Func<T, IDictionary<TKey, TChild>>> expression)
-	{
-		return MapHasManyToMany<TChild, IDictionary<TKey, TChild>>(expression);
-	}*/
+        public ManyToManyPart<TChild> HasManyToMany<TKey, TChild>(Expression<Func<T, IDictionary<TKey, TChild>>> expression)
+        {
+	        return HasManyToMany<TChild>(typeof(TKey), expression.ToMember());
+        }
 
         /// <summary>
         /// CreateProperties a many-to-many relationship

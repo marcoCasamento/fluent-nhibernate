@@ -46,6 +46,7 @@ namespace FluentNHibernate.MappingModel.Collections
         {
             Name = GetMemberName(member);
             Type = GetCollectionType(member.PropertyType);
+            Member = member;
 
             if (IsCustomCollection(member.PropertyType))
                 CollectionType = new TypeReference(member.PropertyType);

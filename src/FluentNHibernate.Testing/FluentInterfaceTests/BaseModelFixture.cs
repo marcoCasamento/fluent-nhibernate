@@ -155,25 +155,31 @@ namespace FluentNHibernate.Testing.FluentInterfaceTests
 
         protected static ModelTester<ManyToManyPart<T>, CollectionMapping> ManyToMany<T>(Expression<Func<ManyToManyTarget, IList<T>>> property)
         {
-            var structure = new MemberStructure<CollectionMapping>(ReflectionHelper.GetMember(property));
+            var structure = new MemberStructure<CollectionMapping>(property.ToMember());
+            var key = new TypeStructure<KeyMapping>(typeof(OneToManyTarget));
+            var relationship = new TypeStructure<ManyToManyMapping>(typeof(T));
             return new ModelTester<ManyToManyPart<T>, CollectionMapping>(
-                () => new ManyToManyPart<T>(structure),
+                () => new ManyToManyPart<T>(typeof(T), structure, key, relationship),
                 structure.CreateMappingNode);
         }
 
         protected static ModelTester<ManyToManyPart<IDictionary>, CollectionMapping> ManyToMany(Expression<Func<ManyToManyTarget, IDictionary>> property)
         {
-            var structure = new MemberStructure<CollectionMapping>(ReflectionHelper.GetMember(property));
+            var structure = new MemberStructure<CollectionMapping>(property.ToMember());
+            var key = new TypeStructure<KeyMapping>(typeof(OneToManyTarget));
+            var relationship = new TypeStructure<OneToManyMapping>(typeof(ManyToManyTarget));
             return new ModelTester<ManyToManyPart<IDictionary>, CollectionMapping>(
-                () => new ManyToManyPart<IDictionary>(structure),
+                () => new ManyToManyPart<IDictionary>(typeof(ManyToManyTarget), structure, key, relationship),
                 structure.CreateMappingNode);
         }
 
         protected static ModelTester<ManyToManyPart<IDictionary<TIndex, TValue>>, CollectionMapping> ManyToMany<TIndex, TValue>(Expression<Func<ManyToManyTarget, IDictionary<TIndex, TValue>>> property)
         {
-            var structure = new MemberStructure<CollectionMapping>(ReflectionHelper.GetMember(property));
+            var structure = new MemberStructure<CollectionMapping>(property.ToMember());
+            var key = new TypeStructure<KeyMapping>(typeof(OneToManyTarget));
+            var relationship = new TypeStructure<OneToManyMapping>(typeof(ManyToManyTarget));
             return new ModelTester<ManyToManyPart<IDictionary<TIndex, TValue>>, CollectionMapping>(
-               () => new ManyToManyPart<IDictionary<TIndex, TValue>>(structure),
+               () => new ManyToManyPart<IDictionary<TIndex, TValue>>(typeof(ManyToManyTarget), structure, key, relationship),
                structure.CreateMappingNode);
         }
 

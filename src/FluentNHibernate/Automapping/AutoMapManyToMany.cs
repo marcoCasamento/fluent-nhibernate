@@ -64,9 +64,8 @@ namespace FluentNHibernate.Automapping
 
         private ICollectionRelationshipMapping CreateManyToMany(Member property, Type child, Type parent)
         {
-            var mapping = new ManyToManyMapping
+            var mapping = new ManyToManyMapping(property.PropertyType.GetGenericArguments()[0])
             {
-                Class = new TypeReference(property.PropertyType.GetGenericArguments()[0]),
                 ContainingEntityType = parent
             };
 

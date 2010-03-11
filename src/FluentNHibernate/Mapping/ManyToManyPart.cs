@@ -8,48 +8,57 @@ namespace FluentNHibernate.Mapping
 {
     public class ManyToManyPart<TChild> : ToManyBase<ManyToManyPart<TChild>, TChild, ManyToManyMapping>
     {
+        readonly Type entity;
         readonly IMappingStructure<CollectionMapping> structure;
         readonly IMappingStructure<KeyMapping> keyStructure;
+        readonly IMappingStructure relationshipStructure;
         readonly FetchTypeExpression<ManyToManyPart<TChild>> fetch;
         readonly NotFoundExpression<ManyToManyPart<TChild>> notFound;
 
-        public ManyToManyPart(IMappingStructure<CollectionMapping> structure)
-            : this(structure, new BucketStructure<KeyMapping>())
-        {}
-
-        ManyToManyPart(IMappingStructure<CollectionMapping> structure, IMappingStructure<KeyMapping> keyStructure)
-            : base(structure, keyStructure, null)
+        public ManyToManyPart(Type entity, IMappingStructure<CollectionMapping> structure, IMappingStructure<KeyMapping> keyStructure, IMappingStructure relationshipStructure)
+            : base(structure, keyStructure, relationshipStructure)
         {
+            this.entity = entity;
             this.structure = structure;
             this.keyStructure = keyStructure;
+            this.relationshipStructure = relationshipStructure;
 
             fetch = new FetchTypeExpression<ManyToManyPart<TChild>>(this, value => structure.SetValue(Attr.Fetch, value));
-            notFound = new NotFoundExpression<ManyToManyPart<TChild>>(this, value => structure.SetValue(Attr.NotFound, value));
+            notFound = new NotFoundExpression<ManyToManyPart<TChild>>(this, value => relationshipStructure.SetValue(Attr.NotFound, value));
         }
 
         public ManyToManyPart<TChild> ChildKeyColumn(string childKeyColumn)
         {
-            keyStructure.RemoveChildrenMatching(x => x is IMappingStructure<ColumnMapping>);
+            relationshipStructure.RemoveChildrenMatching(x => x is IMappingStructure<ColumnMapping>);
 
-            var column = new ColumnStructure(keyStructure);
+            var column = new ColumnStructure(relationshipStructure);
 
             new ColumnPart(column)
                 .Name(childKeyColumn);
+
+            relationshipStructure.AddChild(column);
 
             return this;
         }
 
         public ManyToManyPart<TChild> ParentKeyColumn(string parentKeyColumn)
         {
-            //parentColumns.Clear(); // support only one currently
-            //parentColumns.Add(parentKeyColumn);
+            keyStructure.RemoveChildrenMatching(x => x is IMappingStructure<ColumnMapping>);
+
+            var column = new ColumnStructure(keyStructure);
+
+            new ColumnPart(column)
+                .Name(parentKeyColumn);
+
+            keyStructure.AddChild(column);
+
             return this;
         }
 
         public ManyToManyPart<TChild> ForeignKeyConstraintNames(string parentForeignKeyName, string childForeignKeyName)
         {
             keyStructure.SetValue(Attr.ForeignKey, parentForeignKeyName);
-            structure.SetValue(Attr.ForeignKey, childForeignKeyName);
+            relationshipStructure.SetValue(Attr.ForeignKey, childForeignKeyName);
             return this;
         }
 
@@ -67,34 +76,32 @@ namespace FluentNHibernate.Mapping
 
         private void EnsureGenericDictionary()
         {
-            var childType = typeof(TChild);
-            if (!(childType.IsGenericType && childType.GetGenericTypeDefinition() == typeof(IDictionary<,>)))
-                throw new ArgumentException(" must be of type IDictionary<> to be used in a ternary assocation. Type was: " + childType);
+            //var childType = typeof(TChild);
+            //if (!(childType.IsGenericType && childType.GetGenericTypeDefinition() == typeof(IDictionary<,>)))
+            //    throw new ArgumentException(" must be of type IDictionary<> to be used in a ternary assocation. Type was: " + childType);
         }
 
         public ManyToManyPart<TChild> AsTernaryAssociation()
         {
             EnsureGenericDictionary();
 
-            var indexType = typeof(TChild).GetGenericArguments()[0];
-            var valueType = typeof(TChild).GetGenericArguments()[1];
-
-            return AsTernaryAssociation(indexType.Name + "_id", valueType.Name + "_id");
+            return AsTernaryAssociation(string.Empty, null);
         }
 
         public ManyToManyPart<TChild> AsTernaryAssociation(string indexColumn, string valueColumn)
         {
             EnsureGenericDictionary();
 
-            var indexType = typeof(TChild).GetGenericArguments()[0];
-            var valueType = typeof(TChild).GetGenericArguments()[1];
-
-            var indexStructure = new BucketStructure<IndexManyToManyMapping>();
+            var indexStructure = new TypeStructure<IndexManyToManyMapping>(entity);
             var part = new IndexManyToManyPart(indexStructure);
-            part.Column(indexColumn);
-            part.Type(indexType);
 
-            ChildKeyColumn(valueColumn);
+            if (!string.IsNullOrEmpty(indexColumn))
+                part.Column(indexColumn);
+
+            if (!string.IsNullOrEmpty(valueColumn))
+                ChildKeyColumn(valueColumn);
+
+            structure.AddChild(indexStructure);
 
             return this;
         }
@@ -108,12 +115,14 @@ namespace FluentNHibernate.Mapping
         {
             EnsureDictionary();
 
-            var indexStructure = new BucketStructure<IndexManyToManyMapping>();
+            var indexStructure = new TypeStructure<IndexManyToManyMapping>(entity);
             var part = new IndexManyToManyPart(indexStructure);
             part.Column(indexColumn);
             part.Type(indexType);
 
             ChildKeyColumn(valueColumn);
+
+            structure.AddChild(indexStructure);
 
             return this;
         }
@@ -132,15 +141,17 @@ namespace FluentNHibernate.Mapping
         {
             EnsureGenericDictionary();
 
-            var indexType = typeof(TChild).GetGenericArguments()[0];
-            var valueType = typeof(TChild).GetGenericArguments()[1];
+            //var indexType = typeof(TChild).GetGenericArguments()[0];
+            //var valueType = typeof(TChild).GetGenericArguments()[1];
 
             var indexStructure = new BucketStructure<IndexMapping>();
             var part = new IndexPart(indexStructure);
             part.Column(indexColumn);
-            part.Type(indexType);
+            part.Type(entity);
 
             ChildKeyColumn(valueColumn);
+
+            structure.AddChild(indexStructure);
 
             return this;
         }

@@ -242,7 +242,7 @@ namespace FluentNHibernate.Specs.Visitors
             return new CollectionMapping(member)
             {
                 ContainingEntityType = typeof(T),
-                Relationship = new ManyToManyMapping(),
+                Relationship = new ManyToManyMapping(null),
                 ChildType = member.PropertyType.GetGenericArguments()[0],
                 Type = Collection.Bag
             };

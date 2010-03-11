@@ -407,7 +407,7 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         [Test]
         public void RelationshipMapped()
         {
-            mapping.Relationship = new ManyToManyMapping();
+            mapping.Relationship = new ManyToManyMapping(null);
             mapping.Relationship.Class = new TypeReference(typeof(ExampleClass));
             inspector.Relationship.Class.ShouldEqual(new TypeReference(typeof(ExampleClass)));
         }
@@ -415,7 +415,7 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         [Test]
         public void RelationshipIsSet()
         {
-            mapping.Relationship = new ManyToManyMapping();
+            mapping.Relationship = new ManyToManyMapping(null);
             mapping.Relationship.Class = new TypeReference(typeof(ExampleClass));
             inspector.IsSet(Prop(x => x.Relationship))
                 .ShouldBeTrue();

@@ -53,10 +53,10 @@ namespace FluentNHibernate.Automapping
             return base.References<TOther>(property, columnName);
         }
 
-        protected override ManyToManyPart<TChild> HasManyToMany<TChild>(Member property)
+        protected override ManyToManyPart<TChild> HasManyToMany<TChild>(Type childType, Member property)
         {
             propertiesMapped.Add(property);
-            return base.HasManyToMany<TChild>(property);
+            return base.HasManyToMany<TChild>(childType, property);
         }
 
         protected override ComponentPart<TComponent> Component<TComponent>(Member property, Action<ComponentPart<TComponent>> action)
