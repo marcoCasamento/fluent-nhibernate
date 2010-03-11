@@ -88,7 +88,7 @@ namespace FluentNHibernate.Automapping
                 if (subclassStrategy == SubclassStrategy.JoinedSubclass)
                 {
                     subclassMapping = new SubclassMapping(classType);
-                    subclassMapping.Key = new KeyMapping();
+                    subclassMapping.Key = new KeyMapping(classType);
                     subclassMapping.Key.AddDefaultColumn(new ColumnMapping() { Name = mapping.Type.Name + "_id" });
                 }
                 else

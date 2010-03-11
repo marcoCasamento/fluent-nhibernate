@@ -199,7 +199,7 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         [Test]
         public void KeyMapped()
         {
-            mapping.Key = new KeyMapping();
+            mapping.Key = new KeyMapping(null);
             mapping.Key.ForeignKey = "test";
             inspector.Key.ForeignKey.ShouldEqual("test");
         }
@@ -207,7 +207,7 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         [Test]
         public void KeyIsSet()
         {
-            mapping.Key = new KeyMapping();
+            mapping.Key = new KeyMapping(null);
             mapping.Key.ForeignKey = "test";
             inspector.IsSet(Prop(x => x.Key))
                 .ShouldBeTrue();

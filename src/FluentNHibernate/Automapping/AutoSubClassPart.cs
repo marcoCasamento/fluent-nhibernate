@@ -35,10 +35,10 @@ namespace FluentNHibernate.Automapping
         void IAutoClasslike.AlterModel(ClassMappingBase mapping)
         { }
 
-        protected override OneToManyPart<TChild> HasMany<TChild>(Member property)
+        protected override OneToManyPart<TChild> HasMany<TChild>(Type type, Member property)
         {
             propertiesMapped.Add(property);
-            return base.HasMany<TChild>(property);
+            return base.HasMany<TChild>(type, property);
         }
 
         protected override PropertyPart Map(Member property, string columnName)

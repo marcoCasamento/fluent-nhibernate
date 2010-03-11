@@ -73,10 +73,10 @@ namespace FluentNHibernate.Automapping
             //    mapping.AddStoredProcedure(storedProcedure.GetStoredProcedureMapping());
         }
 
-        protected override OneToManyPart<TChild> HasMany<TChild>(Member property)
+        protected override OneToManyPart<TChild> HasMany<TChild>(Type type, Member property)
         {
             mappedProperties.Add(property.Name);
-            return base.HasMany<TChild>(property);
+            return base.HasMany<TChild>(type, property);
         }
 
         public void IgnoreProperty(Expression<Func<T, object>> expression)

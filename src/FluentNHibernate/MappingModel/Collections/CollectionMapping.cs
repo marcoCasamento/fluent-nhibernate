@@ -1,22 +1,30 @@
 using System;
 using System.Collections.Generic;
+using FluentNHibernate.Utils;
 using FluentNHibernate.Visitors;
 
 namespace FluentNHibernate.MappingModel.Collections
 {
     public class Collection
     {
-        public static readonly Collection Set = new Collection("set");
-        public static readonly Collection Bag = new Collection("bag");
-        public static readonly Collection List = new Collection("list");
-        public static readonly Collection Array = new Collection("array");
-        public static readonly Collection Map = new Collection("map");
+        public static readonly Collection Set = new Collection("set", true);
+        public static readonly Collection Bag = new Collection("bag", false);
+        public static readonly Collection List = new Collection("list", true);
+        public static readonly Collection Array = new Collection("array", true);
+        public static readonly Collection Map = new Collection("map", true);
 
         readonly string elementName;
+        readonly bool supportsIndex;
 
-        Collection(string elementName)
+        Collection(string elementName, bool supportsIndex)
         {
             this.elementName = elementName;
+            this.supportsIndex = supportsIndex;
+        }
+
+        public bool SupportsIndex
+        {
+            get { return supportsIndex; }
         }
 
         public string GetElementName()
@@ -24,9 +32,9 @@ namespace FluentNHibernate.MappingModel.Collections
             return elementName;
         }
     }
-    public class CollectionMapping : MappingBase, IMapping, IMemberMapping
+
+    public class CollectionMapping : MappingBase, IMemberMapping
     {
-        readonly Member member;
         readonly ValueStore values = new ValueStore();
         readonly IList<FilterMapping> filters = new List<FilterMapping>();
         
@@ -36,9 +44,35 @@ namespace FluentNHibernate.MappingModel.Collections
 
         public CollectionMapping(Member member)
         {
-            this.member = member;
+            Name = GetMemberName(member);
+            Type = GetCollectionType(member.PropertyType);
 
-            Type = Collection.Bag;
+            if (IsCustomCollection(member.PropertyType))
+                CollectionType = new TypeReference(member.PropertyType);
+        }
+
+        string GetMemberName(Member member)
+        {
+            if (member is MethodMember && member.Name.StartsWith("Get"))
+            {
+                var name = member.Name.Substring(3);
+                return char.ToLower(name[0]) + name.Substring(1);
+            }
+
+            return member.Name;
+        }
+
+        bool IsCustomCollection(Type type)
+        {
+            return type.ClosesInterface(typeof(IEnumerable<>)) && !type.Namespace.StartsWith("System");
+        }
+
+        Collection GetCollectionType(Type type)
+        {
+            if (type.Namespace == "Iesi.Collections.Generic" || type.Closes(typeof(HashSet<>)))
+                return Collection.Set;
+            
+            return Collection.Bag;
         }
 
         public IList<FilterMapping> Filters
@@ -48,6 +82,8 @@ namespace FluentNHibernate.MappingModel.Collections
 
         public override void AcceptVisitor(IMappingModelVisitor visitor)
         {
+            visitor.ProcessCollection(this);
+
             if (Key != null)
                 visitor.Visit(Key);
 
@@ -65,6 +101,9 @@ namespace FluentNHibernate.MappingModel.Collections
 
             if (Cache != null)
                 visitor.Visit(Cache);
+
+            if (Type.SupportsIndex && Index != null)
+                visitor.Visit(Index);
         }
 
         public override bool IsSpecified(string property)
@@ -202,6 +241,8 @@ namespace FluentNHibernate.MappingModel.Collections
         {
             if (child is KeyMapping)
                 Key = (KeyMapping)child;
+            if (child is IIndexMapping)
+                Index = (IIndexMapping)child;
             if (child is ElementMapping)
                 Element = (ElementMapping)child;
             if (child is CompositeElementMapping)

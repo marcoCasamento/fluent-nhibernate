@@ -207,9 +207,9 @@ namespace FluentNHibernate.MappingModel.ClassBased
             return false;
         }
 
-        public bool HasValue<TResult>(Expression<Func<ClassMapping, TResult>> property)
+        public bool HasValue(Attr attr)
         {
-            return false;
+            return values.HasValue(attr);
         }
 
         public bool Equals(ClassMapping other)

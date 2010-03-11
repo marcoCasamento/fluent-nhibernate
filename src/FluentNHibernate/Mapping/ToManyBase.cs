@@ -15,6 +15,7 @@ namespace FluentNHibernate.Mapping
     {
         readonly IMappingStructure<CollectionMapping> structure;
         readonly IMappingStructure<KeyMapping> keyStructure;
+        readonly IMappingStructure relationshipStructure;
         readonly AccessStrategyBuilder<T> access;
         readonly FetchTypeExpression<T> fetch;
         readonly OptimisticLockBuilder<T> optimisticLock;
@@ -24,26 +25,19 @@ namespace FluentNHibernate.Mapping
         readonly IList<FilterPart> filters = new List<FilterPart>();
         IMappingStructure<CacheMapping> cacheStructure;
 
-        protected ToManyBase(IMappingStructure<CollectionMapping> structure, IMappingStructure<KeyMapping> keyStructure)
+        protected ToManyBase(IMappingStructure<CollectionMapping> structure, IMappingStructure<KeyMapping> keyStructure, IMappingStructure relationshipStructure)
         {
             this.structure = structure;
             this.keyStructure = keyStructure;
+            this.relationshipStructure = relationshipStructure;
+            
             structure.AddChild(keyStructure);
+            structure.AddChild(relationshipStructure);
 
             access = new AccessStrategyBuilder<T>((T)this, value => structure.SetValue(Attr.Access, value));
             fetch = new FetchTypeExpression<T>((T)this, value => structure.SetValue(Attr.Fetch, value));
             optimisticLock = new OptimisticLockBuilder<T>((T)this, value => structure.SetValue(Attr.OptimisticLock, value));
             cascade = new CollectionCascadeExpression<T>((T)this, value => structure.SetValue(Attr.Cascade, value));
-
-            SetDefaultCollectionType(typeof(TChild));
-        }
-
-        void SetDefaultCollectionType(Type type)
-        {
-            if (type.Namespace == "Iesi.Collections.Generic" || type.Closes(typeof(HashSet<>)))
-                AsSet();
-            else
-                AsBag();
         }
 
         /// <summary>
@@ -96,96 +90,118 @@ namespace FluentNHibernate.Mapping
 
         public T AsSet()
         {
-            structure.OverrideMappingType(typeof(CollectionMapping));
+            structure.Alter(x => x.Type = Collection.Set);
             return (T)this;
+        }
+
+        void SetSort(SortType sort)
+        {
+            structure.SetValue(Attr.Sort, sort.ToString());
+        }
+
+        void SetSort(string sort)
+        {
+            structure.SetValue(Attr.Sort, sort);
         }
 
         public T AsSet(SortType sort)
         {
-            structure.OverrideMappingType(typeof(CollectionMapping));
+            SetSort(sort);
+            structure.Alter(x =>
+            {
+                x.Type = Collection.Set;
+            });
             return (T)this;
         }
 
         public T AsSet<TComparer>() where TComparer : IComparer<TChild>
         {
-            structure.OverrideMappingType(typeof(CollectionMapping));
+            SetSort(typeof(TComparer).AssemblyQualifiedName);
+            structure.Alter(x =>
+            {
+                x.Type = Collection.Set;
+            });
             return (T)this;
         }
 
         public T AsBag()
         {
-            structure.OverrideMappingType(typeof(CollectionMapping));
+            structure.Alter(x => x.Type = Collection.Bag);
             return (T)this;
         }
 
         public T AsList()
         {
-            structure.OverrideMappingType(typeof(CollectionMapping));
-            CreateIndexMapping(null);
+            structure.Alter(x => x.Type = Collection.List);
+            CreateIndexMapping(null, null, null);
             return (T)this;
         }
 
         public T AsList(Action<IndexPart> customIndexMapping)
         {
-            structure.OverrideMappingType(typeof(CollectionMapping));
-            CreateIndexMapping(customIndexMapping);
+            structure.Alter(x => x.Type = Collection.List);
+            CreateIndexMapping(null, null, customIndexMapping);
             return (T)this;
         }
 
         public T AsMap<TIndex>(Expression<Func<TChild, TIndex>> indexSelector)
         {
-            return AsMap(indexSelector, null);
+            return AsMap(indexSelector, _ => {});
         }
 
         public T AsMap<TIndex>(Expression<Func<TChild, TIndex>> indexSelector, SortType sort)
         {
+            SetSort(sort);
             return AsMap(indexSelector, null, sort);
         }
 
         public T AsMap(string indexColumnName)
         {
-            structure.OverrideMappingType(typeof(CollectionMapping));
+            structure.Alter(x => x.Type = Collection.Map);
             AsIndexedCollection<Int32>(indexColumnName, null);
             return (T)this;
         }
 
         public T AsMap(string indexColumnName, SortType sort)
         {
-            structure.OverrideMappingType(typeof(CollectionMapping));
+            structure.Alter(x => x.Type = Collection.Map);
+            SetSort(sort);
             AsIndexedCollection<Int32>(indexColumnName, null);
             return (T)this;
         }
 
         public T AsMap<TIndex>(string indexColumnName)
         {
-            structure.OverrideMappingType(typeof(CollectionMapping));
+            structure.Alter(x => x.Type = Collection.Map);
             AsIndexedCollection<TIndex>(indexColumnName, null);
             return (T)this;
         }
 
         public T AsMap<TIndex>(string indexColumnName, SortType sort)
         {
-            structure.OverrideMappingType(typeof(CollectionMapping));
+            structure.Alter(x => x.Type = Collection.Map);
+            SetSort(sort);
             AsIndexedCollection<TIndex>(indexColumnName, null);
             return (T)this;
         }
 
         public T AsMap<TIndex, TComparer>(string indexColumnName) where TComparer : IComparer<TChild>
         {
-            structure.OverrideMappingType(typeof(CollectionMapping));
+            structure.Alter(x => x.Type = Collection.Map);
+            SetSort(typeof(TComparer).AssemblyQualifiedName);
             AsIndexedCollection<TIndex>(indexColumnName, null);
             return (T)this;
         }
 
         public T AsMap<TIndex>(Expression<Func<TChild, TIndex>> indexSelector, Action<IndexPart> customIndexMapping)
         {
-            structure.OverrideMappingType(typeof(CollectionMapping));
+            structure.Alter(x => x.Type = Collection.Map);
             return AsIndexedCollection(indexSelector, customIndexMapping);
         }
 
         public T AsMap<TIndex>(Expression<Func<TChild, TIndex>> indexSelector, Action<IndexPart> customIndexMapping, SortType sort)
         {
-            structure.OverrideMappingType(typeof(CollectionMapping));
+            structure.Alter(x => x.Type = Collection.Map);
             return AsIndexedCollection(indexSelector, customIndexMapping);
         }
 
@@ -193,8 +209,8 @@ namespace FluentNHibernate.Mapping
         // so a hack is better than nothing.
         public T AsMap<TIndex>(Action<IndexPart> customIndexMapping, Action<ElementPart> customElementMapping)
         {
-            structure.OverrideMappingType(typeof(CollectionMapping));
-            AsIndexedCollection<TIndex>(string.Empty, customIndexMapping);
+            structure.Alter(x => x.Type = Collection.Map);
+            AsIndexedCollection<TIndex>(customIndexMapping);
             Element(string.Empty, customElementMapping);
             return (T)this;
         }
@@ -206,29 +222,50 @@ namespace FluentNHibernate.Mapping
 
         public T AsArray<TIndex>(Expression<Func<TChild, TIndex>> indexSelector, Action<IndexPart> customIndexMapping)
         {
-            structure.OverrideMappingType(typeof(CollectionMapping));
+            structure.Alter(x => x.Type = Collection.Array);
             return AsIndexedCollection(indexSelector, customIndexMapping);
+        }
+
+        public T AsIndexedCollection<TIndex>(string indexColumn, Action<IndexPart> customIndexMapping)
+        {
+            CreateIndexMapping(typeof(TIndex), null, x =>
+            {
+                if (!string.IsNullOrEmpty(indexColumn))
+                    x.Column(indexColumn);
+                
+                if (customIndexMapping != null)
+                    customIndexMapping(x);
+            });
+            return (T)this;
         }
 
         public T AsIndexedCollection<TIndex>(Expression<Func<TChild, TIndex>> indexSelector, Action<IndexPart> customIndexMapping)
         {
             var indexMember = indexSelector.ToMember();
-            return AsIndexedCollection<TIndex>(indexMember.Name, customIndexMapping);
-        }
-
-        public T AsIndexedCollection<TIndex>(string indexColumn, Action<IndexPart> customIndexMapping)
-        {
-            CreateIndexMapping(customIndexMapping);
+            CreateIndexMapping(typeof(TIndex), indexMember, customIndexMapping);
             return (T)this;
         }
 
-        private void CreateIndexMapping(Action<IndexPart> customIndex)
+        public T AsIndexedCollection<TIndex>(Action<IndexPart> customIndexMapping)
         {
-            var indexStructure = new BucketStructure<IndexMapping>();
-            var indexPart = new IndexPart(indexStructure);
+            CreateIndexMapping(typeof(TIndex), null, customIndexMapping);
+            return (T)this;
+        }
+
+        private void CreateIndexMapping(Type indexType, Member member, Action<IndexPart> customIndex)
+        {
+            IMappingStructure<IndexMapping> indexStructure = new BucketStructure<IndexMapping>();
+            
+            if (member != null)
+                indexStructure = new MemberStructure<IndexMapping>(member);
+
+            var part = new IndexPart(indexStructure);
+
+            if (indexType != null)
+                part.Type(indexType);
 
             if (customIndex != null)
-                customIndex(indexPart);
+                customIndex(part);
 
             structure.AddChild(indexStructure);
         }

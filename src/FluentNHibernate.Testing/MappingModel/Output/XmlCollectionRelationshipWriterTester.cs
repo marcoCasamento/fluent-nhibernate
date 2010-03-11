@@ -28,7 +28,7 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         [Test]
         public void ShouldWriteOneToManyForOneToManyMapping()
         {
-            var mapping = new OneToManyMapping();
+            var mapping = new OneToManyMapping(null);
 
             writer.VerifyXml(mapping)
                 .RootElement.HasName("one-to-many");

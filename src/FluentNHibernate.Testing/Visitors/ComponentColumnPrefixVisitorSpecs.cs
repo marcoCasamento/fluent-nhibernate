@@ -201,7 +201,7 @@ namespace FluentNHibernate.Testing.Visitors
         {
             var collection = new CollectionMapping(null);
 
-            collection.Key = new KeyMapping();
+            collection.Key = new KeyMapping(null);
             collection.Key.AddDefaultColumn(new ColumnMapping() { Name = column });
 
             return collection;

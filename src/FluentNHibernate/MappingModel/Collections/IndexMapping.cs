@@ -1,24 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Reflection;
-using FluentNHibernate.Utils;
 using FluentNHibernate.Visitors;
 
 namespace FluentNHibernate.MappingModel.Collections
 {
-    public class IndexMapping : MappingBase, IIndexMapping, IHasColumnMappings, IMapping
+    public class IndexMapping : MappingBase, IIndexMapping, IHasColumnMappings, IMapping, IMemberMapping
     {
-        private readonly AttributeStore<IndexMapping> attributes;
-        private readonly IDefaultableList<ColumnMapping> columns = new DefaultableList<ColumnMapping>();
+        readonly Member member;
+        readonly ValueStore values = new ValueStore();
+        readonly IDefaultableList<ColumnMapping> columns = new DefaultableList<ColumnMapping>();
 
+        // Explicit ctor for use in BucketStructure's
         public IndexMapping()
-            : this(new AttributeStore())
         {}
 
-        public IndexMapping(AttributeStore underlyingStore)
+        public IndexMapping(Member member)
         {
-            attributes = new AttributeStore<IndexMapping>(underlyingStore);
+            this.member = member;
+
+            var column = new ColumnMapping { Name = member.Name };
+            column.SpecifyParentValues(values);
+            AddDefaultColumn(column);
         }
 
         public override void AcceptVisitor(IMappingModelVisitor visitor)
@@ -31,8 +33,8 @@ namespace FluentNHibernate.MappingModel.Collections
 
         public TypeReference Type
         {
-            get { return attributes.Get(x => x.Type); }
-            set { attributes.Set(x => x.Type, value); }
+            get { return values.Get<TypeReference>(Attr.Type); }
+            set { values.Set(Attr.Type, value); }
         }
 
         public Type ContainingEntityType { get; set; }
@@ -59,24 +61,19 @@ namespace FluentNHibernate.MappingModel.Collections
 
         public override bool IsSpecified(string property)
         {
-            return attributes.IsSpecified(property);
+            return false;
         }
 
-        public bool HasValue<TResult>(Expression<Func<IndexMapping, TResult>> property)
+        public bool HasValue(Attr attr)
         {
-            return attributes.HasValue(property);
-        }
-
-        public void SetDefaultValue<TResult>(Expression<Func<IndexMapping, TResult>> property, TResult value)
-        {
-            attributes.SetDefault(property, value);
+            return values.HasValue(attr);
         }
 
         public bool Equals(IndexMapping other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return Equals(other.attributes, attributes) &&
+            return Equals(other.values, values) &&
                 other.columns.ContentEquals(columns) &&
                 Equals(other.ContainingEntityType, ContainingEntityType);
         }
@@ -93,7 +90,7 @@ namespace FluentNHibernate.MappingModel.Collections
         {
             unchecked
             {
-                int result = (attributes != null ? attributes.GetHashCode() : 0);
+                int result = (values != null ? values.GetHashCode() : 0);
                 result = (result * 397) ^ (columns != null ? columns.GetHashCode() : 0);
                 result = (result * 397) ^ (ContainingEntityType != null ? ContainingEntityType.GetHashCode() : 0);
                 return result;
@@ -102,10 +99,13 @@ namespace FluentNHibernate.MappingModel.Collections
 
         public void AddChild(IMapping child)
         {
+            if (child is ColumnMapping)
+                AddColumn((ColumnMapping)child);
         }
 
-        public void UpdateValues(IEnumerable<KeyValuePair<Attr, object>> values)
+        public void UpdateValues(IEnumerable<KeyValuePair<Attr, object>> otherValues)
         {
+            values.Merge(otherValues);
         }
     }
 }

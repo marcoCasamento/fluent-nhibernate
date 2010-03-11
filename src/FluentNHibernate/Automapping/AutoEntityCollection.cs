@@ -42,9 +42,8 @@ namespace FluentNHibernate.Automapping
 
         private void SetRelationship(Member property, ClassMappingBase classMap, CollectionMapping mapping)
         {
-            var relationship = new OneToManyMapping
+            var relationship = new OneToManyMapping(property.PropertyType.GetGenericArguments()[0])
             {
-                Class = new TypeReference(property.PropertyType.GetGenericArguments()[0]),
                 ContainingEntityType = classMap.Type
             };
 

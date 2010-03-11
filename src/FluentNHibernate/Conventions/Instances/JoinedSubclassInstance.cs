@@ -23,7 +23,7 @@ namespace FluentNHibernate.Conventions.Instances
             get
             {
                 if (mapping.Key == null)
-                    mapping.Key = new KeyMapping();
+                    mapping.Key = new KeyMapping(null);
 
                 return new KeyInstance(mapping.Key);
             }

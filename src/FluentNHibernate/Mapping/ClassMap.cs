@@ -19,7 +19,6 @@ namespace FluentNHibernate.Mapping
         void AddChild(IMappingStructure child);
         void SetValue(Attr key, object value);
         void RemoveChildrenMatching(Predicate<IMappingStructure> predicate);
-        void OverrideMappingType(Type alternative);
         IMapping CreateMappingNode(IMappingFactory factory);
         void ApplyCustomisations();
     }
@@ -27,6 +26,7 @@ namespace FluentNHibernate.Mapping
     public interface IMappingStructure<T> : IMappingStructure
         where T : IMapping // ????
     {
+        void Alter(Action<T> alteration);
     }
 
     public abstract class MappingStructure<T> : IMappingStructure<T>
@@ -34,9 +34,8 @@ namespace FluentNHibernate.Mapping
     {
         readonly Dictionary<Attr, object> values = new Dictionary<Attr, object>();
         readonly List<IMappingStructure> children = new List<IMappingStructure>();
+        readonly List<Action<T>> alterations = new List<Action<T>>();
         T node;
-
-        public abstract void OverrideMappingType(Type alternative);
 
         IMapping IMappingStructure.CreateMappingNode(IMappingFactory factory)
         {
@@ -46,6 +45,7 @@ namespace FluentNHibernate.Mapping
         public void ApplyCustomisations()
         {
             node.UpdateValues(Values);
+            alterations.Each(x => x(node));
 
             Children.Each(x => x.ApplyCustomisations());
         }
@@ -60,6 +60,11 @@ namespace FluentNHibernate.Mapping
         public void RemoveChildrenMatching(Predicate<IMappingStructure> predicate)
         {
             children.RemoveAll(predicate);
+        }
+
+        public void Alter(Action<T> alteration)
+        {
+            alterations.Add(alteration);
         }
 
         public virtual IEnumerable<KeyValuePair<Attr, object>> Values
@@ -82,21 +87,15 @@ namespace FluentNHibernate.Mapping
         where T : IMapping, ITypeMapping
     {
         readonly Type type;
-        Type alternateMappingType;
 
         public TypeStructure(Type type)
         {
             this.type = type;
         }
 
-        public override void OverrideMappingType(Type alternative)
-        {
-            alternateMappingType = alternative;
-        }
-
         public override T CreateMappingNode(IMappingFactory factory)
         {
-            var mapping = (T)factory.CreateTypeMapping(alternateMappingType ?? typeof(T), type);
+            var mapping = (T)factory.CreateTypeMapping(typeof(T), type);
 
             Children
                 .Select(x => x.CreateMappingNode(factory))
@@ -113,16 +112,9 @@ namespace FluentNHibernate.Mapping
     public class BucketStructure<T> : MappingStructure<T>
         where T : IMapping
     {
-        Type alternateMappingType;
-
-        public override void OverrideMappingType(Type alternative)
-        {
-            alternateMappingType = alternative;
-        }
-
         public override T CreateMappingNode(IMappingFactory factory)
         {
-            var mapping = (T)factory.CreateMapping(alternateMappingType ?? typeof(T));
+            var mapping = (T)factory.CreateMapping(typeof(T));
 
             Children
                 .Select(x => x.CreateMappingNode(factory))
@@ -136,21 +128,15 @@ namespace FluentNHibernate.Mapping
         where T : IMapping, IMemberMapping
     {
         readonly Member member;
-        Type alternateMappingType;
 
         public MemberStructure(Member member)
         {
             this.member = member;
         }
 
-        public override void OverrideMappingType(Type alternative)
-        {
-            alternateMappingType = alternative;
-        }
-
         public override T CreateMappingNode(IMappingFactory factory)
         {
-            var mapping = (T)factory.CreateMemberMapping(alternateMappingType ?? typeof(T), member);
+            var mapping = (T)factory.CreateMemberMapping(typeof(T), member);
 
             Children
                 .Select(x => x.CreateMappingNode(factory))
@@ -168,9 +154,6 @@ namespace FluentNHibernate.Mapping
         {
             this.parent = parent;
         }
-
-        public override void OverrideMappingType(Type alternative)
-        {}
 
         public override ColumnMapping CreateMappingNode(IMappingFactory factory)
         {

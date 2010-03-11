@@ -146,8 +146,10 @@ namespace FluentNHibernate.Testing.FluentInterfaceTests
         protected static ModelTester<OneToManyPart<T>, CollectionMapping> OneToMany<T>(Expression<Func<OneToManyTarget, IEnumerable<T>>> property)
         {
             var structure = new MemberStructure<CollectionMapping>(property.ToMember());
+            var key = new TypeStructure<KeyMapping>(typeof(OneToManyTarget));
+            var relationship = new TypeStructure<OneToManyMapping>(typeof(T));
             return new ModelTester<OneToManyPart<T>, CollectionMapping>(
-                () => new OneToManyPart<T>(structure),
+                () => new OneToManyPart<T>(typeof(T), structure, key, relationship),
                 structure.CreateMappingNode);
         }
 

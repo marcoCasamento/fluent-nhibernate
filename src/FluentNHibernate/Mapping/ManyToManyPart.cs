@@ -18,7 +18,7 @@ namespace FluentNHibernate.Mapping
         {}
 
         ManyToManyPart(IMappingStructure<CollectionMapping> structure, IMappingStructure<KeyMapping> keyStructure)
-            : base(structure, keyStructure)
+            : base(structure, keyStructure, null)
         {
             this.structure = structure;
             this.keyStructure = keyStructure;

@@ -89,7 +89,7 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         {
             var mapping = new JoinMapping();
 
-            mapping.Key = new KeyMapping();
+            mapping.Key = new KeyMapping(null);
 
             writer.VerifyXml(mapping)
                 .Element("key").Exists();

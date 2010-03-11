@@ -20,7 +20,7 @@ namespace FluentNHibernate.Automapping
             if (classMap is ComponentMapping)
                 columnName = expressions.GetComponentColumnPrefix(((ComponentMapping)classMap).Member) + columnName;
 
-            var key = new KeyMapping();
+            var key = new KeyMapping(classMap.Type);
 
             key.ContainingEntityType = classMap.Type;
             key.AddDefaultColumn(new ColumnMapping() { Name = columnName });

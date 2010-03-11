@@ -181,7 +181,7 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         {
             var mapping = new CollectionMapping(null)
             {
-                Key = new KeyMapping()
+                Key = new KeyMapping(null)
             };
 
             writer.VerifyXml(mapping)
@@ -193,7 +193,7 @@ namespace FluentNHibernate.Testing.MappingModel.Output
         {
             var mapping = new CollectionMapping(null);
 
-            mapping.Relationship = new OneToManyMapping();
+            mapping.Relationship = new OneToManyMapping(null);
 
             writer.VerifyXml(mapping)
                 .Element("one-to-many").Exists();

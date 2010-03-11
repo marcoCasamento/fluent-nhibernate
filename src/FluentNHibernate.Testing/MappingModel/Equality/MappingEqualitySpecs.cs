@@ -56,7 +56,7 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
                 BatchSize = 1, Cache = new CacheMapping(), Check = "check",
                 ChildType = typeof(Target), CollectionType = new TypeReference(typeof(Target)), CompositeElement = new CompositeElementMapping(typeof(ExampleClass)),
                 Element = new ElementMapping(), Fetch = "fetch", Generic = true,
-                Index = new IndexMapping(), Inverse = true, Key = new KeyMapping(),
+                Index = new IndexMapping(), Inverse = true, Key = new KeyMapping(null),
                 Mutable = true, OrderBy = "order-by",
                 OtherSide = new CollectionMapping(null), Persister = new TypeReference(typeof(Target)), Relationship = new ManyToManyMapping(),
                 Schema = "schema", Subselect = "subselect", TableName = "table", Where = "where"
@@ -88,7 +88,7 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
                 CollectionType = new TypeReference(typeof(Target)),
                 CompositeElement = new CompositeElementMapping(typeof(ExampleClass)),
                 Element = new ElementMapping(), Fetch = "fetch", Generic = true,
-                Inverse = true, Key = new KeyMapping(),
+                Inverse = true, Key = new KeyMapping(null),
                 Mutable = true, OrderBy = "order-by",
                 OtherSide = new CollectionMapping(null), Persister = new TypeReference(typeof(Target)), Relationship = new ManyToManyMapping(),
                 Schema = "schema", Subselect = "subselect", TableName = "table", Where = "where"
@@ -573,10 +573,9 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
     {
         public override IndexManyToManyMapping create_mapping()
         {
-            var mapping = new IndexManyToManyMapping
+            var mapping = new IndexManyToManyMapping(typeof(Target))
             {
                 ContainingEntityType = typeof(Target),
-                Class = new TypeReference(typeof(Target)),
                 ForeignKey = "fk"
             };
 
@@ -640,7 +639,7 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
                 TableName = "table",
                 Type = typeof(Target),
                 Extends = "extends",
-                Key = new KeyMapping()
+                Key = new KeyMapping(null)
             };
 
             mapping.AddAny(new AnyMapping(null));
@@ -675,7 +674,7 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
                 ContainingEntityType = typeof(Target),
                 Fetch = "fetch",
                 Inverse = true,
-                Key = new KeyMapping(),
+                Key = new KeyMapping(null),
                 Optional = true,
                 Schema = "schema",
                 Subselect = "subselect",
@@ -755,7 +754,7 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
     {
         public override KeyMapping create_mapping()
         {
-            var mapping = new KeyMapping
+            var mapping = new KeyMapping(typeof(Target))
             {
                 ContainingEntityType = typeof(Target),
                 ForeignKey = "fk",
@@ -793,7 +792,7 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
                 CollectionType = new TypeReference(typeof(Target)),
                 CompositeElement = new CompositeElementMapping(typeof(ExampleClass)),
                 Element = new ElementMapping(), Fetch = "fetch", Generic = true,
-                Index = new IndexMapping(), Inverse = true, Key = new KeyMapping(),
+                Index = new IndexMapping(), Inverse = true, Key = new KeyMapping(null),
                 Mutable = true, OrderBy = "order-by",
                 OtherSide = new CollectionMapping(null), Persister = new TypeReference(typeof(Target)), Relationship = new ManyToManyMapping(),
                 Schema = "schema", Subselect = "subselect", TableName = "table", Where = "where"
@@ -890,7 +889,7 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
                 CollectionType = new TypeReference(typeof(Target)),
                 CompositeElement = new CompositeElementMapping(typeof(ExampleClass)),
                 Element = new ElementMapping(), Fetch = "fetch", Generic = true,
-                Index = new IndexMapping(), Inverse = true, Key = new KeyMapping(),
+                Index = new IndexMapping(), Inverse = true, Key = new KeyMapping(null),
                 Mutable = true, OrderBy = "order-by",
                 OtherSide = new CollectionMapping(null), Persister = new TypeReference(typeof(Target)), Relationship = new ManyToManyMapping(),
                 Schema = "schema", Subselect = "subselect", TableName = "table", Where = "where",
@@ -933,10 +932,9 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
     {
         public override OneToManyMapping create_mapping()
         {
-            return new OneToManyMapping
+            return new OneToManyMapping(typeof(Target))
             {
                 ContainingEntityType = typeof(Target),
-                Class = new TypeReference(typeof(Target)),
                 ChildType = typeof(Target),
                 NotFound = "not-found"
             };
@@ -1073,7 +1071,7 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
                 CollectionType = new TypeReference(typeof(Target)),
                 CompositeElement = new CompositeElementMapping(typeof(ExampleClass)),
                 Element = new ElementMapping(), Fetch = "fetch", Generic = true,
-                Inverse = true, Key = new KeyMapping(),
+                Inverse = true, Key = new KeyMapping(null),
                 Mutable = true, OrderBy = "order-by",
                 OtherSide = new CollectionMapping(null), Persister = new TypeReference(typeof(Target)), Relationship = new ManyToManyMapping(),
                 Schema = "schema", Subselect = "subselect", TableName = "table", Where = "where",

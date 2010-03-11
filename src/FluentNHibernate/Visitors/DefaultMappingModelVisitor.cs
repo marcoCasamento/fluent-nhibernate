@@ -11,11 +11,6 @@ namespace FluentNHibernate.Visitors
     {
         #region Collections
 
-        public override void ProcessCollection(CollectionMapping mapping)
-        {
-
-        }
-
         public override void ProcessIndex(IndexManyToManyMapping indexMapping)
         {
             ProcessIndex((IIndexMapping)indexMapping);

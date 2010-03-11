@@ -56,7 +56,7 @@ namespace FluentNHibernate.Conventions.Inspections
             get
             {
                 if (mapping.Key == null)
-                    return new KeyInspector(new KeyMapping());
+                    return new KeyInspector(new KeyMapping(null));
 
                 return new KeyInspector(mapping.Key);
             }

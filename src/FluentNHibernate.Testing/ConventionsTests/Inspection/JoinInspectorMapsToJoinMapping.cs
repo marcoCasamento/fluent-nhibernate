@@ -112,7 +112,7 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         [Test]
         public void KeyMapped()
         {
-            mapping.Key = new KeyMapping();
+            mapping.Key = new KeyMapping(null);
             mapping.Key.PropertyRef = "ref";
             inspector.Key.PropertyRef.ShouldEqual("ref");
         }
@@ -120,7 +120,7 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         [Test]
         public void KeyIsSet()
         {
-            mapping.Key = new KeyMapping();
+            mapping.Key = new KeyMapping(null);
             mapping.Key.PropertyRef = "ref";
             inspector.IsSet(Prop(x => x.Key))
                 .ShouldBeTrue();

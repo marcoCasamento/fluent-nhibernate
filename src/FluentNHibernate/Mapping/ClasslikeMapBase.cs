@@ -190,13 +190,15 @@ namespace FluentNHibernate.Mapping
         /// <returns>one-to-many part</returns>
         private OneToManyPart<TChild> MapHasMany<TChild, TReturn>(Expression<Func<T, TReturn>> expression)
         {
-            return HasMany<TChild>(expression.ToMember());
+            return HasMany<TChild>(typeof(TChild), expression.ToMember());
         }
 
-        protected virtual OneToManyPart<TChild> HasMany<TChild>(Member member)
+        protected virtual OneToManyPart<TChild> HasMany<TChild>(Type childType, Member member)
         {
             var collectionStructure = new MemberStructure<CollectionMapping>(member);
-            var part = new OneToManyPart<TChild>(collectionStructure);
+            var key = new TypeStructure<KeyMapping>(typeof(T));
+            var relationship = new TypeStructure<OneToManyMapping>(typeof(TChild));
+            var part = new OneToManyPart<TChild>(childType, collectionStructure, key, relationship);
 
             structure.AddChild(collectionStructure);
 
@@ -223,7 +225,7 @@ namespace FluentNHibernate.Mapping
         /// <returns>one-to-many part</returns>
         public OneToManyPart<TChild> HasMany<TKey, TChild>(Expression<Func<T, IDictionary<TKey, TChild>>> expression)
         {
-            return MapHasMany<TChild, IDictionary<TKey, TChild>>(expression);
+            return HasMany<TChild>(typeof(TKey), expression.ToMember());
         }
 
         /// <summary>

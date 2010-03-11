@@ -8,34 +8,25 @@ namespace FluentNHibernate.Mapping
 {
     public class OneToManyPart<TChild> : ToManyBase<OneToManyPart<TChild>, TChild, OneToManyMapping>
     {
+        readonly Type entity;
         readonly IMappingStructure<CollectionMapping> structure;
         readonly IMappingStructure<KeyMapping> keyStructure;
+        readonly IMappingStructure relationshipStructure;
         private readonly ColumnMappingCollection<OneToManyPart<TChild>> keyColumns;
         private readonly CollectionCascadeExpression<OneToManyPart<TChild>> cascade;
         private readonly NotFoundExpression<OneToManyPart<TChild>> notFound;
 
-        public OneToManyPart(IMappingStructure<CollectionMapping> structure)
-            : this(structure, new BucketStructure<KeyMapping>())
-        {}
-
-        OneToManyPart(IMappingStructure<CollectionMapping> structure, IMappingStructure<KeyMapping> keyStructure)
-            : base(structure, keyStructure)
+        public OneToManyPart(Type entity, IMappingStructure<CollectionMapping> structure, IMappingStructure<KeyMapping> keyStructure, IMappingStructure relationshipStructure)
+            : base(structure, keyStructure, relationshipStructure)
         {
+            this.entity = entity;
             this.structure = structure;
             this.keyStructure = keyStructure;
+            this.relationshipStructure = relationshipStructure;
 
-            keyColumns = new ColumnMappingCollection<OneToManyPart<TChild>>(this, structure);
+            keyColumns = new ColumnMappingCollection<OneToManyPart<TChild>>(this, keyStructure);
             cascade = new CollectionCascadeExpression<OneToManyPart<TChild>>(this, value => structure.SetValue(Attr.Cascade, value));
-            notFound = new NotFoundExpression<OneToManyPart<TChild>>(this, value => structure.SetValue(Attr.NotFound, value));
-
-            CreateRelationship();
-        }
-
-        void CreateRelationship()
-        {
-            var relationshipStructure = new BucketStructure<OneToManyMapping>();
-            relationshipStructure.SetValue(Attr.Class, new TypeReference(typeof(TChild)));
-            structure.AddChild(relationshipStructure);
+            notFound = new NotFoundExpression<OneToManyPart<TChild>>(this, value => relationshipStructure.SetValue(Attr.NotFound, value));
         }
 
         public NotFoundExpression<OneToManyPart<TChild>> NotFound
@@ -57,23 +48,20 @@ namespace FluentNHibernate.Mapping
 
         public OneToManyPart<TChild> AsTernaryAssociation()
         {
-            var childType = typeof(TChild);
-            var keyType = childType.GetGenericArguments()[0];
-            return AsTernaryAssociation(keyType.Name + "_id");
+            return AsTernaryAssociation(null);
         }
 
         public OneToManyPart<TChild> AsTernaryAssociation(string indexColumnName)
         {
-            EnsureGenericDictionary();
+            //EnsureGenericDictionary();
 
-            var childType = typeof(TChild);
-            var keyType = childType.GetGenericArguments()[0];
-            var valType = childType.GetGenericArguments()[1];
-
-            var indexStructure = new BucketStructure<IndexManyToManyMapping>();
+            var indexStructure = new TypeStructure<IndexManyToManyMapping>(entity);
             var part = new IndexManyToManyPart(indexStructure);
-            part.Column(indexColumnName);
-            part.Type(keyType);
+
+            if (!string.IsNullOrEmpty(indexColumnName))
+                part.Column(indexColumnName);
+
+            structure.AddChild(indexStructure);
 
             return this;
         }

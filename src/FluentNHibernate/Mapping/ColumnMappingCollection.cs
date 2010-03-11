@@ -20,8 +20,10 @@ namespace FluentNHibernate.Mapping
         public TParent Add(string name)
         {
             var column = new ColumnStructure(parentStructure);
-            
-            column.SetValue(Attr.Name, name);
+
+            new ColumnPart(column)
+                .Name(name);
+
             parentStructure.AddChild(column);
 
             return parent;
@@ -40,6 +42,8 @@ namespace FluentNHibernate.Mapping
         {
             var column = new ColumnStructure(parentStructure);
             var part = new ColumnPart(column);
+
+            part.Name(columnName);
 
             customColumnMapping(part);
             
