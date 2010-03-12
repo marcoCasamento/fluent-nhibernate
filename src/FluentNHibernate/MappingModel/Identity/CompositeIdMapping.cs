@@ -8,22 +8,24 @@ namespace FluentNHibernate.MappingModel.Identity
 {
     public class CompositeIdMapping : MappingBase, IIdentityMapping, IMapping, IMemberMapping
     {
-        readonly Member member;
-        private readonly AttributeStore<CompositeIdMapping> attributes;
+        private readonly AttributeStore<CompositeIdMapping> attributes = new AttributeStore<CompositeIdMapping>();
         private readonly IList<KeyPropertyMapping> keyProperties = new List<KeyPropertyMapping>();
         private readonly IList<KeyManyToOneMapping> keyManyToOnes = new List<KeyManyToOneMapping>();
 
-        public CompositeIdMapping(Member member)
-            : this(new AttributeStore())
+        public CompositeIdMapping()
         {
-            this.member = member;
+            Mapped = false;
+            UnsavedValue = "undefined";
         }
 
-        CompositeIdMapping(AttributeStore underlyingStore)
+        public CompositeIdMapping(Member member)
+            : this()
         {
-            attributes = new AttributeStore<CompositeIdMapping>(underlyingStore);
-            attributes.SetDefault(x => x.Mapped, false);
-            attributes.SetDefault(x => x.UnsavedValue, "undefined");
+            Initialise(member);
+        }
+
+        public void Initialise(Member member)
+        {
         }
 
         public override void AcceptVisitor(IMappingModelVisitor visitor)

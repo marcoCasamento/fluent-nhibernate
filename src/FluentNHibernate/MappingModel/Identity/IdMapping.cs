@@ -9,12 +9,17 @@ namespace FluentNHibernate.MappingModel.Identity
     public class IdMapping : ColumnBasedMappingBase, IIdentityMapping, IMemberMapping
     {
         readonly ValueStore values = new ValueStore();
-        readonly Member member;
+
+        public IdMapping()
+        {}
 
         public IdMapping(Member member)
         {
-            this.member = member;
+            Initialise(member);
+        }
 
+        public void Initialise(Member member)
+        {
             Name = member.Name;
             Type = new TypeReference(member.PropertyType);
             Generator = GetDefaultGenerator(member);

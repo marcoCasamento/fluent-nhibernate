@@ -7,13 +7,18 @@ namespace FluentNHibernate.MappingModel.Collections
 {
     public class OneToManyMapping : MappingBase, ICollectionRelationshipMapping, ITypeMapping
     {
-        readonly Type type;
         readonly ValueStore values = new ValueStore();
+
+        public OneToManyMapping()
+        {}
 
         public OneToManyMapping(Type type)
         {
-            this.type = type;
+            Initialise(type);
+        }
 
+        public void Initialise(Type type)
+        {
             Class = new TypeReference(type);
         }
 

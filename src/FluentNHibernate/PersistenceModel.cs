@@ -147,8 +147,6 @@ namespace FluentNHibernate
 
         private void BuildSeparateMappings(Action<HibernateMapping> add)
         {
-            var factory = new DefaultMappingFactory();
-
             foreach (var classMap in classProviders)
             {
                 var userMappings = classMap.GetUserDefinedMappings();
@@ -156,7 +154,7 @@ namespace FluentNHibernate
                 if (userMappings.Structure is IMappingStructure<ClassMapping>)
                 {
                     var hbm = classMap.GetHibernateMapping();
-                    var model = userMappings.CreateEmptyModel(factory);
+                    var model = userMappings.CreateEmptyModel();
 
                     userMappings.ApplyCustomisations();
 
@@ -335,7 +333,7 @@ namespace FluentNHibernate
             public IMappingStructure Structure { get; private set; }
             public Type Type { get; private set; }
             
-            public IMapping CreateEmptyModel(IMappingFactory factory)
+            public IMapping CreateEmptyModel()
             {
                 return classMapping;
             }

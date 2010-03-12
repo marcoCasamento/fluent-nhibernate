@@ -6,14 +6,19 @@ namespace FluentNHibernate.MappingModel.Collections
 {
     public class IndexManyToManyMapping : MappingBase, IIndexMapping, IHasColumnMappings, IMapping, ITypeMapping
     {
-        readonly Type type;
         readonly ValueStore values = new ValueStore();
         readonly IDefaultableList<ColumnMapping> columns = new DefaultableList<ColumnMapping>();
 
+        public IndexManyToManyMapping()
+        {}
+
         public IndexManyToManyMapping(Type type)
         {
-            this.type = type;
+            Initialise(type);
+        }
 
+        public void Initialise(Type type)
+        {
             var column = new ColumnMapping { Name = type.Name + "_id" };
             column.SpecifyParentValues(values);
             AddDefaultColumn(column);

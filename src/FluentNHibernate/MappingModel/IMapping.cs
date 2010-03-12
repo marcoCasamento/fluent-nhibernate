@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace FluentNHibernate.MappingModel
@@ -12,11 +13,15 @@ namespace FluentNHibernate.MappingModel
     /// Denotes a mapping node that is directly related to a member (property, any, bag, etc...)
     /// </summary>
     public interface IMemberMapping : IMapping
-    {}
+    {
+        void Initialise(Member member);
+    }
 
     /// <summary>
     /// Denotes a mapping node that represents a type (class, subclass, etc...)
     /// </summary>
     public interface ITypeMapping : IMapping
-    {}
+    {
+        void Initialise(Type type);
+    }
 }

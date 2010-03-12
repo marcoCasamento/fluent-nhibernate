@@ -7,12 +7,17 @@ namespace FluentNHibernate.MappingModel
     public class PropertyMapping : ColumnBasedMappingBase, IMapping, IMemberMapping
     {
         readonly ValueStore values = new ValueStore();
-        readonly Member member;
+
+        public PropertyMapping()
+        {}
 
         public PropertyMapping(Member member)
         {
-            this.member = member;
-            
+            Initialise(member);
+        }
+
+        public void Initialise(Member member)
+        {
             Name = member.Name;
 
             var column = new ColumnMapping { Name = member.Name };

@@ -19,27 +19,27 @@ namespace FluentNHibernate.Mapping
         void AddChild(IMappingStructure child);
         void SetValue(Attr key, object value);
         void RemoveChildrenMatching(Predicate<IMappingStructure> predicate);
-        IMapping CreateMappingNode(IMappingFactory factory);
+        IMapping CreateMappingNode();
         void ApplyCustomisations();
     }
 
     public interface IMappingStructure<T> : IMappingStructure
-        where T : IMapping // ????
+        where T : IMapping, new()
     {
         void Alter(Action<T> alteration);
     }
 
     public abstract class MappingStructure<T> : IMappingStructure<T>
-        where T : IMapping
+        where T : IMapping, new()
     {
         readonly Dictionary<Attr, object> values = new Dictionary<Attr, object>();
         readonly List<IMappingStructure> children = new List<IMappingStructure>();
         readonly List<Action<T>> alterations = new List<Action<T>>();
         T node;
 
-        IMapping IMappingStructure.CreateMappingNode(IMappingFactory factory)
+        IMapping IMappingStructure.CreateMappingNode()
         {
-            return node = CreateMappingNode(factory);
+            return node = CreateMappingNode();
         }
 
         public void ApplyCustomisations()
@@ -50,7 +50,7 @@ namespace FluentNHibernate.Mapping
             Children.Each(x => x.ApplyCustomisations());
         }
 
-        public abstract T CreateMappingNode(IMappingFactory factory);
+        public abstract T CreateMappingNode();
         
         public void SetValue(Attr key, object value)
         {
@@ -84,7 +84,7 @@ namespace FluentNHibernate.Mapping
     }
 
     public class TypeStructure<T> : MappingStructure<T>
-        where T : IMapping, ITypeMapping
+        where T : IMapping, ITypeMapping, new()
     {
         readonly Type type;
 
@@ -93,12 +93,14 @@ namespace FluentNHibernate.Mapping
             this.type = type;
         }
 
-        public override T CreateMappingNode(IMappingFactory factory)
+        public override T CreateMappingNode()
         {
-            var mapping = (T)factory.CreateTypeMapping(typeof(T), type);
+            var mapping = new T();
+
+            mapping.Initialise(type);
 
             Children
-                .Select(x => x.CreateMappingNode(factory))
+                .Select(x => x.CreateMappingNode())
                 .Each(mapping.AddChild);
 
             return mapping;
@@ -110,14 +112,14 @@ namespace FluentNHibernate.Mapping
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class BucketStructure<T> : MappingStructure<T>
-        where T : IMapping
+        where T : IMapping, new()
     {
-        public override T CreateMappingNode(IMappingFactory factory)
+        public override T CreateMappingNode()
         {
-            var mapping = (T)factory.CreateMapping(typeof(T));
+            var mapping = new T();
 
             Children
-                .Select(x => x.CreateMappingNode(factory))
+                .Select(x => x.CreateMappingNode())
                 .Each(mapping.AddChild);
 
             return mapping;
@@ -125,7 +127,7 @@ namespace FluentNHibernate.Mapping
     }
 
     public class MemberStructure<T> : MappingStructure<T>
-        where T : IMapping, IMemberMapping
+        where T : IMapping, IMemberMapping, new()
     {
         readonly Member member;
 
@@ -134,12 +136,14 @@ namespace FluentNHibernate.Mapping
             this.member = member;
         }
 
-        public override T CreateMappingNode(IMappingFactory factory)
+        public override T CreateMappingNode()
         {
-            var mapping = (T)factory.CreateMemberMapping(typeof(T), member);
+            var mapping = new T();
+
+            mapping.Initialise(member);
 
             Children
-                .Select(x => x.CreateMappingNode(factory))
+                .Select(x => x.CreateMappingNode())
                 .Each(mapping.AddChild);
 
             return mapping;
@@ -155,12 +159,12 @@ namespace FluentNHibernate.Mapping
             this.parent = parent;
         }
 
-        public override ColumnMapping CreateMappingNode(IMappingFactory factory)
+        public override ColumnMapping CreateMappingNode()
         {
             var mapping = new ColumnMapping();
 
             Children
-                .Select(x => x.CreateMappingNode(factory))
+                .Select(x => x.CreateMappingNode())
                 .Each(mapping.AddChild);
 
             return mapping;
@@ -186,24 +190,6 @@ namespace FluentNHibernate.Mapping
             right.Each(x => merged[x.Key] = x.Value);
 
             return merged;
-        }
-    }
-
-    public class DefaultMappingFactory : IMappingFactory
-    {
-        public object CreateMemberMapping(Type mappingType, Member member)
-        {
-            return Activator.CreateInstance(mappingType, member);
-        }
-
-        public object CreateTypeMapping(Type mappingType, Type type)
-        {
-            return Activator.CreateInstance(mappingType, type);
-        }
-
-        public object CreateMapping(Type mappingType)
-        {
-            return Activator.CreateInstance(mappingType);
         }
     }
 

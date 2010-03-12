@@ -42,7 +42,15 @@ namespace FluentNHibernate.MappingModel.Collections
         public Member Member { get; set; }
         public Collection Type { get; set; }
 
+        public CollectionMapping()
+        {}
+
         public CollectionMapping(Member member)
+        {
+            Initialise(member);
+        }
+
+        public void Initialise(Member member)
         {
             Name = GetMemberName(member);
             Type = GetCollectionType(member.PropertyType);

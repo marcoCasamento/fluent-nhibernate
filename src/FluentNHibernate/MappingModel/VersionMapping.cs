@@ -7,13 +7,18 @@ namespace FluentNHibernate.MappingModel
 {
     public class VersionMapping : ColumnBasedMappingBase, IMemberMapping
     {
-        readonly Member member;
         readonly ValueStore values = new ValueStore();
+
+        public VersionMapping()
+        {}
 
         public VersionMapping(Member member)
         {
-            this.member = member;
+            Initialise(member);
+        }
 
+        public void Initialise(Member member)
+        {
             Name = member.Name;
             Type = member.PropertyType == typeof(DateTime) ? new TypeReference("timestamp") : new TypeReference(member.PropertyType);
             

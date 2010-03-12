@@ -6,7 +6,6 @@ namespace FluentNHibernate.MappingModel.Collections
 {
     public class IndexMapping : MappingBase, IIndexMapping, IHasColumnMappings, IMapping, IMemberMapping
     {
-        readonly Member member;
         readonly ValueStore values = new ValueStore();
         readonly IDefaultableList<ColumnMapping> columns = new DefaultableList<ColumnMapping>();
 
@@ -16,8 +15,11 @@ namespace FluentNHibernate.MappingModel.Collections
 
         public IndexMapping(Member member)
         {
-            this.member = member;
+            Initialise(member);
+        }
 
+        public void Initialise(Member member)
+        {
             var column = new ColumnMapping { Name = member.Name };
             column.SpecifyParentValues(values);
             AddDefaultColumn(column);

@@ -10,7 +10,15 @@ namespace FluentNHibernate.MappingModel
         readonly IDefaultableList<ColumnMapping> columns = new DefaultableList<ColumnMapping>();
         public Type ContainingEntityType { get; set; }
 
+        public KeyMapping()
+        {}
+
         public KeyMapping(Type type)
+        {
+            Initialise(type);
+        }
+
+        public void Initialise(Type type)
         {
             var column = new ColumnMapping { Name = type.Name + "_id" };
             column.SpecifyParentValues(values);

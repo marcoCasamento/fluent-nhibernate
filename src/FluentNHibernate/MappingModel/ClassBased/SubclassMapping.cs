@@ -7,20 +7,25 @@ namespace FluentNHibernate.MappingModel.ClassBased
 {
     public class SubclassMapping : ClassMappingBase, ITypeMapping
     {
-        readonly Type type;
         public SubclassType SubclassType { get; set; }
         private AttributeStore<SubclassMapping> attributes;
 
+        public SubclassMapping()
+        {}
+
         public SubclassMapping(Type type)
-            : this(SubclassType.Subclass, new AttributeStore())
         {
-            this.type = type;
+            Initialise(type);
         }
 
         SubclassMapping(SubclassType subclassType, AttributeStore underlyingStore)
         {
             SubclassType = subclassType;
             attributes = new AttributeStore<SubclassMapping>(underlyingStore);
+        }
+
+        public void Initialise(Type type)
+        {
         }
 
         public override void AcceptVisitor(IMappingModelVisitor visitor)

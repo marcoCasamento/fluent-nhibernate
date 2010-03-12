@@ -5,15 +5,20 @@ using FluentNHibernate.Visitors;
 
 namespace FluentNHibernate.MappingModel
 {
-    public class OneToOneMapping : MappingBase, IMapping, IMemberMapping
+    public class OneToOneMapping : MappingBase, IMemberMapping
     {
-        readonly Member member;
         readonly ValueStore values = new ValueStore();
+
+        public OneToOneMapping()
+        {}
 
         public OneToOneMapping(Member member)
         {
-            this.member = member;
+            Initialise(member);
+        }
 
+        public void Initialise(Member member)
+        {
             Name = member.Name;
             Class = new TypeReference(member.PropertyType);
         }

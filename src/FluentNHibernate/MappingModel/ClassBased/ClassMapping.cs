@@ -10,7 +10,15 @@ namespace FluentNHibernate.MappingModel.ClassBased
     {
         readonly ValueStore values = new ValueStore();
 
+        public ClassMapping()
+        {}
+
         public ClassMapping(Type type)
+        {
+            Initialise(type);
+        }
+
+        public void Initialise(Type type)
         {
             Type = type;
 
@@ -253,7 +261,7 @@ namespace FluentNHibernate.MappingModel.ClassBased
 
         public void UpdateValues(IEnumerable<KeyValuePair<Attr, object>> otherValues)
         {
-            
+            values.Merge(otherValues);
         }
     }
 }

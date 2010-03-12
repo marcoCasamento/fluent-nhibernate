@@ -18,7 +18,7 @@ namespace FluentNHibernate
     {
         IMappingStructure Structure { get; }
         Type Type { get; }
-        IMapping CreateEmptyModel(IMappingFactory factory);
+        IMapping CreateEmptyModel();
         void ApplyCustomisations();
     }
 
@@ -33,9 +33,9 @@ namespace FluentNHibernate
         public IMappingStructure Structure { get; private set; }
         public Type Type { get; private set; }
         
-        public IMapping CreateEmptyModel(IMappingFactory factory)
+        public IMapping CreateEmptyModel()
         {
-            return Structure.CreateMappingNode(factory);
+            return Structure.CreateMappingNode();
         }
 
         public void ApplyCustomisations()

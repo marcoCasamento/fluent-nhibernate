@@ -7,22 +7,29 @@ namespace FluentNHibernate.MappingModel
 {
     public class AnyMapping : MappingBase, IMemberMapping
     {
-        readonly Member member;
         readonly ValueStore values = new ValueStore();
         readonly IDefaultableList<ColumnMapping> typeColumns = new DefaultableList<ColumnMapping>();
         readonly IDefaultableList<ColumnMapping> identifierColumns = new DefaultableList<ColumnMapping>();
         readonly IList<MetaValueMapping> metaValues = new List<MetaValueMapping>();
 
-        public AnyMapping(Member member)
+        public AnyMapping()
         {
-            this.member = member;
-
-            Name = member.Name;
-            MetaType = new TypeReference(member.PropertyType);
             Insert = true;
             Update = true;
             OptimisticLock = true;
             Lazy = true;
+        }
+
+        public AnyMapping(Member member)
+            : this()
+        {
+            Initialise(member);
+        }
+
+        public void Initialise(Member member)
+        {
+            Name = member.Name;
+            MetaType = new TypeReference(member.PropertyType);
         }
 
         public override void AcceptVisitor(IMappingModelVisitor visitor)

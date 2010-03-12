@@ -9,7 +9,15 @@ namespace FluentNHibernate.MappingModel
     {
         readonly ValueStore values = new ValueStore();
 
+        public MetaValueMapping()
+        {}
+
         public MetaValueMapping(Type type)
+        {
+            Initialise(type);
+        }
+
+        public void Initialise(Type type)
         {
             Class = new TypeReference(type);
         }

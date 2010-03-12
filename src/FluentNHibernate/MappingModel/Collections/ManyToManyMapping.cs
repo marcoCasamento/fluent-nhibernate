@@ -6,14 +6,19 @@ namespace FluentNHibernate.MappingModel.Collections
 {
     public class ManyToManyMapping : MappingBase, ICollectionRelationshipMapping, IHasColumnMappings, IMapping, ITypeMapping
     {
-        readonly Type type;
         readonly ValueStore values = new ValueStore();
         readonly IDefaultableList<ColumnMapping> columns = new DefaultableList<ColumnMapping>();
-        
+
+        public ManyToManyMapping()
+        {}
+
         public ManyToManyMapping(Type type)
         {
-            this.type = type;
+            Initialise(type);
+        }
 
+        public void Initialise(Type type)
+        {
             Class = new TypeReference(type);
         }
 

@@ -1,19 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
 using FluentNHibernate.Visitors;
 
 namespace FluentNHibernate.MappingModel.Collections
 {
-    public class CompositeElementMapping : MappingBase, IMapping, ITypeMapping
+    public class CompositeElementMapping : MappingBase, ITypeMapping
     {
-        readonly Type type;
         readonly MappedMembers mappedMembers = new MappedMembers();
         readonly ValueStore values = new ValueStore();
 
+        public CompositeElementMapping()
+        {}
+
         public CompositeElementMapping(Type type)
         {
-            this.type = type;
+            Initialise(type);
+        }
+
+        public void Initialise(Type type)
+        {
         }
 
         public override void AcceptVisitor(IMappingModelVisitor visitor)

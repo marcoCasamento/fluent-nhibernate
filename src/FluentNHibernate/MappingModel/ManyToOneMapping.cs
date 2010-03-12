@@ -1,22 +1,24 @@
 using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Reflection;
-using FluentNHibernate.Utils;
 using FluentNHibernate.Visitors;
 
 namespace FluentNHibernate.MappingModel
 {
     public class ManyToOneMapping : MappingBase, IHasColumnMappings, IMemberMapping
     {
-        readonly Member member;
         readonly ValueStore values = new ValueStore();
         readonly IDefaultableList<ColumnMapping> columns = new DefaultableList<ColumnMapping>();
 
+        public ManyToOneMapping()
+        {}
+
         public ManyToOneMapping(Member member)
         {
-            this.member = member;
+            Initialise(member);
+        }
 
+        public void Initialise(Member member)
+        {
             Name = member.Name;
 
             var column = new ColumnMapping { Name = member.Name + "_id" };

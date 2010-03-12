@@ -7,13 +7,18 @@ namespace FluentNHibernate.MappingModel
 {
     public class ParentMapping : MappingBase, IMemberMapping
     {
-        readonly Member member;
-        private readonly ValueStore values = new ValueStore();
+        readonly ValueStore values = new ValueStore();
+
+        public ParentMapping()
+        {}
 
         public ParentMapping(Member member)
         {
-            this.member = member;
+            Initialise(member);
+        }
 
+        public void Initialise(Member member)
+        {
             Name = member.Name;
         }
 

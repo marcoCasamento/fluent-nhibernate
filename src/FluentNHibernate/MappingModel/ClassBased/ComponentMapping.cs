@@ -10,16 +10,26 @@ namespace FluentNHibernate.MappingModel.ClassBased
         readonly ValueStore values;
         public ComponentType ComponentType { get; set; }
 
-        public ComponentMapping(Type type)
-            : this(type, new ValueStore())
+        public ComponentMapping()
+            : this(new ValueStore())
         {}
 
-        ComponentMapping(Type type, ValueStore values)
+        public ComponentMapping(Type type)
+            : this()
+        {
+            Initialise(type);
+        }
+
+        ComponentMapping(ValueStore values)
             : base(values)
         {
             this.values = values;
-            
+
             ComponentType = ComponentType.Component;
+        }
+
+        public void Initialise(Type type)
+        {
             Class = new TypeReference(type);
         }
 

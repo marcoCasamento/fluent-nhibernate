@@ -7,6 +7,9 @@ namespace FluentNHibernate.MappingModel.ClassBased
     /// </summary>
     public class ExternalComponentMapping : ComponentMapping
     {
+        public ExternalComponentMapping()
+        {}
+
         public ExternalComponentMapping(Type type)
             : base(type)
         {}

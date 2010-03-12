@@ -20,9 +20,10 @@ namespace FluentNHibernate.Testing.FluentInterfaceTests
     {
         protected static ModelTester<ClassMap<T>, ClassMapping> ClassMap<T>()
         {
+            var map = new ClassMap<T>();
             return new ModelTester<ClassMap<T>, ClassMapping>(
-                () => new ClassMap<T>(),
-                x => (ClassMapping)((IMappingProvider)x).GetUserDefinedMappings().Structure);
+                () => map,
+                () => (ClassMapping)((IMappingProvider)map).GetUserDefinedMappings().Structure.CreateMappingNode());
         }
 
         protected static ModelTester<DiscriminatorPart, DiscriminatorMapping> DiscriminatorMap<T>()
@@ -43,10 +44,11 @@ namespace FluentNHibernate.Testing.FluentInterfaceTests
 
         protected static ModelTester<SubclassMap<T>, SubclassMapping> SubclassMapForSubclass<T>()
         {
-            return new ModelTester<SubclassMap<T>, SubclassMapping>(() => new SubclassMap<T>(), x =>
+            var map = new SubclassMap<T>();
+            return new ModelTester<SubclassMap<T>, SubclassMapping>(() => map, () =>
             {
-                var userMappings = ((IIndeterminateSubclassMappingProvider)x).GetUserDefinedMappings();
-                var mapping = (SubclassMapping)userMappings.Structure;
+                var userMappings = ((IIndeterminateSubclassMappingProvider)map).GetUserDefinedMappings();
+                var mapping = (SubclassMapping)userMappings.Structure.CreateMappingNode();
                 mapping.SubclassType = SubclassType.Subclass;
                 return mapping;
             });
@@ -62,10 +64,11 @@ namespace FluentNHibernate.Testing.FluentInterfaceTests
 
         protected static ModelTester<SubclassMap<T>, SubclassMapping> SubclassMapForJoinedSubclass<T>()
         {
-            return new ModelTester<SubclassMap<T>, SubclassMapping>(() => new SubclassMap<T>(), x =>
+            var map = new SubclassMap<T>();
+            return new ModelTester<SubclassMap<T>, SubclassMapping>(() => map, () =>
             {
-                var userMappings = ((IIndeterminateSubclassMappingProvider)x).GetUserDefinedMappings();
-                var mapping = (SubclassMapping)userMappings.Structure;
+                var userMappings = ((IIndeterminateSubclassMappingProvider)map).GetUserDefinedMappings();
+                var mapping = (SubclassMapping)userMappings.Structure.CreateMappingNode();
                 mapping.SubclassType = SubclassType.JoinedSubclass;
                 return mapping;
             });
@@ -209,7 +212,10 @@ namespace FluentNHibernate.Testing.FluentInterfaceTests
 
         protected static ModelTester<HibernateMappingPart, HibernateMapping> HibernateMapping()
         {
-            return new ModelTester<HibernateMappingPart, HibernateMapping>(() => new HibernateMappingPart(), x => ((IHibernateMappingProvider)x).GetHibernateMapping());
+            var map = new HibernateMappingPart();
+            return new ModelTester<HibernateMappingPart, HibernateMapping>(
+                () => map,
+                () => ((IHibernateMappingProvider)map).GetHibernateMapping());
         }
 
         protected static ModelTester<CompositeElementPart<T>, CompositeElementMapping> CompositeElement<T>()

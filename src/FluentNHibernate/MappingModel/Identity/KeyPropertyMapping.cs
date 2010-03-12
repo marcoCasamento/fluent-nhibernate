@@ -5,15 +5,21 @@ using FluentNHibernate.Visitors;
 
 namespace FluentNHibernate.MappingModel.Identity
 {
-    public class KeyPropertyMapping : MappingBase, IMapping, IMemberMapping
+    public class KeyPropertyMapping : MappingBase, IMemberMapping
     {
-        readonly Member member;
         private readonly AttributeStore<KeyPropertyMapping> attributes = new AttributeStore<KeyPropertyMapping>();
         private readonly IList<ColumnMapping> columns = new List<ColumnMapping>();
 
+        public KeyPropertyMapping()
+        {}
+
         public KeyPropertyMapping(Member member)
         {
-            this.member = member;
+            Initialise(member);
+        }
+
+        public void Initialise(Member member)
+        {
         }
 
         public override void AcceptVisitor(IMappingModelVisitor visitor)
