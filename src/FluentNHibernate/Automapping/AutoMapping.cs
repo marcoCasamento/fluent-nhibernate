@@ -119,7 +119,7 @@ namespace FluentNHibernate.Automapping
 
         public override CompositeIdentityPart<T> CompositeId()
         {
-            var compositeIdStructure = new FreeStructure<CompositeIdMapping>();
+            var compositeIdStructure = Structures.CompositeId(null);
             var part = new AutoCompositeIdentityPart<T>(compositeIdStructure, mappedProperties);
 
             //compositeId = part;

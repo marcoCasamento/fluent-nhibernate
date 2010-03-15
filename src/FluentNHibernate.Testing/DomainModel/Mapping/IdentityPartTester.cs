@@ -261,7 +261,7 @@ namespace FluentNHibernate.Testing.DomainModel.Mapping
         public void IdentityType_MustBeIntegral_ForIncrement()
         {
             Member property = ReflectionHelper.GetMember<IdentityTarget>(x => x.GuidId);
-            new IdentityPart<Guid>(new MemberStructure<IdMapping>(property)).GeneratedBy.Increment();
+            new IdentityPart<Guid>(Structures.Id(property)).GeneratedBy.Increment();
         }
 
         [Test]
@@ -270,7 +270,7 @@ namespace FluentNHibernate.Testing.DomainModel.Mapping
         {
 
             Member property = ReflectionHelper.GetMember<IdentityTarget>(x => x.GuidId);
-            new IdentityPart<Guid>(new MemberStructure<IdMapping>(property)).GeneratedBy.Identity();
+            new IdentityPart<Guid>(Structures.Id(property)).GeneratedBy.Identity();
         }
 
         [Test]
@@ -279,7 +279,7 @@ namespace FluentNHibernate.Testing.DomainModel.Mapping
         {
 
             Member property = ReflectionHelper.GetMember<IdentityTarget>(x => x.GuidId);
-            new IdentityPart<Guid>(new MemberStructure<IdMapping>(property)).GeneratedBy.Sequence("no");
+            new IdentityPart<Guid>(Structures.Id(property)).GeneratedBy.Sequence("no");
         }
 
         [Test]
@@ -288,7 +288,7 @@ namespace FluentNHibernate.Testing.DomainModel.Mapping
         {
 
             Member property = ReflectionHelper.GetMember<IdentityTarget>(x => x.GuidId);
-            new IdentityPart<Guid>(new MemberStructure<IdMapping>(property)).GeneratedBy.HiLo("no", "no", "no");
+            new IdentityPart<Guid>(Structures.Id(property)).GeneratedBy.HiLo("no", "no", "no");
         }
 
         [Test]
@@ -297,7 +297,7 @@ namespace FluentNHibernate.Testing.DomainModel.Mapping
         {
 
             Member property = ReflectionHelper.GetMember<IdentityTarget>(x => x.GuidId);
-            new IdentityPart<Guid>(new MemberStructure<IdMapping>(property)).GeneratedBy.SeqHiLo("no", "no");
+            new IdentityPart<Guid>(Structures.Id(property)).GeneratedBy.SeqHiLo("no", "no");
         }
 
         [Test]
@@ -306,7 +306,7 @@ namespace FluentNHibernate.Testing.DomainModel.Mapping
         {
 
             Member property = ReflectionHelper.GetMember<IdentityTarget>(x => x.IntId);
-            new IdentityPart<int>(new MemberStructure<IdMapping>(property)).GeneratedBy.UuidHex("format");
+            new IdentityPart<int>(Structures.Id(property)).GeneratedBy.UuidHex("format");
         }
 
         [Test]
@@ -315,7 +315,7 @@ namespace FluentNHibernate.Testing.DomainModel.Mapping
         {
 
             Member property = ReflectionHelper.GetMember<IdentityTarget>(x => x.IntId);
-            new IdentityPart<int>(new MemberStructure<IdMapping>(property)).GeneratedBy.UuidString();
+            new IdentityPart<int>(Structures.Id(property)).GeneratedBy.UuidString();
         }
 
         [Test]
@@ -324,7 +324,7 @@ namespace FluentNHibernate.Testing.DomainModel.Mapping
         {
 
             Member property = ReflectionHelper.GetMember<IdentityTarget>(x => x.IntId);
-            new IdentityPart<int>(new MemberStructure<IdMapping>(property)).GeneratedBy.Guid();
+            new IdentityPart<int>(Structures.Id(property)).GeneratedBy.Guid();
         }
 
         [Test]
@@ -333,7 +333,7 @@ namespace FluentNHibernate.Testing.DomainModel.Mapping
         {
 
             Member property = ReflectionHelper.GetMember<IdentityTarget>(x => x.IntId);
-            new IdentityPart<int>(new MemberStructure<IdMapping>(property)).GeneratedBy.GuidComb();
+            new IdentityPart<int>(Structures.Id(property)).GeneratedBy.GuidComb();
         }
 
         [Test, Ignore]
@@ -341,7 +341,7 @@ namespace FluentNHibernate.Testing.DomainModel.Mapping
         public void IdentityType_MustBeIntegral_ForNative()
         {
             Member property = ReflectionHelper.GetMember<IdentityTarget>(x => x.GuidId);
-            new IdentityPart<int>(new MemberStructure<IdMapping>(property)).GeneratedBy.Native();
+            new IdentityPart<int>(Structures.Id(property)).GeneratedBy.Native();
         }
 
         [Test]

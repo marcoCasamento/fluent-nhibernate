@@ -19,7 +19,7 @@ namespace FluentNHibernate.Mapping
             : base(structure)
         {
             this.structure = structure;
-            this.keyStructure = new TypeStructure<KeyMapping>(typeof(T));
+            this.keyStructure = Structures.Key(typeof(T));
             structure.AddChild(keyStructure);
 
             fetch = new FetchTypeExpression<JoinPart<T>>(this, value => structure.SetValue(Attr.Fetch, value));
@@ -29,7 +29,7 @@ namespace FluentNHibernate.Mapping
         {
             keyStructure.RemoveChildrenMatching(x => x is IMappingStructure<ColumnMapping>);
 
-            var column = new ColumnStructure(structure);
+            var column = Structures.Column(structure);
 
             new ColumnPart(column)
                 .Name(columnName);

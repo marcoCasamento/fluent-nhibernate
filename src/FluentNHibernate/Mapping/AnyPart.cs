@@ -60,7 +60,7 @@ namespace FluentNHibernate.Mapping
 
         public AnyPart<T> EntityTypeColumn(string columnName)
         {
-            var column = new ColumnStructure(structure);
+            var column = Structures.Column(structure);
             var part = new ColumnPart(column);
             part.Name(columnName);
             structure.AddChild(column);
@@ -69,7 +69,7 @@ namespace FluentNHibernate.Mapping
 
         public AnyPart<T> EntityIdentifierColumn(string columnName)
         {
-            var column = new ColumnStructure(structure);
+            var column = Structures.Column(structure);
             var part = new ColumnPart(column);
             part.Name(columnName);
             structure.AddChild(column);
@@ -79,7 +79,7 @@ namespace FluentNHibernate.Mapping
         public AnyPart<T> AddMetaValue<TModel>(string valueMap)
         {
             structure.SetValue(Attr.MetaType, new TypeReference(typeof(string)));
-            var metaValue = new TypeStructure<MetaValueMapping>(typeof(TModel));
+            var metaValue = Structures.MetaValue(typeof(TModel));
             metaValue.SetValue(Attr.Value, valueMap);
             structure.AddChild(metaValue);
             return this;

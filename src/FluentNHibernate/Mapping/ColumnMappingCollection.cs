@@ -20,7 +20,7 @@ namespace FluentNHibernate.Mapping
 
         public TParent Add(string name)
         {
-            var column = new ColumnStructure(parentStructure);
+            var column = Structures.Column(parentStructure);
 
             new ColumnPart(column)
                 .Name(name);
@@ -41,7 +41,7 @@ namespace FluentNHibernate.Mapping
 
         public TParent Add(string columnName, Action<ColumnPart> customColumnMapping)
         {
-            var column = new ColumnStructure(parentStructure);
+            var column = Structures.Column(parentStructure);
             var part = new ColumnPart(column);
 
             part.Name(columnName);

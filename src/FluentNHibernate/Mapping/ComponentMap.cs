@@ -11,7 +11,7 @@ namespace FluentNHibernate.Mapping
         readonly IMappingStructure<ComponentMapping> structure;
 
         public ComponentMap()
-            : this(new TypeStructure<ComponentMapping>(typeof(T)))
+            : this(Structures.Component(ComponentType.Component, null, typeof(T)))
         {}
 
         ComponentMap(IMappingStructure<ComponentMapping> structure)

@@ -59,7 +59,7 @@ namespace FluentNHibernate.Mapping
 
         public KeyManyToOnePart Column(string columnName)
         {
-            var column = new ColumnStructure(structure);
+            var column = Structures.Column(structure);
 
             new ColumnPart(column)
                 .Name(columnName);

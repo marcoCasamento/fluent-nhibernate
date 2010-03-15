@@ -19,14 +19,14 @@ namespace FluentNHibernate.Mapping
             : base(structure)
         {
             this.structure = structure;
-            keyStructure = new FreeStructure<KeyMapping>();
+            keyStructure = Structures.Key(typeof(TSubclass));
             structure.AddChild(keyStructure);
             columns = new ColumnMappingCollection<JoinedSubClassPart<TSubclass>>(this, keyStructure);
         }
 
         public virtual void JoinedSubClass<TNextSubclass>(string keyColumn, Action<JoinedSubClassPart<TNextSubclass>> action)
         {
-            var subclassStructure = new SubclassStructure(SubclassType.JoinedSubclass, typeof(TNextSubclass));
+            var subclassStructure = Structures.Subclass(SubclassType.JoinedSubclass, typeof(TNextSubclass));
             var subclass = new JoinedSubClassPart<TNextSubclass>(subclassStructure);
 
             subclass.KeyColumns.Add(keyColumn);

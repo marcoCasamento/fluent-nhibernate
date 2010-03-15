@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using FluentNHibernate.Automapping.TestFixtures;
 using FluentNHibernate.Mapping;
 using FluentNHibernate.MappingModel;
 using FluentNHibernate.MappingModel.ClassBased;
@@ -14,12 +15,12 @@ namespace FluentNHibernate.Testing.FluentInterfaceTests
     public class ColumnPartTests
     {
         ColumnPart columnPart;
-        ColumnStructure structure;
+        IMappingStructure<ColumnMapping> structure;
 
         [SetUp]
         public void SetUp()
         {
-            structure = new ColumnStructure(new FreeStructure<ClassMapping>());
+            structure = Structures.Column(Structures.Class(typeof(ExampleClass)));
             columnPart = new ColumnPart(structure);
         }
 

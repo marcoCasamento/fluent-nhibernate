@@ -37,7 +37,7 @@ namespace FluentNHibernate.Mapping
 
         private ComponentPartBase<T> ParentReference(Member property)
         {
-            var parentStructure = new MemberStructure<ParentMapping>(property);
+            var parentStructure = Structures.Parent(property);
             
             structure.AddChild(parentStructure);
 

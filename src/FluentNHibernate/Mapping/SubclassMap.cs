@@ -21,7 +21,7 @@ namespace FluentNHibernate.Mapping
         IMappingStructure<KeyMapping> keyStructure;
 
         public SubclassMap()
-            : this(new SubclassStructure(SubclassType.Unknown, typeof(T)))
+            : this(Structures.Subclass(SubclassType.Unknown, typeof(T)))
         {}
 
         SubclassMap(IMappingStructure<SubclassMapping> structure)
@@ -193,11 +193,11 @@ namespace FluentNHibernate.Mapping
         {
             if (keyStructure == null)
             {
-                keyStructure = new FreeStructure<KeyMapping>();
+                keyStructure = Structures.Key(typeof(T));
                 structure.AddChild(keyStructure);
             }
 
-            var column = new ColumnStructure(keyStructure);
+            var column = Structures.Column(keyStructure);
 
             new ColumnPart(column)
                 .Name(columnName);
@@ -241,7 +241,7 @@ namespace FluentNHibernate.Mapping
         /// <param name="action">Joined table mapping</param>
         public void Join(string tableName, Action<JoinPart<T>> action)
         {
-            var joinStructure = new FreeStructure<JoinMapping>();
+            var joinStructure = Structures.Join();
             var join = new JoinPart<T>(joinStructure);
 
             if (!string.IsNullOrEmpty(tableName))

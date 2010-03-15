@@ -9,10 +9,10 @@ namespace FluentNHibernate.Mapping
 {
     public class NaturalIdPart<T>
     {
-        readonly FreeStructure<NaturalIdMapping> structure;
+        readonly IMappingStructure<NaturalIdMapping> structure;
         bool nextBool = true;
 
-        public NaturalIdPart(FreeStructure<NaturalIdMapping> structure)
+        public NaturalIdPart(IMappingStructure<NaturalIdMapping> structure)
         {
             this.structure = structure;
         }
@@ -42,7 +42,7 @@ namespace FluentNHibernate.Mapping
 
         NaturalIdPart<T> Property(Member member, string columnName)
         {
-            var propertyStructure = new MemberStructure<PropertyMapping>(member);
+            var propertyStructure = Structures.Property(member);
             var part = new PropertyPart(propertyStructure);
             part.Column(columnName);
 
@@ -76,7 +76,7 @@ namespace FluentNHibernate.Mapping
 
         protected virtual NaturalIdPart<T> Reference(Member member, string columnName)
         {
-            var referenceStructure = new MemberStructure<ManyToOneMapping>(member);
+            var referenceStructure = Structures.ManyToOne(member);
             var part = new ManyToOnePart<T>(referenceStructure);
             part.Column(columnName);
 

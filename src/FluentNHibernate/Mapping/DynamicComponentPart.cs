@@ -80,7 +80,7 @@ namespace FluentNHibernate.Mapping
 
         public PropertyPart Map<TProperty>(string key)
         {
-            var propertyStructure = new MemberStructure<PropertyMapping>(new DummyPropertyInfo(key, typeof(TProperty)).ToMember());
+            var propertyStructure = Structures.Property(new DummyPropertyInfo(key, typeof(TProperty)).ToMember());
             var propertyMap = new PropertyPart(propertyStructure);
 
             structure.AddChild(propertyStructure);

@@ -29,8 +29,8 @@ namespace FluentNHibernate.Testing.FluentInterfaceTests
 
         protected static ModelTester<DiscriminatorPart, DiscriminatorMapping> DiscriminatorMap<T>()
         {
-            var structure = new FreeStructure<DiscriminatorMapping>();
-            var parentStructure = new FreeStructure<ClassMapping>();
+            var structure = Structures.Discriminator(typeof(T));
+            var parentStructure = Structures.Class(typeof(T));
             return new ModelTester<DiscriminatorPart, DiscriminatorMapping>(
                 () => new DiscriminatorPart(structure, parentStructure),
                 structure.CreateMappingNode);
@@ -38,7 +38,7 @@ namespace FluentNHibernate.Testing.FluentInterfaceTests
 
         protected static ModelTester<SubClassPart<T>, SubclassMapping> Subclass<T>()
         {
-            var structure = new SubclassStructure(SubclassType.JoinedSubclass, typeof(T));
+            var structure = Structures.Subclass(SubclassType.JoinedSubclass, typeof(T));
             return new ModelTester<SubClassPart<T>, SubclassMapping>(
                 () => new SubClassPart<T>(null, structure),
                 structure.CreateMappingNode);
@@ -58,7 +58,7 @@ namespace FluentNHibernate.Testing.FluentInterfaceTests
 
         protected static ModelTester<JoinedSubClassPart<T>, SubclassMapping> JoinedSubclass<T>()
         {
-            var structure = new SubclassStructure(SubclassType.JoinedSubclass, typeof(T));
+            var structure = Structures.Subclass(SubclassType.JoinedSubclass, typeof(T));
             return new ModelTester<JoinedSubClassPart<T>, SubclassMapping>(
                 () => new JoinedSubClassPart<T>(structure),
                 structure.CreateMappingNode);
@@ -78,7 +78,7 @@ namespace FluentNHibernate.Testing.FluentInterfaceTests
 
         protected static ModelTester<ComponentPart<T>, ComponentMapping> Component<T>()
         {
-            var structure = new ComponentStructure(ComponentType.Component, ReflectionHelper.GetMember<ExampleClass>(x => x.Parent), typeof(ExampleClass));
+            var structure = Structures.Component(ComponentType.Component, ReflectionHelper.GetMember<ExampleClass>(x => x.Parent), typeof(ExampleClass));
             return new ModelTester<ComponentPart<T>, ComponentMapping>(
                 () => new ComponentPart<T>(structure),
                 structure.CreateMappingNode);
@@ -86,7 +86,7 @@ namespace FluentNHibernate.Testing.FluentInterfaceTests
 
         protected static ModelTester<DynamicComponentPart<T>, ComponentMapping> DynamicComponent<T>()
         {
-            var structure = new ComponentStructure(ComponentType.DynamicComponent, ReflectionHelper.GetMember<ExampleClass>(x => x.Dictionary), typeof(ExampleClass));
+            var structure = Structures.Component(ComponentType.DynamicComponent, ReflectionHelper.GetMember<ExampleClass>(x => x.Dictionary), typeof(ExampleClass));
             return new ModelTester<DynamicComponentPart<T>, ComponentMapping>(
                 () => new DynamicComponentPart<T>(structure),
                 structure.CreateMappingNode);
@@ -94,7 +94,7 @@ namespace FluentNHibernate.Testing.FluentInterfaceTests
 
         protected static ModelTester<VersionPart, VersionMapping> Version()
         {
-            var structure = new MemberStructure<VersionMapping>(ReflectionHelper.GetMember<VersionTarget>(x => x.VersionNumber));
+            var structure = Structures.Version(ReflectionHelper.GetMember<VersionTarget>(x => x.VersionNumber));
             return new ModelTester<VersionPart, VersionMapping>(
                 () => new VersionPart(structure),
                 structure.CreateMappingNode);
@@ -102,7 +102,7 @@ namespace FluentNHibernate.Testing.FluentInterfaceTests
 
         protected static ModelTester<CachePart, CacheMapping> Cache()
         {
-            var structure = new FreeStructure<CacheMapping>();
+            var structure = Structures.Cache();
             return new ModelTester<CachePart, CacheMapping>(
                 () => new CachePart(structure),
                 structure.CreateMappingNode);
@@ -110,7 +110,7 @@ namespace FluentNHibernate.Testing.FluentInterfaceTests
 
         protected static ModelTester<IdentityPart<int>, IdMapping> Id()
         {
-            var structure = new MemberStructure<IdMapping>(ReflectionHelper.GetMember<IdentityTarget>(x => x.IntId));
+            var structure = Structures.Id(ReflectionHelper.GetMember<IdentityTarget>(x => x.IntId));
             return new ModelTester<IdentityPart<int>, IdMapping>(
                 () => new IdentityPart<int>(structure),
                 structure.CreateMappingNode);
@@ -118,7 +118,7 @@ namespace FluentNHibernate.Testing.FluentInterfaceTests
 
         protected static ModelTester<CompositeIdentityPart<T>, CompositeIdMapping> CompositeId<T>()
         {
-            var structure = new FreeStructure<CompositeIdMapping>();
+            var structure = Structures.CompositeId(ReflectionHelper.GetMember<IdentityTarget>(x => x.IntId));
             return new ModelTester<CompositeIdentityPart<T>, CompositeIdMapping>(
                 () => new CompositeIdentityPart<T>(structure),
                 structure.CreateMappingNode);
@@ -126,7 +126,7 @@ namespace FluentNHibernate.Testing.FluentInterfaceTests
 
         protected static ModelTester<OneToOnePart<PropertyReferenceTarget>, OneToOneMapping> OneToOne()
         {
-            var structure = new MemberStructure<OneToOneMapping>(ReflectionHelper.GetMember<PropertyTarget>(x => x.Reference));
+            var structure = Structures.OneToOne(ReflectionHelper.GetMember<PropertyTarget>(x => x.Reference));
             return new ModelTester<OneToOnePart<PropertyReferenceTarget>, OneToOneMapping>(
                 () => new OneToOnePart<PropertyReferenceTarget>(structure),
                 structure.CreateMappingNode);
@@ -134,7 +134,7 @@ namespace FluentNHibernate.Testing.FluentInterfaceTests
 
         protected static ModelTester<PropertyPart, PropertyMapping> Property()
         {
-            var structure = new MemberStructure<PropertyMapping>(ReflectionHelper.GetMember<PropertyTarget>(x => x.Name));
+            var structure = Structures.Property(ReflectionHelper.GetMember<PropertyTarget>(x => x.Name));
             return new ModelTester<PropertyPart, PropertyMapping>(
                 () => new PropertyPart(structure),
                 structure.CreateMappingNode);
@@ -142,7 +142,7 @@ namespace FluentNHibernate.Testing.FluentInterfaceTests
 
         protected static ModelTester<PropertyPart, PropertyMapping> Property<T>(Expression<Func<T, object>> property)
         {
-            var structure = new MemberStructure<PropertyMapping>(property.ToMember());
+            var structure = Structures.Property(ReflectionHelper.GetMember<PropertyTarget>(x => x.Name));
             return new ModelTester<PropertyPart, PropertyMapping>(
                 () => new PropertyPart(structure),
                 structure.CreateMappingNode);
@@ -150,9 +150,9 @@ namespace FluentNHibernate.Testing.FluentInterfaceTests
 
         protected static ModelTester<OneToManyPart<T>, CollectionMapping> OneToMany<T>(Expression<Func<OneToManyTarget, IEnumerable<T>>> property)
         {
-            var structure = new TypeAndMemberStructure<CollectionMapping>(typeof(OneToManyTarget), property.ToMember());
-            var key = new TypeStructure<KeyMapping>(typeof(OneToManyTarget));
-            var relationship = new TypeStructure<OneToManyMapping>(typeof(T));
+            var structure = Structures.Collection(typeof(OneToManyTarget), property.ToMember());
+            var key = Structures.Key(typeof(OneToManyTarget));
+            var relationship = Structures.OneToMany(typeof(T));
             return new ModelTester<OneToManyPart<T>, CollectionMapping>(
                 () => new OneToManyPart<T>(typeof(T), structure, key, relationship),
                 structure.CreateMappingNode);
@@ -160,9 +160,9 @@ namespace FluentNHibernate.Testing.FluentInterfaceTests
 
         protected static ModelTester<ManyToManyPart<T>, CollectionMapping> ManyToMany<T>(Expression<Func<ManyToManyTarget, IList<T>>> property)
         {
-            var structure = new TypeAndMemberStructure<CollectionMapping>(typeof(ManyToManyTarget), property.ToMember());
-            var key = new TypeStructure<KeyMapping>(typeof(OneToManyTarget));
-            var relationship = new TypeStructure<ManyToManyMapping>(typeof(T));
+            var structure = Structures.Collection(typeof(ManyToManyTarget), property.ToMember());
+            var key = Structures.Key(typeof(OneToManyTarget));
+            var relationship = Structures.ManyToMany(typeof(T));
             return new ModelTester<ManyToManyPart<T>, CollectionMapping>(
                 () => new ManyToManyPart<T>(typeof(T), structure, key, relationship),
                 structure.CreateMappingNode);
@@ -170,9 +170,9 @@ namespace FluentNHibernate.Testing.FluentInterfaceTests
 
         protected static ModelTester<ManyToManyPart<IDictionary>, CollectionMapping> ManyToMany(Expression<Func<ManyToManyTarget, IDictionary>> property)
         {
-            var structure = new TypeAndMemberStructure<CollectionMapping>(typeof(ManyToManyTarget), property.ToMember());
-            var key = new TypeStructure<KeyMapping>(typeof(OneToManyTarget));
-            var relationship = new TypeStructure<OneToManyMapping>(typeof(ManyToManyTarget));
+            var structure = Structures.Collection(typeof(ManyToManyTarget), property.ToMember());
+            var key = Structures.Key(typeof(OneToManyTarget));
+            var relationship = Structures.ManyToMany(typeof(ManyToManyTarget));
             return new ModelTester<ManyToManyPart<IDictionary>, CollectionMapping>(
                 () => new ManyToManyPart<IDictionary>(typeof(ManyToManyTarget), structure, key, relationship),
                 structure.CreateMappingNode);
@@ -180,9 +180,9 @@ namespace FluentNHibernate.Testing.FluentInterfaceTests
 
         protected static ModelTester<ManyToManyPart<IDictionary<TIndex, TValue>>, CollectionMapping> ManyToMany<TIndex, TValue>(Expression<Func<ManyToManyTarget, IDictionary<TIndex, TValue>>> property)
         {
-            var structure = new TypeAndMemberStructure<CollectionMapping>(typeof(ManyToManyTarget), property.ToMember());
-            var key = new TypeStructure<KeyMapping>(typeof(OneToManyTarget));
-            var relationship = new TypeStructure<OneToManyMapping>(typeof(ManyToManyTarget));
+            var structure = Structures.Collection(typeof(ManyToManyTarget), property.ToMember());
+            var key = Structures.Key(typeof(OneToManyTarget));
+            var relationship = Structures.ManyToMany(typeof(ManyToManyTarget));
             return new ModelTester<ManyToManyPart<IDictionary<TIndex, TValue>>, CollectionMapping>(
                () => new ManyToManyPart<IDictionary<TIndex, TValue>>(typeof(ManyToManyTarget), structure, key, relationship),
                structure.CreateMappingNode);
@@ -190,7 +190,7 @@ namespace FluentNHibernate.Testing.FluentInterfaceTests
 
         protected static ModelTester<ManyToOnePart<PropertyReferenceTarget>, ManyToOneMapping> ManyToOne()
         {
-            var structure = new MemberStructure<ManyToOneMapping>(ReflectionHelper.GetMember<PropertyTarget>(x => x.Reference));
+            var structure = Structures.ManyToOne(ReflectionHelper.GetMember<PropertyTarget>(x => x.Reference));
             return new ModelTester<ManyToOnePart<PropertyReferenceTarget>, ManyToOneMapping>(
                 () => new ManyToOnePart<PropertyReferenceTarget>(structure),
                 structure.CreateMappingNode);
@@ -198,7 +198,7 @@ namespace FluentNHibernate.Testing.FluentInterfaceTests
 
         protected static ModelTester<AnyPart<T>, AnyMapping> Any<T>()
         {
-            var structure = new MemberStructure<AnyMapping>(ReflectionHelper.GetMember<MappedObject>(x => x.Parent));
+            var structure = Structures.Any(ReflectionHelper.GetMember<PropertyTarget>(x => x.Reference));
             return new ModelTester<AnyPart<T>, AnyMapping>(
                 () => new AnyPart<T>(structure),
                 structure.CreateMappingNode);
@@ -206,7 +206,7 @@ namespace FluentNHibernate.Testing.FluentInterfaceTests
 
         protected static ModelTester<JoinPart<T>, JoinMapping> Join<T>()
         {
-            var structure = new FreeStructure<JoinMapping>();
+            var structure = Structures.Join();
             return new ModelTester<JoinPart<T>, JoinMapping>(
                 () => new JoinPart<T>(structure),
                 structure.CreateMappingNode);
@@ -214,7 +214,7 @@ namespace FluentNHibernate.Testing.FluentInterfaceTests
 
         protected static ModelTester<HibernateMappingPart, HibernateMapping> HibernateMapping()
         {
-            var structure = new FreeStructure<HibernateMapping>();
+            var structure = Structures.Container();
             var map = new HibernateMappingPart(structure);
             return new ModelTester<HibernateMappingPart, HibernateMapping>(
                 () => map,
@@ -223,7 +223,7 @@ namespace FluentNHibernate.Testing.FluentInterfaceTests
 
         protected static ModelTester<CompositeElementPart<T>, CompositeElementMapping> CompositeElement<T>()
         {
-            var structure = new FreeStructure<CompositeElementMapping>();
+            var structure = Structures.CompositeElement(typeof(T));
             return new ModelTester<CompositeElementPart<T>, CompositeElementMapping>(
                 () => new CompositeElementPart<T>(structure),
                 structure.CreateMappingNode);
@@ -239,7 +239,7 @@ namespace FluentNHibernate.Testing.FluentInterfaceTests
 
         protected static ModelTester<NaturalIdPart<T>, NaturalIdMapping> NaturalId<T>()
         {
-            var structure = new FreeStructure<NaturalIdMapping>();
+            var structure = Structures.NaturalId();
             return new ModelTester<NaturalIdPart<T>, NaturalIdMapping>(
                 () => new NaturalIdPart<T>(structure), 
                 structure.CreateMappingNode);

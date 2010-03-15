@@ -29,7 +29,7 @@ namespace FluentNHibernate.Mapping
             {
                 if (generatorStructure == null)
                 {
-                    generatorStructure = new FreeStructure<GeneratorMapping>();
+                    generatorStructure = Structures.Generator();
                     structure.AddChild(generatorStructure);
                 }
 
@@ -73,7 +73,7 @@ namespace FluentNHibernate.Mapping
         {
             structure.RemoveChildrenMatching(x => x is IMappingStructure<ColumnMapping>);
 
-            var column = new ColumnStructure(structure);
+            var column = Structures.Column(structure);
 
             new ColumnPart(column)
                 .Name(columnName);

@@ -43,7 +43,7 @@ namespace FluentNHibernate.Mapping
 
         public VersionPart Column(string name)
         {
-            var column = new ColumnStructure(structure);
+            var column = Structures.Column(structure);
 
             new ColumnPart(column)
                 .Name(name);

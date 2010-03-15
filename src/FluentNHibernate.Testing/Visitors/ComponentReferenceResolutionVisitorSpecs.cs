@@ -90,7 +90,7 @@ namespace FluentNHibernate.Testing.Visitors
         public override void establish_context()
         {
             var udm_one = Stub<IUserDefinedMapping>.Create(cfg =>
-                cfg.Stub(x => x.Structure).Return(new TypeStructure<ExternalComponentMapping>(typeof(ComponentType))));
+                cfg.Stub(x => x.Structure).Return(Structures.ExternalComponent(typeof(ComponentType))));
             var external_component_one = Stub<IExternalComponentMappingProvider>.Create(cfg =>
             {
                 cfg.Stub(x => x.GetUserDefinedMappings())
@@ -101,7 +101,7 @@ namespace FluentNHibernate.Testing.Visitors
             });
 
             var udm_two = Stub<IUserDefinedMapping>.Create(cfg =>
-                cfg.Stub(x => x.Structure).Return(new TypeStructure<ExternalComponentMapping>(typeof(ComponentType))));
+                cfg.Stub(x => x.Structure).Return(Structures.ExternalComponent(typeof(ComponentType))));
             var external_component_two = Stub<IExternalComponentMappingProvider>.Create(cfg =>
             {
                 cfg.Stub(x => x.GetUserDefinedMappings())

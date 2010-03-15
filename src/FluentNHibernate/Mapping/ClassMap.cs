@@ -24,7 +24,7 @@ namespace FluentNHibernate.Mapping
         IMappingStructure<CacheMapping> cacheStructure;
 
         public ClassMap()
-            : this(new TypeStructure<ClassMapping>(typeof(T)), new FreeStructure<HibernateMapping>())
+            : this(Structures.Class(typeof(T)), Structures.Container())
         {}
 
         ClassMap(IMappingStructure<ClassMapping> structure, IMappingStructure<HibernateMapping> mappingStructure)
@@ -43,7 +43,7 @@ namespace FluentNHibernate.Mapping
             {
                 if (cacheStructure == null)
                 {
-                    cacheStructure = new FreeStructure<CacheMapping>();
+                    cacheStructure = Structures.Cache();
                     structure.AddChild(cacheStructure);
                 }
 
@@ -68,7 +68,7 @@ namespace FluentNHibernate.Mapping
 
         public virtual NaturalIdPart<T> NaturalId()
         {
-            var natrualIdStructure = new FreeStructure<NaturalIdMapping>();
+            var natrualIdStructure = Structures.NaturalId();
             var part = new NaturalIdPart<T>(natrualIdStructure);
 
             structure.AddChild(natrualIdStructure);
@@ -78,7 +78,7 @@ namespace FluentNHibernate.Mapping
 
         public virtual CompositeIdentityPart<T> CompositeId()
         {
-            var compositeIdStructure = new FreeStructure<CompositeIdMapping>();
+            var compositeIdStructure = Structures.CompositeId(null);
             var part = new CompositeIdentityPart<T>(compositeIdStructure);
 
             structure.AddChild(compositeIdStructure);
@@ -88,7 +88,7 @@ namespace FluentNHibernate.Mapping
 
         public virtual CompositeIdentityPart<TId> CompositeId<TId>(Expression<Func<T, TId>> expression)
         {
-            var compositeIdStructure = new MemberStructure<CompositeIdMapping>(expression.ToMember());
+            var compositeIdStructure = Structures.CompositeId(expression.ToMember());
             var part = new CompositeIdentityPart<TId>(compositeIdStructure);
 
             structure.AddChild(compositeIdStructure);
@@ -103,7 +103,7 @@ namespace FluentNHibernate.Mapping
 
         protected virtual VersionPart Version(Member property)
         {
-            var versionStructure = new MemberStructure<VersionMapping>(property);
+            var versionStructure = Structures.Version(property);
             var versionPart = new VersionPart(versionStructure);
 
             structure.AddChild(versionStructure);
@@ -113,7 +113,7 @@ namespace FluentNHibernate.Mapping
 
         public virtual DiscriminatorPart DiscriminateSubClassesOnColumn<TDiscriminator>(string columnName, TDiscriminator baseClassDiscriminator)
         {
-            var discriminatorStructure = new TypeStructure<DiscriminatorMapping>(typeof(TDiscriminator));
+            var discriminatorStructure = Structures.Discriminator(typeof(TDiscriminator));
             var part = new DiscriminatorPart(discriminatorStructure, structure);
 
             part.Column(columnName);
@@ -126,7 +126,7 @@ namespace FluentNHibernate.Mapping
 
         public virtual DiscriminatorPart DiscriminateSubClassesOnColumn<TDiscriminator>(string columnName)
         {
-            var discriminatorStructure = new TypeStructure<DiscriminatorMapping>(typeof(TDiscriminator));
+            var discriminatorStructure = Structures.Discriminator(typeof(TDiscriminator));
             var part = new DiscriminatorPart(discriminatorStructure, structure);
 
             part.Column(columnName);
@@ -148,7 +148,7 @@ namespace FluentNHibernate.Mapping
 
         public virtual IdentityPart<TReturn> Id<TReturn>(Expression<Func<T, TReturn>> expression, string column)
         {
-            var idStructure = new MemberStructure<IdMapping>(expression.ToMember());
+            var idStructure = Structures.Id(expression.ToMember());
             var part = new IdentityPart<TReturn>(idStructure);
 
             if (column != null)
@@ -161,7 +161,7 @@ namespace FluentNHibernate.Mapping
 
         public virtual IdentityPart<TReturn> Id<TReturn>(string column)
         {
-            var idStructure = new FreeStructure<IdMapping>();
+            var idStructure = Structures.Id(null);
             var part = new IdentityPart<TReturn>(idStructure);
             
             if (column != null)
@@ -175,7 +175,7 @@ namespace FluentNHibernate.Mapping
         [Obsolete("Inline definitions of subclasses are depreciated. Please create a derived class from SubclassMap in the same way you do with ClassMap.")]
         public virtual void JoinedSubClass<TSubclass>(string keyColumn, Action<JoinedSubClassPart<TSubclass>> action) where TSubclass : T
         {
-            var subclassStructure = new SubclassStructure(SubclassType.JoinedSubclass, typeof(TSubclass));
+            var subclassStructure = Structures.Subclass(SubclassType.JoinedSubclass, typeof(TSubclass));
             var subclass = new JoinedSubClassPart<TSubclass>(subclassStructure);
 
             subclass.KeyColumns.Add(keyColumn);
@@ -232,7 +232,7 @@ namespace FluentNHibernate.Mapping
         /// <param name="action">Joined table mapping</param>
         public void Join(string tableName, Action<JoinPart<T>> action)
         {
-            var joinStructure = new FreeStructure<JoinMapping>();
+            var joinStructure = Structures.Join();
             var join = new JoinPart<T>(joinStructure);
 
             join.Table(tableName);
@@ -248,7 +248,7 @@ namespace FluentNHibernate.Mapping
         /// <typeparam name="TImport">Type to import.</typeparam>
         public ImportPart ImportType<TImport>()
         {
-            var import = new TypeStructure<ImportMapping>(typeof(TImport));
+            var import = Structures.Import(typeof(TImport));
             var part = new ImportPart(import);
             
             mappingStructure.AddChild(import);
@@ -387,7 +387,7 @@ namespace FluentNHibernate.Mapping
         /// </typeparam>
         public ClassMap<T> ApplyFilter<TFilter>(string condition) where TFilter : FilterDefinition, new()
         {
-            var filter = new FreeStructure<FilterMapping>();
+            var filter = Structures.Filter();
 
             new FilterPart(filter)
                 .Name(new TFilter().Name)
@@ -412,7 +412,7 @@ namespace FluentNHibernate.Mapping
 
         public ClassMap<T> Tuplizer(TuplizerMode mode, Type tuplizerType)
         {
-            var tuplizer = new FreeStructure<TuplizerMapping>();
+            var tuplizer = Structures.Tuplizer();
             tuplizer.SetValue(Attr.Mode, mode);
             tuplizer.SetValue(Attr.Type, new TypeReference(tuplizerType));
 

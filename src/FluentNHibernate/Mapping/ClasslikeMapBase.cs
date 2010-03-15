@@ -33,7 +33,7 @@ namespace FluentNHibernate.Mapping
 
         protected virtual PropertyPart Map(Member property, string columnName)
         {
-            var propertyStructure = new MemberStructure<PropertyMapping>(property);
+            var propertyStructure = Structures.Property(property);
             var propertyMap = new PropertyPart(propertyStructure);
 
             if (!string.IsNullOrEmpty(columnName))
@@ -66,7 +66,7 @@ namespace FluentNHibernate.Mapping
 
         protected virtual ManyToOnePart<TOther> References<TOther>(Member property, string columnName)
         {
-            var referencesStructure = new MemberStructure<ManyToOneMapping>(new OverriddenReturnTypeMember(property, typeof(TOther)));
+            var referencesStructure = Structures.ManyToOne(new OverriddenReturnTypeMember(property, typeof(TOther)));
             var part = new ManyToOnePart<TOther>(referencesStructure);
 
             if (columnName != null)
@@ -84,7 +84,7 @@ namespace FluentNHibernate.Mapping
 
         protected virtual AnyPart<TOther> ReferencesAny<TOther>(Member property)
         {
-            var anyStructure = new MemberStructure<AnyMapping>(property);
+            var anyStructure = Structures.Any(property);
             var part = new AnyPart<TOther>(anyStructure);
 
             structure.AddChild(anyStructure);
@@ -105,7 +105,7 @@ namespace FluentNHibernate.Mapping
         protected virtual OneToOnePart<TOther> HasOne<TOther>(Member property)
         {
             var member = property.PropertyType == typeof(TOther) ? property : new OverriddenReturnTypeMember(property, typeof(TOther));
-            var oneToOneStructure = new MemberStructure<OneToOneMapping>(member);
+            var oneToOneStructure = Structures.OneToOne(member);
             var part = new OneToOnePart<TOther>(oneToOneStructure);
 
             structure.AddChild(oneToOneStructure);
@@ -120,7 +120,7 @@ namespace FluentNHibernate.Mapping
 
         protected DynamicComponentPart<IDictionary> DynamicComponent(Member property, Action<DynamicComponentPart<IDictionary>> action)
         {
-            var componentStructure = new ComponentStructure(ComponentType.DynamicComponent, property, typeof(IDictionary));
+            var componentStructure = Structures.Component(ComponentType.DynamicComponent, property, typeof(IDictionary));
             var part = new DynamicComponentPart<IDictionary>(componentStructure);
             
             action(part);
@@ -140,7 +140,7 @@ namespace FluentNHibernate.Mapping
         /// <returns>Component reference builder</returns>
         public ReferenceComponentPart<TComponent> Component<TComponent>(Expression<Func<T, TComponent>> member)
         {
-            var componentStructure = new MemberStructure<ReferenceComponentMapping>(member.ToMember());
+            var componentStructure = Structures.ReferenceComponent(member.ToMember());
             var part = new ReferenceComponentPart<TComponent>(componentStructure);
 
             structure.AddChild(componentStructure);
@@ -172,7 +172,7 @@ namespace FluentNHibernate.Mapping
         
         protected virtual ComponentPart<TComponent> Component<TComponent>(Member property, Action<ComponentPart<TComponent>> action)
         {
-            var componentStructure = new ComponentStructure(ComponentType.Component, property, typeof(TComponent));
+            var componentStructure = Structures.Component(ComponentType.Component, property, typeof(TComponent));
             var part = new ComponentPart<TComponent>(componentStructure);
 
             action(part);
@@ -196,9 +196,9 @@ namespace FluentNHibernate.Mapping
 
         protected virtual OneToManyPart<TChild> HasMany<TChild>(Type childType, Member member)
         {
-            var collectionStructure = new TypeAndMemberStructure<CollectionMapping>(typeof(T), member);
-            var key = new TypeStructure<KeyMapping>(typeof(T));
-            var relationship = new TypeStructure<OneToManyMapping>(typeof(TChild));
+            var collectionStructure = Structures.Collection(typeof(T), member);
+            var key = Structures.Key(typeof(T));
+            var relationship = Structures.OneToMany(typeof(TChild));
             var part = new OneToManyPart<TChild>(childType, collectionStructure, key, relationship);
 
             structure.AddChild(collectionStructure);
@@ -254,9 +254,9 @@ namespace FluentNHibernate.Mapping
 
         protected virtual ManyToManyPart<TChild> HasManyToMany<TChild>(Type childType, Member member)
         {
-            var collectionStructure = new TypeAndMemberStructure<CollectionMapping>(typeof(T), member);
-            var key = new TypeStructure<KeyMapping>(typeof(T));
-            var relationship = new TypeStructure<ManyToManyMapping>(typeof(TChild));
+            var collectionStructure = Structures.Collection(typeof(T), member);
+            var key = Structures.Key(typeof(T));
+            var relationship = Structures.ManyToMany(typeof(TChild));
             var part = new ManyToManyPart<TChild>(childType, collectionStructure, key, relationship);
 
             structure.AddChild(collectionStructure);
@@ -320,7 +320,7 @@ namespace FluentNHibernate.Mapping
 
         StoredProcedurePart StoredProcedure(string element, string innerText)
         {
-            var proc = new FreeStructure<StoredProcedureMapping>();
+            var proc = Structures.StoredProcedure();
             var part = new StoredProcedurePart(proc)
                 .StoredProcedureType(element)
                 .Query(innerText);

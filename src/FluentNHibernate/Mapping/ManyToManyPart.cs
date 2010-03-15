@@ -32,7 +32,7 @@ namespace FluentNHibernate.Mapping
         {
             relationshipStructure.RemoveChildrenMatching(x => x is IMappingStructure<ColumnMapping>);
 
-            var column = new ColumnStructure(relationshipStructure);
+            var column = Structures.Column(relationshipStructure);
 
             new ColumnPart(column)
                 .Name(childKeyColumn);
@@ -46,7 +46,7 @@ namespace FluentNHibernate.Mapping
         {
             keyStructure.RemoveChildrenMatching(x => x is IMappingStructure<ColumnMapping>);
 
-            var column = new ColumnStructure(keyStructure);
+            var column = Structures.Column(keyStructure);
 
             new ColumnPart(column)
                 .Name(parentKeyColumn);
@@ -93,7 +93,7 @@ namespace FluentNHibernate.Mapping
         {
             EnsureGenericDictionary();
 
-            var indexStructure = new TypeStructure<IndexManyToManyMapping>(entity);
+            var indexStructure = Structures.IndexManyToMany(entity);
             var part = new IndexManyToManyPart(indexStructure);
 
             if (!string.IsNullOrEmpty(indexColumn))
@@ -116,7 +116,7 @@ namespace FluentNHibernate.Mapping
         {
             EnsureDictionary();
 
-            var indexStructure = new TypeStructure<IndexManyToManyMapping>(entity);
+            var indexStructure = Structures.IndexManyToMany(entity);
             var part = new IndexManyToManyPart(indexStructure);
             part.Column(indexColumn);
             part.Type(indexType);
@@ -145,7 +145,7 @@ namespace FluentNHibernate.Mapping
             //var indexType = typeof(TChild).GetGenericArguments()[0];
             //var valueType = typeof(TChild).GetGenericArguments()[1];
 
-            var indexStructure = new FreeStructure<IndexMapping>();
+            var indexStructure = Structures.Index(null);
             var part = new IndexPart(indexStructure);
             part.Column(indexColumn);
             part.Type(entity);

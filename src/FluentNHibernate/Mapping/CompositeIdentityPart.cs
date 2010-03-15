@@ -59,7 +59,7 @@ namespace FluentNHibernate.Mapping
 
         protected virtual CompositeIdentityPart<T> KeyProperty(Member property, string columnName, Action<KeyPropertyPart> customMapping)
         {
-            var keyStructure = new MemberStructure<KeyPropertyMapping>(property);
+            var keyStructure = Structures.KeyProperty(property);
             var part = new KeyPropertyPart(keyStructure);
 
             if (customMapping != null)
@@ -115,7 +115,7 @@ namespace FluentNHibernate.Mapping
 
         protected virtual CompositeIdentityPart<T> KeyReference(Member property, string columnName, Action<KeyManyToOnePart> customMapping)
         {
-            var keyStructure = new MemberStructure<KeyManyToOneMapping>(property);
+            var keyStructure = Structures.KeyManyToOne(property);
             var part = new KeyManyToOnePart(keyStructure);
 
             if (!string.IsNullOrEmpty(columnName))

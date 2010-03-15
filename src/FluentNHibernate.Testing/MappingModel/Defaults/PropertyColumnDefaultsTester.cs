@@ -19,7 +19,7 @@ namespace FluentNHibernate.Testing.MappingModel.Defaults
         [SetUp]
         public void CreatePart()
         {
-            structure = new MemberStructure<PropertyMapping>(Prop(x => x.Name));
+            structure = Structures.Property(Prop(x => x.Name));
             part = new PropertyPart(structure);
         }
 

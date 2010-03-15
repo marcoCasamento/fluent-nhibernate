@@ -15,7 +15,7 @@ namespace FluentNHibernate.Testing.FluentInterfaceTests
         [SetUp]
         public void CreatePart()
         {
-            structure = new FreeStructure<ElementMapping>();
+            structure = Structures.Element();
             part = new ElementPart(structure);
         }
 

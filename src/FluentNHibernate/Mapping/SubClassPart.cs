@@ -21,7 +21,7 @@ namespace FluentNHibernate.Mapping
 
         public DiscriminatorPart SubClass<TChild>(object discriminatorValue, Action<SubClassPart<TChild>> action)
         {
-            var subclassStructure = new SubclassStructure(SubclassType.Subclass, typeof(TChild));
+            var subclassStructure = Structures.Subclass(SubclassType.Subclass, typeof(TChild));
             var subclass = new SubClassPart<TChild>(parent, subclassStructure);
 
             if (discriminatorValue != null)

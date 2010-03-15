@@ -15,7 +15,7 @@ namespace FluentNHibernate.Testing.FluentInterfaceTests
         [SetUp]
         public void SetUp()
         {
-            structure = new FreeStructure<KeyPropertyMapping>();
+            structure = Structures.KeyProperty(null);
             part = new KeyPropertyPart(structure);
         }
 

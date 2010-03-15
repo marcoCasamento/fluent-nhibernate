@@ -402,14 +402,8 @@
     <Compile Include="MappingModel\ParamMapping.cs" />
     <Compile Include="MappingModel\Attr.cs" />
     <Compile Include="MappingModel\Structure\BaseMappingStructure.cs" />
-    <Compile Include="MappingModel\Structure\ColumnStructure.cs" />
-    <Compile Include="MappingModel\Structure\ComponentStructure.cs" />
-    <Compile Include="MappingModel\Structure\FreeStructure.cs" />
     <Compile Include="MappingModel\Structure\IMappingStructure.cs" />
-    <Compile Include="MappingModel\Structure\MemberStructure.cs" />
-    <Compile Include="MappingModel\Structure\SubclassStructure.cs" />
-    <Compile Include="MappingModel\Structure\TypeAndMemberStructure.cs" />
-    <Compile Include="MappingModel\Structure\TypeStructure.cs" />
+    <Compile Include="MappingModel\Structure\Structures.cs" />
     <Compile Include="MappingModel\ValueStore.cs" />
     <Compile Include="Mapping\NaturalIdPart.cs" />
     <Compile Include="Mapping\Providers\IExternalComponentMappingProvider.cs" />

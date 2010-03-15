@@ -32,7 +32,7 @@ namespace FluentNHibernate.Mapping
 
         protected PropertyPart Map(Member property, string columnName)
         {
-            var propertyStructure = new MemberStructure<PropertyMapping>(property);
+            var propertyStructure = Structures.Property(property);
             var propertyMap = new PropertyPart(propertyStructure);
 
             if (!string.IsNullOrEmpty(columnName))
@@ -55,7 +55,7 @@ namespace FluentNHibernate.Mapping
 
         protected virtual ManyToOnePart<TOther> References<TOther>(Member property, string columnName)
         {
-            var referencesStructure = new MemberStructure<ManyToOneMapping>(property);
+            var referencesStructure = Structures.ManyToOne(property);
             var part = new ManyToOnePart<TOther>(referencesStructure);
 
             if (columnName != null)
@@ -73,7 +73,7 @@ namespace FluentNHibernate.Mapping
         /// <returns>Component being mapped</returns>
         public CompositeElementPart<T> ParentReference(Expression<Func<T, object>> expression)
         {
-            var parentStructure = new MemberStructure<ParentMapping>(expression.ToMember());
+            var parentStructure = Structures.Parent(expression.ToMember());
             structure.AddChild(parentStructure);
             return this;
         }

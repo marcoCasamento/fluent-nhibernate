@@ -29,7 +29,7 @@ namespace FluentNHibernate.Mapping
 
         private void AddColumn(string column)
         {
-            var columnStructure = new ColumnStructure(structure);
+            var columnStructure = Structures.Column(structure);
             var part = new ColumnPart(columnStructure);
             part.Name(column);
             structure.AddChild(columnStructure);

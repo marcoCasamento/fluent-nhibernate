@@ -60,7 +60,7 @@ namespace FluentNHibernate.Mapping
             {
                 if (cacheStructure == null)
                 {
-                    cacheStructure = new FreeStructure<CacheMapping>();
+                    cacheStructure = Structures.Cache();
                     structure.AddChild(cacheStructure);
                 }
 
@@ -253,10 +253,10 @@ namespace FluentNHibernate.Mapping
 
         private void CreateIndexMapping(Type indexType, Member member, Action<IndexPart> customIndex)
         {
-            IMappingStructure<IndexMapping> indexStructure = new FreeStructure<IndexMapping>();
+            IMappingStructure<IndexMapping> indexStructure = Structures.Index(null);
             
             if (member != null)
-                indexStructure = new MemberStructure<IndexMapping>(member);
+                indexStructure = Structures.Index(member);
 
             var part = new IndexPart(indexStructure);
 
@@ -276,7 +276,7 @@ namespace FluentNHibernate.Mapping
 
         public T Element(string columnName, Action<ElementPart> customElementMapping)
         {
-            var elementStructure = new FreeStructure<ElementMapping>();
+            var elementStructure = Structures.Element();
             var part = new ElementPart(elementStructure);
             part.Type<TChild>();
 
@@ -297,7 +297,7 @@ namespace FluentNHibernate.Mapping
         /// <param name="action">Component mapping</param>
         public T Component(Action<CompositeElementPart<TChild>> action)
         {
-            var compositeElementStructure = new TypeStructure<CompositeElementMapping>(typeof(TChild));
+            var compositeElementStructure = Structures.CompositeElement(typeof(TChild));
             var part = new CompositeElementPart<TChild>(compositeElementStructure);
 
             action(part);
@@ -451,7 +451,7 @@ namespace FluentNHibernate.Mapping
         /// </typeparam>
         public T ApplyFilter<TFilter>(string condition) where TFilter : FilterDefinition, new()
         {
-            var filter = new FreeStructure<FilterMapping>();
+            var filter = Structures.Filter();
             
             new FilterPart(filter)
                 .Name(new TFilter().Name)

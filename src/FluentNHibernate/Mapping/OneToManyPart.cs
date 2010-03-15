@@ -56,7 +56,7 @@ namespace FluentNHibernate.Mapping
         {
             //EnsureGenericDictionary();
 
-            var indexStructure = new TypeStructure<IndexManyToManyMapping>(entity);
+            var indexStructure = Structures.IndexManyToMany(entity);
             var part = new IndexManyToManyPart(indexStructure);
 
             if (!string.IsNullOrEmpty(indexColumnName))

@@ -16,7 +16,7 @@ namespace FluentNHibernate.Mapping
 
         public ParamBuilder AddParam(string name, string value)
         {
-            var paramStructure = new FreeStructure<ParamMapping>();
+            var paramStructure = Structures.Param();
 
             paramStructure.SetValue(Attr.Name, name);
             paramStructure.SetValue(Attr.Value, value);

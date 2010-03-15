@@ -19,7 +19,7 @@ namespace FluentNHibernate.Mapping
 
         public IndexPart Column(string indexColumnName)
         {
-            var column = new ColumnStructure(structure);
+            var column = Structures.Column(structure);
 
             new ColumnPart(column)
                 .Name(indexColumnName);
