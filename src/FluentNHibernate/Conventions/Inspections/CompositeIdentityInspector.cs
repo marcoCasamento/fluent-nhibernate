@@ -9,7 +9,7 @@ namespace FluentNHibernate.Conventions.Inspections
 {
     public class CompositeIdentityInspector : ICompositeIdentityInspector
     {
-        private readonly InspectorModelMapper<ICompositeIdentityInspector, CompositeIdMapping> mappedProperties = new InspectorModelMapper<ICompositeIdentityInspector, CompositeIdMapping>();
+        private readonly InspectorMapper<ICompositeIdentityInspector, CompositeIdMapping> mappedProperties = new InspectorMapper<ICompositeIdentityInspector, CompositeIdMapping>();
         private readonly CompositeIdMapping mapping;
 
         public CompositeIdentityInspector(CompositeIdMapping mapping)

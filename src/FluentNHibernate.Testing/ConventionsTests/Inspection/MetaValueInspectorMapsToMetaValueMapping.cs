@@ -1,10 +1,9 @@
 using System;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
-using FluentNHibernate.Conventions;
 using FluentNHibernate.Conventions.Inspections;
 using FluentNHibernate.MappingModel;
+using FluentNHibernate.MappingModel.Structure;
+using FluentNHibernate.Testing.Fixtures;
 using FluentNHibernate.Utils.Reflection;
 using NUnit.Framework;
 
@@ -13,27 +12,27 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
     [TestFixture, Category("Inspection DSL")]
     public class MetaValueInspectorMapsToMetaValueMapping
     {
-        private MetaValueMapping mapping;
+        private IMappingStructure<MetaValueMapping> structure;
         private IMetaValueInspector inspector;
 
         [SetUp]
         public void CreateDsl()
         {
-            mapping = new MetaValueMapping(null);
-            inspector = new MetaValueInspector(mapping);
+            structure = Structures.MetaValue(FakeMembers.Type);
+            inspector = new MetaValueInspector(structure);
         }
 
         [Test]
         public void ClassMapped()
         {
-            mapping.Class = new TypeReference(typeof(string));
+            structure.SetValue(Attr.Class, new TypeReference(typeof(string)));
             inspector.Class.ShouldEqual(new TypeReference(typeof(string)));
         }
 
         [Test]
         public void ClassIsSet()
         {
-            mapping.Class = new TypeReference(typeof(string));
+            structure.SetValue(Attr.Class, new TypeReference(typeof(string)));
             inspector.IsSet(Prop(x => x.Class))
                 .ShouldBeTrue();
         }
@@ -48,14 +47,14 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         [Test]
         public void ValueMapped()
         {
-            mapping.Value = "value";
+            structure.SetValue(Attr.Value, "value");
             inspector.Value.ShouldEqual("value");
         }
 
         [Test]
         public void ValueIsSet()
         {
-            mapping.Value = "value";
+            structure.SetValue(Attr.Value, "value");
             inspector.IsSet(Prop(x => x.Value))
                 .ShouldBeTrue();
         }

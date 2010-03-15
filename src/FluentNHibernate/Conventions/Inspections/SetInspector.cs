@@ -6,7 +6,7 @@ namespace FluentNHibernate.Conventions.Inspections
 {
     public class SetInspector : CollectionInspector, ISetInspector
     {
-        private readonly InspectorModelMapper<ISetInspector, CollectionMapping> mappedProperties = new InspectorModelMapper<ISetInspector, CollectionMapping>();
+        private readonly InspectorMapper<ISetInspector, CollectionMapping> mappedProperties = new InspectorMapper<ISetInspector, CollectionMapping>();
         private readonly CollectionMapping mapping;
 
         public SetInspector(CollectionMapping mapping)

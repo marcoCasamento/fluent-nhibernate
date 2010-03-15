@@ -6,7 +6,7 @@ namespace FluentNHibernate.Conventions.Inspections
 {
     public class CacheInspector : ICacheInspector
     {
-        private readonly InspectorModelMapper<ICacheInspector, CacheMapping> propertyMappings = new InspectorModelMapper<ICacheInspector, CacheMapping>();
+        private readonly InspectorMapper<ICacheInspector> propertyMappings = new InspectorMapper<ICacheInspector>();
         private readonly CacheMapping mapping;
 
         public CacheInspector(CacheMapping mapping)
@@ -41,7 +41,8 @@ namespace FluentNHibernate.Conventions.Inspections
 
         public bool IsSet(Member property)
         {
-            return mapping.IsSpecified(propertyMappings.Get(property));
+            throw new NotImplementedException();
+            //return mapping.IsSpecified(propertyMappings.Get(property));
         }
     }
 }

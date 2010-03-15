@@ -8,7 +8,7 @@ namespace FluentNHibernate.Conventions.Inspections
 {
     public class KeyInspector : IKeyInspector
     {
-        private readonly InspectorModelMapper<IKeyInspector, KeyMapping> propertyMappings = new InspectorModelMapper<IKeyInspector, KeyMapping>();
+        private readonly InspectorMapper<IKeyInspector, KeyMapping> propertyMappings = new InspectorMapper<IKeyInspector, KeyMapping>();
         private readonly KeyMapping mapping;
 
         public KeyInspector(KeyMapping mapping)

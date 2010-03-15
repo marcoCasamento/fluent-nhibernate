@@ -4,21 +4,22 @@ using FluentNHibernate.Conventions.Instances;
 using FluentNHibernate.MappingModel;
 using FluentNHibernate.MappingModel.ClassBased;
 using FluentNHibernate.MappingModel.Identity;
+using FluentNHibernate.MappingModel.Structure;
 
 namespace FluentNHibernate.Conventions.Inspections
 {
     public class ClassInspector : IClassInspector
     {
         private readonly ClassMapping mapping;
-        private readonly InspectorModelMapper<IClassInspector, ClassMapping> propertyMappings = new InspectorModelMapper<IClassInspector, ClassMapping>();
+        private readonly InspectorMapper<IClassInspector> propertyMappings = new InspectorMapper<IClassInspector>();
 
         public ClassInspector(ClassMapping mapping)
         {
             this.mapping = mapping;
 
-            propertyMappings.Map(x => x.LazyLoad, x => x.Lazy);
-            propertyMappings.Map(x => x.ReadOnly, x => x.Mutable);
-            propertyMappings.Map(x => x.EntityType, x => x.Type);
+            propertyMappings.Map(x => x.LazyLoad, Attr.Lazy);
+            propertyMappings.Map(x => x.ReadOnly, Attr.Mutable);
+            propertyMappings.Map(x => x.EntityType, Attr.Type);
         }
 
         public Type EntityType
@@ -114,7 +115,7 @@ namespace FluentNHibernate.Conventions.Inspections
             get
             {
                 return mapping.Anys
-                    .Select(x => new AnyInspector(x))
+                    .Select(x => new AnyInspector((IMappingStructure<AnyMapping>)x))
                     .Cast<IAnyInspector>()
                     .ToDefaultableList();
             }
@@ -274,7 +275,8 @@ namespace FluentNHibernate.Conventions.Inspections
 
         public bool IsSet(Member property)
         {
-            return mapping.IsSpecified(propertyMappings.Get(property));
+            throw new NotImplementedException();
+            //return mapping.IsSpecified(propertyMappings.Get(property));
         }
     }
 }

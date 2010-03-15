@@ -15,7 +15,7 @@ namespace FluentNHibernate.Conventions.Inspections
 
     public class GeneratorInspector : IGeneratorInspector
     {
-        private readonly InspectorModelMapper<IGeneratorInspector, GeneratorMapping> propertyMappings = new InspectorModelMapper<IGeneratorInspector, GeneratorMapping>();
+        private readonly InspectorMapper<IGeneratorInspector, GeneratorMapping> propertyMappings = new InspectorMapper<IGeneratorInspector, GeneratorMapping>();
         private readonly GeneratorMapping mapping;
 
         public GeneratorInspector(GeneratorMapping mapping)

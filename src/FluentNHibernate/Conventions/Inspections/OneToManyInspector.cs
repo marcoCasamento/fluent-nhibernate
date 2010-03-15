@@ -7,7 +7,7 @@ namespace FluentNHibernate.Conventions.Inspections
 {
     public class OneToManyInspector : IOneToManyInspector
     {
-        private readonly InspectorModelMapper<IOneToManyInspector, OneToManyMapping> mappedProperties = new InspectorModelMapper<IOneToManyInspector, OneToManyMapping>();
+        private readonly InspectorMapper<IOneToManyInspector, OneToManyMapping> mappedProperties = new InspectorMapper<IOneToManyInspector, OneToManyMapping>();
         private readonly OneToManyMapping mapping;
 
         public OneToManyInspector(OneToManyMapping mapping)

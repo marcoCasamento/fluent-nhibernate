@@ -1,8 +1,10 @@
-﻿using FluentNHibernate.Automapping.TestFixtures;
+﻿using System.Collections.Generic;
+using FluentNHibernate.Automapping.TestFixtures;
 using FluentNHibernate.MappingModel;
 using FluentNHibernate.MappingModel.ClassBased;
 using FluentNHibernate.MappingModel.Collections;
 using FluentNHibernate.MappingModel.Identity;
+using FluentNHibernate.Utils;
 using NHibernate;
 using NUnit.Framework;
 
@@ -13,25 +15,27 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
     {
         protected override AnyMapping CreateMapping()
         {
-            var mapping = new AnyMapping
+            var mapping = TestMappings.Create<AnyMapping>(new Dictionary<Attr, object>
             {
-                Access = "access",
-                Cascade = "cascade",
-                ContainingEntityType = typeof(Target),
-                IdType = "id-type",
-                Insert = true,
-                Lazy = true,
-                MetaType = new TypeReference(typeof(Target)),
-                Name = "name",
-                OptimisticLock = true,
-                Update = true
-            };
+               { Attr.Access, "access" },
+               { Attr.Cascade, "cascade" },
+               { Attr.IdType, "id-type" },
+               { Attr.Insert, true },
+               { Attr.Lazy, true },
+               { Attr.MetaType, new TypeReference(typeof(Target)) },
+               { Attr.Name, "name" },
+               { Attr.OptimisticLock, true },
+               { Attr.Update, true },
+            });
 
-            mapping.AddIdentifierDefaultColumn(new ColumnMapping { Name = "default-id-col" });
-            mapping.AddIdentifierColumn(new ColumnMapping { Name = "id-col" });
-            mapping.AddMetaValue(new MetaValueMapping(null) { Value = "value" });
-            mapping.AddTypeDefaultColumn(new ColumnMapping { Name = "default-type-col" });
-            mapping.AddTypeColumn(new ColumnMapping { Name = "type-col" });
+            mapping.AddIdentifierDefaultColumn(TestMappings.CreateColumn("default-id-col"));
+            mapping.AddIdentifierColumn(TestMappings.CreateColumn("id-col"));
+            mapping.AddMetaValue(TestMappings.Create<MetaValueMapping>(new Dictionary<Attr, object>
+            {
+                { Attr.Value, "value" }
+            }));
+            mapping.AddTypeDefaultColumn(TestMappings.CreateColumn("default-type-col"));
+            mapping.AddTypeColumn(TestMappings.CreateColumn("type-col"));
 
             return mapping;
         }
@@ -265,21 +269,20 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
     {
         protected override ColumnMapping CreateMapping()
         {
-            return new ColumnMapping
+            return TestMappings.CreateColumn(new Dictionary<Attr, object>
             {
-                Check = "check",
-                Default = "default",
-                Index = "index",
-                Length = 1,
-                Member = new DummyPropertyInfo("prop", typeof(Target)).ToMember(),
-                Name = "name",
-                NotNull = true,
-                Precision = 1,
-                Scale = 1,
-                SqlType = "sql-type",
-                Unique = true,
-                UniqueKey = "unique-key"
-            };
+                { Attr.Check, "check" },
+                { Attr.Default, "default" },
+                { Attr.Index, "index" },
+                { Attr.Length, 1 },
+                { Attr.Name, "name" },
+                { Attr.NotNull, true },
+                { Attr.Precision, 1 },
+                { Attr.Scale, 1 },
+                { Attr.SqlType, "sql-type" },
+                { Attr.Unique, true },
+                { Attr.UniqueKey, "unique-key" },
+            });
         }
 
         [Test]
@@ -912,11 +915,10 @@ namespace FluentNHibernate.Testing.MappingModel.Equality
     {
         protected override MetaValueMapping CreateMapping()
         {
-            return new MetaValueMapping(typeof(Target))
+            return TestMappings.Create<MetaValueMapping>(new Dictionary<Attr, object>
             {
-                ContainingEntityType = typeof(Target),
-                Value = "value"
-            };
+                { Attr.Value, "value" }
+            });
         }
 
         [Test]

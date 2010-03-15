@@ -7,13 +7,13 @@ namespace FluentNHibernate.Conventions.Inspections
 {
     public class CollectionInspector : ICollectionInspector
     {
-        private readonly InspectorModelMapper<ICollectionInspector, CollectionMapping> propertyMappings = new InspectorModelMapper<ICollectionInspector, CollectionMapping>();
+        private readonly InspectorMapper<ICollectionInspector> propertyMappings = new InspectorMapper<ICollectionInspector>();
         private readonly CollectionMapping mapping;
 
         public CollectionInspector(CollectionMapping mapping)
         {
             this.mapping = mapping;
-            propertyMappings.Map(x => x.LazyLoad, x => x.Lazy);
+            propertyMappings.Map(x => x.LazyLoad, Attr.Lazy);
         }
 
         public Type EntityType
@@ -35,7 +35,8 @@ namespace FluentNHibernate.Conventions.Inspections
         /// </summary>
         public bool IsSet(Member property)
         {
-            return mapping.IsSpecified(propertyMappings.Get(property));
+            throw new NotImplementedException();
+            //return mapping.IsSpecified(propertyMappings.Get(property));
         }
 
         public IKeyInspector Key

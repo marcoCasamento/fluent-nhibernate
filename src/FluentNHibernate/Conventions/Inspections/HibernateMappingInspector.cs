@@ -7,7 +7,7 @@ namespace FluentNHibernate.Conventions.Inspections
 {
     public class HibernateMappingInspector : IHibernateMappingInspector
     {
-        private readonly InspectorModelMapper<IHibernateMappingInspector, HibernateMapping> propertyMappings = new InspectorModelMapper<IHibernateMappingInspector, HibernateMapping>();
+        private readonly InspectorMapper<IHibernateMappingInspector, HibernateMapping> propertyMappings = new InspectorMapper<IHibernateMappingInspector, HibernateMapping>();
         private readonly HibernateMapping mapping;
 
         public HibernateMappingInspector(HibernateMapping mapping)

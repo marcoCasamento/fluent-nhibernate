@@ -4,12 +4,13 @@ using System.Linq;
 using System.Reflection;
 using FluentNHibernate.MappingModel;
 using FluentNHibernate.MappingModel.Collections;
+using FluentNHibernate.MappingModel.Structure;
 
 namespace FluentNHibernate.Conventions.Inspections
 {
     public class IndexInspector : IIndexInspector
     {
-        private readonly InspectorModelMapper<IIndexInspector, IndexMapping> mappedProperties = new InspectorModelMapper<IIndexInspector, IndexMapping>();
+        private readonly InspectorMapper<IIndexInspector, IndexMapping> mappedProperties = new InspectorMapper<IIndexInspector, IndexMapping>();
         private readonly IndexMapping mapping;
 
         public IndexInspector(IndexMapping mapping)
@@ -42,7 +43,7 @@ namespace FluentNHibernate.Conventions.Inspections
             get
             {
                 return mapping.Columns
-                    .Select(x => new ColumnInspector(mapping.ContainingEntityType, x))
+                    .Select(x => new ColumnInspector((IMappingStructure<ColumnMapping>)x))
                     .Cast<IColumnInspector>();
             }
         }

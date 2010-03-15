@@ -6,7 +6,7 @@ namespace FluentNHibernate.Conventions.Inspections
 {
     public class PropertyInspector : ColumnBasedInspector, IPropertyInspector
     {
-        private readonly InspectorModelMapper<IPropertyInspector, PropertyMapping> propertyMappings = new InspectorModelMapper<IPropertyInspector, PropertyMapping>();
+        private readonly InspectorMapper<IPropertyInspector, PropertyMapping> propertyMappings = new InspectorMapper<IPropertyInspector, PropertyMapping>();
         private readonly PropertyMapping mapping;
 
         public PropertyInspector(PropertyMapping mapping)

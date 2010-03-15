@@ -1,78 +1,78 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using FluentNHibernate.MappingModel;
+using FluentNHibernate.MappingModel.Structure;
 
 namespace FluentNHibernate.Conventions.Inspections
 {
     public class AnyInspector : IAnyInspector
     {
-        private readonly InspectorModelMapper<IAnyInspector, AnyMapping> propertyMappings = new InspectorModelMapper<IAnyInspector, AnyMapping>();
-        private readonly AnyMapping mapping;
+        readonly InspectorMapper<IAnyInspector> mappings = new InspectorMapper<IAnyInspector>();
+        readonly IMappingStructure<AnyMapping> structure;
 
-        public AnyInspector(AnyMapping mapping)
+        public AnyInspector(IMappingStructure<AnyMapping> structure)
         {
-            this.mapping = mapping;
-            propertyMappings.Map(x => x.LazyLoad, x => x.Lazy);
+            this.structure = structure;
+            mappings.Map(x => x.LazyLoad, Attr.Lazy);
         }
 
         public Type EntityType
         {
-            get { return mapping.ContainingEntityType; }
+            get { return structure.ContainingEntityType(); }
         }
 
         public string StringIdentifierForModel
         {
-            get { return mapping.Name; }
+            get { return Name; }
         }
 
         public bool IsSet(Member property)
         {
-            return mapping.IsSpecified(propertyMappings.Get(property));
+            return structure.HasValue(property, mappings);
         }
 
         public Access Access
         {
-            get { return Access.FromString(mapping.Access); }
+            get { return Access.FromString(structure.GetValue(Attr.Access)); }
         }
 
         public Cascade Cascade
         {
-            get { return Cascade.FromString(mapping.Cascade); }
+            get { return Cascade.FromString(structure.GetValue(Attr.Cascade)); }
         }
 
-        public IDefaultableEnumerable<IColumnInspector> IdentifierColumns
+        public IEnumerable<IColumnInspector> Columns
         {
             get
             {
-                return mapping.IdentifierColumns.UserDefined
-                    .Select(x => new ColumnInspector(mapping.ContainingEntityType, x))
+                return structure.ChildrenOf<ColumnMapping>()
+                    .Select(x => new ColumnInspector(x))
                     .Cast<IColumnInspector>()
-                    .ToDefaultableList();
+                    .ToList();
             }
         }
 
         public string IdType
         {
-            get { return mapping.IdType; }
+            get { return structure.GetValue(Attr.IdType); }
         }
 
         public bool Insert
         {
-            get { return mapping.Insert; }
+            get { return structure.GetValue<bool>(Attr.Insert); }
         }
 
         public TypeReference MetaType
         {
-            get { return mapping.MetaType; }
+            get { return structure.GetValue<TypeReference>(Attr.MetaType); }
         }
 
         public IEnumerable<IMetaValueInspector> MetaValues
         {
             get
             {
-                return mapping.MetaValues
+                return structure.ChildrenOf<MetaValueMapping>()
                     .Select(x => new MetaValueInspector(x))
                     .Cast<IMetaValueInspector>();
             }
@@ -80,33 +80,22 @@ namespace FluentNHibernate.Conventions.Inspections
 
         public string Name
         {
-            get { return mapping.Name; }
-        }
-
-        public IDefaultableEnumerable<IColumnInspector> TypeColumns
-        {
-            get
-            {
-                return mapping.TypeColumns.UserDefined
-                    .Select(x => new ColumnInspector(mapping.ContainingEntityType, x))
-                    .Cast<IColumnInspector>()
-                    .ToDefaultableList();
-            }
+            get { return structure.GetValue(Attr.Name); }
         }
 
         public bool Update
         {
-            get { return mapping.Update; }
+            get { return structure.GetValue<bool>(Attr.Update); }
         }
 
         public bool LazyLoad
         {
-            get { return mapping.Lazy; }
+            get { return structure.GetValue<bool>(Attr.Lazy); }
         }
 
         public bool OptimisticLock
         {
-            get { return mapping.OptimisticLock; }
+            get { return structure.GetValue<bool>(Attr.OptimisticLock); }
         }
     }
 }

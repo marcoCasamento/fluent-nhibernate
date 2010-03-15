@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using FluentNHibernate.Conventions.Inspections;
 using FluentNHibernate.MappingModel;
+using FluentNHibernate.MappingModel.Structure;
 
 namespace FluentNHibernate.Conventions.Instances
 {
@@ -9,7 +10,7 @@ namespace FluentNHibernate.Conventions.Instances
     {
         private readonly AnyMapping mapping;
 
-        public AnyInstance(AnyMapping mapping) : base(mapping)
+        public AnyInstance(AnyMapping mapping) : base((IMappingStructure<AnyMapping>)mapping)
         {
             this.mapping = mapping;
         }
@@ -20,8 +21,8 @@ namespace FluentNHibernate.Conventions.Instances
             {
                 return new AccessInstance(value =>
                 {
-                    if (!mapping.IsSpecified("Access"))
-                        mapping.Access = value;
+                    //if (!mapping.IsSpecified("Access"))
+                    //    mapping.Access = value;
                 });
             }
         }

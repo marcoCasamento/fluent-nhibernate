@@ -30,13 +30,13 @@ namespace FluentNHibernate.MappingModel
         public string Value
         {
             get { return values.Get(Attr.Value); }
-            set { values.Set(Attr.Value, value); }
+            private set { values.Set(Attr.Value, value); }
         }
 
         public TypeReference Class
         {
             get { return values.Get<TypeReference>(Attr.Class); }
-            set { values.Set(Attr.Class, value); }
+            private set { values.Set(Attr.Class, value); }
         }
 
         public Type ContainingEntityType { get; set; }

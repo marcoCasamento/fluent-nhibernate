@@ -1,12 +1,13 @@
 using System;
 using System.Reflection;
 using FluentNHibernate.MappingModel;
+using FluentNHibernate.MappingModel.Structure;
 
 namespace FluentNHibernate.Conventions.Inspections
 {
     public class DiscriminatorInspector : ColumnBasedInspector, IDiscriminatorInspector
     {
-        private readonly InspectorModelMapper<IDiscriminatorInspector, DiscriminatorMapping> propertyMappings = new InspectorModelMapper<IDiscriminatorInspector, DiscriminatorMapping>();
+        private readonly InspectorMapper<IDiscriminatorInspector, DiscriminatorMapping> propertyMappings = new InspectorMapper<IDiscriminatorInspector, DiscriminatorMapping>();
         private readonly DiscriminatorMapping mapping;
 
         public DiscriminatorInspector(DiscriminatorMapping mapping)
@@ -53,7 +54,7 @@ namespace FluentNHibernate.Conventions.Inspections
                 var items = new DefaultableList<IColumnInspector>();
 
                 foreach (var column in mapping.Columns.UserDefined)
-                    items.Add(new ColumnInspector(mapping.ContainingEntityType, column));
+                    items.Add(new ColumnInspector((IMappingStructure<ColumnMapping>)column));
 
                 return items;
             }

@@ -454,8 +454,11 @@
     <Compile Include="ConventionsTests\DefaultAccessHelperTests.cs" />
     <Compile Include="ConventionsTests\DefaultCascadeHelperTests.cs" />
     <Compile Include="ConventionsTests\DefaultLazyHelperTests.cs" />
+    <Compile Include="ConventionsTests\Inspection\MappingExtensions.cs" />
     <Compile Include="ConventionsTests\ProxyHelperTests.cs" />
+    <Compile Include="Fixtures\FakeMembers.cs" />
     <Compile Include="FluentInterfaceTests\NaturalIdPartTests.cs" />
+    <Compile Include="Mapping.cs" />
     <Compile Include="MappingModel\Output\XmlNaturalIdWriterTester.cs" />
   </ItemGroup>
   <ItemGroup>

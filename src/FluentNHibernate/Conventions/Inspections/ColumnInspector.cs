@@ -1,89 +1,94 @@
 using System;
 using System.Reflection;
 using FluentNHibernate.MappingModel;
+using FluentNHibernate.MappingModel.Structure;
 
 namespace FluentNHibernate.Conventions.Inspections
 {
     public class ColumnInspector : IColumnInspector
     {
-        private readonly ColumnMapping mapping;
-        private readonly InspectorModelMapper<IColumnInspector, ColumnMapping> propertyMappings = new InspectorModelMapper<IColumnInspector, ColumnMapping>();
+        private readonly IMappingStructure<ColumnMapping> structure;
+        private readonly InspectorMapper<IColumnInspector> mappings = new InspectorMapper<IColumnInspector>();
 
-        public ColumnInspector(Type containingEntityType, ColumnMapping mapping)
+        public ColumnInspector(IMappingStructure<ColumnMapping> structure)
         {
-            EntityType = containingEntityType;
-            this.mapping = mapping;
+            //EntityType = containingEntityType;
+            this.structure = structure;
         }
 
-        public Type EntityType { get; private set; }
+        public ColumnInspector(Type containingEntityType, ColumnMapping columnMapping)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Type EntityType
+        {
+            get { return structure.ContainingEntityType(); }
+        }
 
         public string Name
         {
-            get { return mapping.Name; }
+            get { return structure.GetValue(Attr.Name); }
         }
 
         public string Check
         {
-            get { return mapping.Check; }
+            get { return structure.GetValue(Attr.Check); }
         }
 
         public string Index
         {
-            get { return mapping.Index; }
-            set { mapping.Index = value; }
+            get { return structure.GetValue(Attr.Index); }
         }
 
         public int Length
         {
-            get { return mapping.Length; }
+            get { return structure.GetValue<int>(Attr.Length); }
         }
 
         public bool NotNull
         {
-            get { return mapping.NotNull; }
-            set { mapping.NotNull = value; }
+            get { return structure.GetValue<bool>(Attr.NotNull); }
         }
 
         public string SqlType
         {
-            get { return mapping.SqlType; }
+            get { return structure.GetValue(Attr.SqlType); }
         }
 
         public bool Unique
         {
-            get { return mapping.Unique; }
-            set { mapping.Unique = value; }
+            get { return structure.GetValue<bool>(Attr.Unique); }
         }
 
         public string UniqueKey
         {
-            get { return mapping.UniqueKey; }
-            set { mapping.UniqueKey = value; }
+            get { return structure.GetValue(Attr.UniqueKey); }
         }
 
         public int Precision
         {
-            get { return mapping.Precision; }
+            get { return structure.GetValue<int>(Attr.Precision); }
         }
 
         public int Scale
         {
-            get { return mapping.Scale; }
+            get { return structure.GetValue<int>(Attr.Scale); }
         }
 
         public string Default
         {
-            get { return mapping.Default; }
+            get { return structure.GetValue(Attr.Default); }
         }
 
         public string StringIdentifierForModel
         {
-            get { return mapping.Name; }
+            get { return Name; }
         }
 
         public bool IsSet(Member property)
         {
-            return mapping.IsSpecified(propertyMappings.Get(property));
+            return structure.HasValue(property, mappings);
         }
     }
 }

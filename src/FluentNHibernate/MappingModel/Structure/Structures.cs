@@ -238,7 +238,7 @@ namespace FluentNHibernate.MappingModel.Structure
             }
         }
 
-        private class TypeStructure<T> : BaseMappingStructure<T>
+        private class TypeStructure<T> : BaseMappingStructure<T>, ITypeMappingStructure
             where T : ITypeMapping, new()
         {
             readonly Type type;
@@ -260,9 +260,14 @@ namespace FluentNHibernate.MappingModel.Structure
 
                 return mapping;
             }
+
+            Type ITypeMappingStructure.Type
+            {
+                get { return type; }
+            }
         }
 
-        private class TypeAndMemberStructure<T> : BaseMappingStructure<T>
+        private class TypeAndMemberStructure<T> : BaseMappingStructure<T>, ITypeMappingStructure
             where T : ITypeAndMemberMapping, new()
         {
             readonly Type type;
@@ -286,6 +291,11 @@ namespace FluentNHibernate.MappingModel.Structure
                     .Each(mapping.AddChild);
 
                 return mapping;
+            }
+
+            Type ITypeMappingStructure.Type
+            {
+                get { return type; }
             }
         }
 

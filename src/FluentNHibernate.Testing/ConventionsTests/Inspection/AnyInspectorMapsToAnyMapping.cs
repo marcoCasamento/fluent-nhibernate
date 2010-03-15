@@ -1,10 +1,11 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 using FluentNHibernate.Conventions;
 using FluentNHibernate.Conventions.Inspections;
 using FluentNHibernate.MappingModel;
+using FluentNHibernate.MappingModel.Structure;
+using FluentNHibernate.Testing.Fixtures;
 using FluentNHibernate.Utils.Reflection;
 using NUnit.Framework;
 
@@ -13,27 +14,27 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
     [TestFixture, Category("Inspection DSL")]
     public class AnyInspectorMapsToAnyMapping
     {
-        private AnyMapping mapping;
+        private IMappingStructure<AnyMapping> structure;
         private IAnyInspector inspector;
 
         [SetUp]
         public void CreateDsl()
         {
-            mapping = new AnyMapping();
-            inspector = new AnyInspector(mapping);
+            structure = Structures.Any(FakeMembers.Entity);
+            inspector = new AnyInspector(structure);
         }
 
         [Test]
         public void AccessMapped()
         {
-            mapping.Access = "field";
+            structure.SetValue(Attr.Access, "field");
             inspector.Access.ShouldEqual(Access.Field);
         }
 
         [Test]
         public void AccessIsSet()
         {
-            mapping.Access = "field";
+            structure.SetValue(Attr.Access, "field");
             inspector.IsSet(Prop(x => x.Access))
                 .ShouldBeTrue();
         }
@@ -48,14 +49,14 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         [Test]
         public void CascadeMapped()
         {
-            mapping.Cascade = "all";
+            structure.SetValue(Attr.Cascade, "all");
             inspector.Cascade.ShouldEqual(Cascade.All);
         }
 
         [Test]
         public void CascadeIsSet()
         {
-            mapping.Cascade = "all";
+            structure.SetValue(Attr.Cascade, "all");
             inspector.IsSet(Prop(x => x.Cascade))
                 .ShouldBeTrue();
         }
@@ -70,34 +71,34 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         [Test]
         public void IdentifierColumnsCollectionHasSameCountAsMapping()
         {
-            mapping.AddIdentifierColumn(new ColumnMapping());
-            inspector.IdentifierColumns.Count().ShouldEqual(1);
+            structure.AddChild(Structures.Column(structure));
+            inspector.Columns.Count().ShouldEqual(1);
         }
 
         [Test]
         public void IdentifierColumnsCollectionOfInspectors()
         {
-            mapping.AddIdentifierColumn(new ColumnMapping());
-            inspector.IdentifierColumns.First().ShouldBeOfType<IColumnInspector>();
+            structure.AddChild(Structures.Column(structure));
+            inspector.Columns.First().ShouldBeOfType<IColumnInspector>();
         }
 
         [Test]
         public void IdentifierColumnsCollectionIsEmpty()
         {
-            inspector.IdentifierColumns.IsEmpty().ShouldBeTrue();
+            inspector.Columns.IsEmpty().ShouldBeTrue();
         }
 
         [Test]
         public void IdTypeMapped()
         {
-            mapping.IdType = "type";
+            structure.SetValue(Attr.IdType, "type");
             inspector.IdType.ShouldEqual("type");
         }
 
         [Test]
         public void IdTypeIsSet()
         {
-            mapping.IdType = "type";
+            structure.SetValue(Attr.IdType, "type");
             inspector.IsSet(Prop(x => x.IdType))
                 .ShouldBeTrue();
         }
@@ -112,14 +113,14 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         [Test]
         public void InsertMapped()
         {
-            mapping.Insert = true;
+            structure.SetValue(Attr.Insert, true);
             inspector.Insert.ShouldEqual(true);
         }
 
         [Test]
         public void InsertIsSet()
         {
-            mapping.Insert = true;
+            structure.SetValue(Attr.Insert, true);
             inspector.IsSet(Prop(x => x.Insert))
                 .ShouldBeTrue();
         }
@@ -134,14 +135,14 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         [Test]
         public void LazyMapped()
         {
-            mapping.Lazy = true;
+            structure.SetValue(Attr.Lazy, true);
             inspector.LazyLoad.ShouldEqual(true);
         }
 
         [Test]
         public void LazyIsSet()
         {
-            mapping.Lazy = true;
+            structure.SetValue(Attr.Lazy, true);
             inspector.IsSet(Prop(x => x.LazyLoad))
                 .ShouldBeTrue();
         }
@@ -156,14 +157,14 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         [Test]
         public void MetaTypeMapped()
         {
-            mapping.MetaType = new TypeReference(typeof(string));
+            structure.SetValue(Attr.MetaType, new TypeReference(typeof(string)));
             inspector.MetaType.ShouldEqual(new TypeReference(typeof(string)));
         }
 
         [Test]
         public void MetaTypeIsSet()
         {
-            mapping.MetaType = new TypeReference(typeof(string));
+            structure.SetValue(Attr.MetaType, new TypeReference(typeof(string)));
             inspector.IsSet(Prop(x => x.MetaType))
                 .ShouldBeTrue();
         }
@@ -178,14 +179,14 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         [Test]
         public void MetaValuesCollectionHasSameCountAsMapping()
         {
-            mapping.AddMetaValue(new MetaValueMapping(null));
+            structure.AddChild(Structures.MetaValue(FakeMembers.Type));
             inspector.MetaValues.Count().ShouldEqual(1);
         }
 
         [Test]
         public void MetaValuesCollectionOfInspectors()
         {
-            mapping.AddMetaValue(new MetaValueMapping(null));
+            structure.AddChild(Structures.MetaValue(FakeMembers.Type));
             inspector.MetaValues.First().ShouldBeOfType<IMetaValueInspector>();
         }
 
@@ -198,14 +199,14 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         [Test]
         public void NameMapped()
         {
-            mapping.Name = "name";
+            structure.SetValue(Attr.Name, "name");
             inspector.Name.ShouldEqual("name");
         }
 
         [Test]
         public void NameIsSet()
         {
-            mapping.Name = "name";
+            structure.SetValue(Attr.Name, "name");
             inspector.IsSet(Prop(x => x.Name))
                 .ShouldBeTrue();
         }
@@ -220,14 +221,14 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         [Test]
         public void OptimisticLockMapped()
         {
-            mapping.OptimisticLock = true;
+            structure.SetValue(Attr.OptimisticLock, true);
             inspector.OptimisticLock.ShouldEqual(true);
         }
 
         [Test]
         public void OptimisticLockIsSet()
         {
-            mapping.OptimisticLock = true;
+            structure.SetValue(Attr.OptimisticLock, true);
             inspector.IsSet(Prop(x => x.OptimisticLock))
                 .ShouldBeTrue();
         }
@@ -242,34 +243,34 @@ namespace FluentNHibernate.Testing.ConventionsTests.Inspection
         [Test]
         public void TypeColumnsCollectionHasSameCountAsMapping()
         {
-            mapping.AddTypeColumn(new ColumnMapping());
-            inspector.TypeColumns.Count().ShouldEqual(1);
+            structure.AddChild(Structures.Column(structure));
+            inspector.Columns.Count().ShouldEqual(1);
         }
 
         [Test]
         public void TypeColumnsCollectionOfInspectors()
         {
-            mapping.AddTypeColumn(new ColumnMapping());
-            inspector.TypeColumns.First().ShouldBeOfType<IColumnInspector>();
+            structure.AddChild(Structures.Column(structure));
+            inspector.Columns.First().ShouldBeOfType<IColumnInspector>();
         }
 
         [Test]
         public void TypeColumnsCollectionIsEmpty()
         {
-            inspector.TypeColumns.IsEmpty().ShouldBeTrue();
+            inspector.Columns.IsEmpty().ShouldBeTrue();
         }
 
         [Test]
         public void UpdateMapped()
         {
-            mapping.Update = true;
+            structure.SetValue(Attr.Update, true);
             inspector.Update.ShouldEqual(true);
         }
 
         [Test]
         public void UpdateIsSet()
         {
-            mapping.Update = true;
+            structure.SetValue(Attr.Update, true);
             inspector.IsSet(Prop(x => x.Update))
                 .ShouldBeTrue();
         }

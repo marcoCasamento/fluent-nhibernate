@@ -32,6 +32,11 @@ namespace FluentNHibernate.MappingModel.Structure
             values[key] = value;
         }
 
+        public TReturn GetValue<TReturn>(Attr attr)
+        {
+            return (TReturn)(values.ContainsKey(attr) ? values[attr] : default(TReturn));
+        }
+
         public void RemoveChildrenMatching(Predicate<IMappingStructure> predicate)
         {
             children.RemoveAll(predicate);
@@ -47,6 +52,8 @@ namespace FluentNHibernate.MappingModel.Structure
             get { return values; }
         }
 
+        public IMappingStructure Parent { get; set; }
+
         public IEnumerable<IMappingStructure> Children
         {
             get { return children.AsReadOnly(); }
@@ -55,6 +62,7 @@ namespace FluentNHibernate.MappingModel.Structure
         public void AddChild(IMappingStructure child)
         {
             children.Add(child);
+            child.Parent = this;
         }
     }
 }

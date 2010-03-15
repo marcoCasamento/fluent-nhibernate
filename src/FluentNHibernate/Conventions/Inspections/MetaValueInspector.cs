@@ -1,42 +1,42 @@
 using System;
-using System.Reflection;
 using FluentNHibernate.MappingModel;
+using FluentNHibernate.MappingModel.Structure;
 
 namespace FluentNHibernate.Conventions.Inspections
 {
     public class MetaValueInspector : IMetaValueInspector
     {
-        private readonly InspectorModelMapper<IMetaValueInspector, MetaValueMapping> propertyMappings = new InspectorModelMapper<IMetaValueInspector, MetaValueMapping>();
-        private readonly MetaValueMapping mapping;
+        private readonly InspectorMapper<IMetaValueInspector> mappings = new InspectorMapper<IMetaValueInspector>();
+        private readonly IMappingStructure<MetaValueMapping> structure;
 
-        public MetaValueInspector(MetaValueMapping mapping)
+        public MetaValueInspector(IMappingStructure<MetaValueMapping> structure)
         {
-            this.mapping = mapping;
+            this.structure = structure;
         }
 
         public Type EntityType
         {
-            get { return mapping.ContainingEntityType; }
+            get { return structure.ContainingEntityType(); }
         }
 
         public string StringIdentifierForModel
         {
-            get { return mapping.Class.Name; }
+            get { return Class.Name; }
         }
 
         public bool IsSet(Member property)
         {
-            return mapping.IsSpecified(propertyMappings.Get(property));
+            return structure.HasValue(property, mappings);
         }
 
         public TypeReference Class
         {
-            get { return mapping.Class; }
+            get { return structure.GetValue<TypeReference>(Attr.Class); }
         }
 
         public string Value
         {
-            get { return mapping.Value; }
+            get { return structure.GetValue(Attr.Value); }
         }
     }
 }

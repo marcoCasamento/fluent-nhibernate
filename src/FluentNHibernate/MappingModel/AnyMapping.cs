@@ -43,55 +43,55 @@ namespace FluentNHibernate.MappingModel
         public string Name
         {
             get { return values.Get(Attr.Name); }
-            set { values.Set(Attr.Name, value); }
+            private set { values.Set(Attr.Name, value); }
         }
 
         public string IdType
         {
             get { return values.Get(Attr.IdType); }
-            set { values.Set(Attr.IdType, value); }
+            private set { values.Set(Attr.IdType, value); }
         }
 
         public TypeReference MetaType
         {
             get { return values.Get<TypeReference>(Attr.MetaType); }
-            set { values.Set(Attr.MetaType, value); }
+            private set { values.Set(Attr.MetaType, value); }
         }
 
         public string Access
         {
             get { return values.Get(Attr.Access); }
-            set { values.Set(Attr.Access, value); }
+            private set { values.Set(Attr.Access, value); }
         }
 
         public bool Insert
         {
             get { return values.Get<bool>(Attr.Insert); }
-            set { values.Set(Attr.Insert, value); }
+            private set { values.Set(Attr.Insert, value); }
         }
 
         public bool Update
         {
             get { return values.Get<bool>(Attr.Update); }
-            set { values.Set(Attr.Update, value); }
+            private set { values.Set(Attr.Update, value); }
         }
 
         public string Cascade
         {
             get { return values.Get(Attr.Cascade); }
-            set { values.Set(Attr.Cascade, value); }
+            private set { values.Set(Attr.Cascade, value); }
         }
 
         public bool Lazy
         {
             get { return values.Get<bool>(Attr.Lazy); }
-            set { values.Set(Attr.Lazy, value); }
+            private set { values.Set(Attr.Lazy, value); }
         }
 
         public bool OptimisticLock
         {
             get { return values.Get<bool>(Attr.OptimisticLock); }
-            set { values.Set(Attr.OptimisticLock, value); }
+            private set { values.Set(Attr.OptimisticLock, value); }
         }
 
         public IDefaultableEnumerable<ColumnMapping> TypeColumns

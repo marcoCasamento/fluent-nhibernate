@@ -4,12 +4,13 @@ using System.Linq;
 using System.Reflection;
 using FluentNHibernate.MappingModel;
 using FluentNHibernate.MappingModel.ClassBased;
+using FluentNHibernate.MappingModel.Structure;
 
 namespace FluentNHibernate.Conventions.Inspections
 {
     public class JoinedSubclassInspector : IJoinedSubclassInspector
     {
-        private readonly InspectorModelMapper<IJoinedSubclassInspector, SubclassMapping> mappedProperties = new InspectorModelMapper<IJoinedSubclassInspector, SubclassMapping>();
+        private readonly InspectorMapper<IJoinedSubclassInspector, SubclassMapping> mappedProperties = new InspectorMapper<IJoinedSubclassInspector, SubclassMapping>();
         private readonly SubclassMapping mapping;
 
         public JoinedSubclassInspector(SubclassMapping mapping)
@@ -43,7 +44,7 @@ namespace FluentNHibernate.Conventions.Inspections
             get
             {
                 return mapping.Anys
-                    .Select(x => new AnyInspector(x))
+                    .Select(x => new AnyInspector((IMappingStructure<AnyMapping>)x))
                     .Cast<IAnyInspector>();
             }
         }

@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using FluentNHibernate.MappingModel;
+using FluentNHibernate.MappingModel.Structure;
 
 namespace FluentNHibernate.Conventions.Inspections
 {
     public class JoinInspector : IJoinInspector
     {
-        private readonly InspectorModelMapper<IJoinInspector, JoinMapping> propertyMappings = new InspectorModelMapper<IJoinInspector, JoinMapping>();
+        private readonly InspectorMapper<IJoinInspector, JoinMapping> propertyMappings = new InspectorMapper<IJoinInspector, JoinMapping>();
         private readonly JoinMapping mapping;
 
         public JoinInspector(JoinMapping mapping)
@@ -36,7 +37,7 @@ namespace FluentNHibernate.Conventions.Inspections
             get
             {
                 return mapping.Anys
-                    .Select(x => new AnyInspector(x))
+                    .Select(x => new AnyInspector((IMappingStructure<AnyMapping>)x))
                     .Cast<IAnyInspector>();
             }
         }

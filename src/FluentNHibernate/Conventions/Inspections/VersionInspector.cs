@@ -6,7 +6,7 @@ namespace FluentNHibernate.Conventions.Inspections
 {
     public class VersionInspector : ColumnBasedInspector, IVersionInspector
     {
-        private readonly InspectorModelMapper<IVersionInspector, VersionMapping> propertyMappings = new InspectorModelMapper<IVersionInspector, VersionMapping>();
+        private readonly InspectorMapper<IVersionInspector, VersionMapping> propertyMappings = new InspectorMapper<IVersionInspector, VersionMapping>();
         private readonly VersionMapping mapping;
 
         public VersionInspector(VersionMapping mapping)

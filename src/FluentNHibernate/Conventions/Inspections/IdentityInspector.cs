@@ -4,12 +4,13 @@ using System.Linq;
 using System.Reflection;
 using FluentNHibernate.MappingModel;
 using FluentNHibernate.MappingModel.Identity;
+using FluentNHibernate.MappingModel.Structure;
 
 namespace FluentNHibernate.Conventions.Inspections
 {
     public class IdentityInspector : ColumnBasedInspector, IIdentityInspector
     {
-        private readonly InspectorModelMapper<IIdentityInspector, IdMapping> propertyMappings = new InspectorModelMapper<IIdentityInspector, IdMapping>();
+        private readonly InspectorMapper<IIdentityInspector, IdMapping> propertyMappings = new InspectorMapper<IIdentityInspector, IdMapping>();
         private readonly IdMapping mapping;
 
         public IdentityInspector(IdMapping mapping)
@@ -44,7 +45,7 @@ namespace FluentNHibernate.Conventions.Inspections
             get
             {
                 return mapping.Columns.UserDefined
-                    .Select(x => new ColumnInspector(EntityType, x))
+                    .Select(x => new ColumnInspector((IMappingStructure<ColumnMapping>)x))
                     .Cast<IColumnInspector>();
             }
         }
